@@ -1,0 +1,6 @@
+{
+	"port": 9000,
+	"clientDevPort": 3002,
+	"clientPath": "client/dist",
+	"cors": ["http://localhost:3002"]
+}

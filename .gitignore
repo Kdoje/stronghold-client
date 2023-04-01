@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+
+# production
+client/dist
+client/dist-ssr
+*.local

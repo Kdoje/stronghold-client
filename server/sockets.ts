@@ -4,6 +4,7 @@ import http from 'http'
 
 
 function startSocketIO(server: http.Server) {
+	console.log("starting server");
 	const io = new Server(server, {
 		cors: {
 			origin: CONFIG.cors,
@@ -19,6 +20,7 @@ function startSocketIO(server: http.Server) {
 	
 		socket.onAny((event, message) => {
 			console.log('[received] ', event, ': ', message)
+			io.emit('chat message', message);
 		
 		})
 		socket.on('disconnect', () => {

@@ -4,6 +4,7 @@ import {fileURLToPath} from 'url'
 import {createServer} from 'http'
 import cors from 'cors'
 import {CONFIG} from '../config'
+import startSocketIO from './sockets'
 
 const port = process.env.PORT || CONFIG.port || 9000
 
@@ -29,5 +30,7 @@ const server = createServer(app)
 server.listen(port, () => {
 	console.log(`Server listening on port ${port}`)
 })
+
+startSocketIO(server)
 
 export {}

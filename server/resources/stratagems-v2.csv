@@ -1,0 +1,19 @@
+﻿name,cost,type,subtype,description,value
+Searing Strike,N,Tactic,,Deal 3 damage to any target within two tiles of you,N
+Burst Lightning,N,Tactic,,"Deal 2 damage to any target. Look at the top card of your damage pile, you may put it on top of your deck",N
+Fierce Instincts,N,Tactic,,Target unit gets +1/+1/+0 and gains indestructible until the end of the turn,N
+Eruption,1 N,Tactic,,Deal 3 damage to any target,N
+Frantic Search,N,Logistic,,"Incinerate the top card of your deck, or top 2 cards of your damage pile. You may play them until the end of your next turn",N
+Burning soul,N,Tactic,,Target unit gets +2 to any stat and deals 1 damage to another adjacent unit,N
+,,,,,
+Interception Matrix,1 R R,Tactic,,Destroy target deploying ordinance.,R
+Static Wall,R R,Building,,"Traversable (units may move through and stop on this tile). When a unit attacks this tile or the tiles [<|> ], sacrifice this building, and stun the attacking unit",R
+Defensive Manuever,R,Tactic,,Target unit gets +1/+2 and gains evasive until the end of the turn,R
+Ludvig's Dowser,R R,Logistic,,"Look at the next 3 cards of the current, you may add 1 to your hand and shuffle the others back into the remaining current",
+Impulse Shield,1 R,Tactic,,Destroy target adjacent deploying ordinance or target non-unit ordinance,R
+,,,,,
+Barrier Protocol,R R,Tactic,,Destroy target deploying ordinance,G
+Dimensional Rift,R R R,Tactic,,Move target unit to any open tile,G
+Arcane Acquisition,1 R,Logistic,,Target wielder draws 3 cards,G
+Following Instincts,1 N,Logistic,,Incinerate the top 3 cards of your deck. You may play them until the end of this turn,G
+Starfall,N,Tactic,,Deal 3 damage to any target,G

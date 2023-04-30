@@ -1,0 +1,20 @@
+﻿name,cost,type,subtype,description,attack,health,move,value
+Beam Cannon,2 R R,Unit,Mech Artillery,"Vulnerable (deals no defensive damage), Bombard: 2 (may attack any unit within 2 tiles)",7,4|2,1,R
+Flare Artillery,3 R R,Unit,Mech Artillery,"Range 4 (can attack any unit within 4 tiles in a straight line). Act: Add a charge counter to this unit.
+As an additional cost to attack, remove a charge counter from this unit",8,5,2,R
+Frontline Gunner,1 R,Unit,Humanoid,Act: Adjacent artillery units get +2 atk until end of turn,1,3,2,R
+Rattlegeist,1 R,Unit,Spirit,"R, Sacrifice this unit: Incinerate target deploying unit",2,2,3,
+Thunderburst Walker,R,Unit,Mech Artillery,Range 2 (can attack any unit within 2 tiles in a straight line).  This unit can defend adjacent tiles,1,2,2,R
+Nullifier Drone,R,Unit,Mech,Act + sacrifice this unit: Target adjacent unit becomes a 0/1/0 and loses all abilites.,2,1,3,R
+,,,,,,,,
+"Orlak, The Mad King",2 N,Unit,Beast,"Whenever Orlak attacks, sacrifice target adjacent friendly unit",6,6|3,3,N
+Orlak's Acolyte,2 N,Unit,Beast,"You may incinerate X cards from your hand to pay X generic resources to deploy this unit. When this unit dies, deal 2 damage to all wielders",5,4,4,N
+Raging Ape,N,Unit,Beast,Rampage (this unit gains +1/+1 whenever you deal non-combat damage),1,2,3,N
+Herald of the Jungle,N,Unit,Beast,Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance),1,2,3,N
+Jungle Opportunist,1 N,Unit,Beast,Rampage (this unit gains +1/+1 whenever you deal non-combat damage). Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance).,1,1,2,N
+Nexus Drake,N,Unit,Avian Beast,"Airborne (can move ""over"" units). Rampage (this unit gains +1/+1 whenever you deal non-combat damage).",2,1,2,N
+Pyrokin Crusader,1 N,Unit,Humanoid,Battlecry (triggers when this unit enters the battlefield): Incinerate the top 2 cards of your damage pile. You may play one this turn,2,2,3,N
+,,,,,,,,
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,G
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,G
+Bane of the Jungle,N N N,Unit,Beast,Rampage (this unit gains +1/+1 whenever you deal non-combat damage). Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance).,2,3|2,3,G

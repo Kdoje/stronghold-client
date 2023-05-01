@@ -2,9 +2,11 @@
 	"port": 9000,
 	"clientDevPort": 3002,
 	"clientPath": "client/dist",
-	"cors": ["http://localhost:3002"],
-	"fileNames": {
-		"unitCards": "resources/units-v2.csv",
-		"stratagemCards": "resources/stratagems-v2.csv"
-	}
+	"cors": [
+		"http://localhost:3002"
+	],
+	"fileNames": [
+		"resources/units-v2.csv",
+		"resources/stratagems-v2.csv"
+	]
 }

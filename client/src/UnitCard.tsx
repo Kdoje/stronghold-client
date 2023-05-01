@@ -1,5 +1,5 @@
 import React from "react";
-import {UnitCardT} from 'common/types/cards'; // TODO why is this not importing
+import {UnitCardT} from 'common/types/cards'; 
 
 export class UnitCard extends React.Component<UnitCardT> {
     constructor(props: UnitCardT) {

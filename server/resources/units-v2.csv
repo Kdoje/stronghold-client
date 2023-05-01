@@ -1,4 +1,4 @@
-﻿name,cost,type,subtype,description,attack,health,move,value
+name,cost,type,subtype,description,attack,health,move,value
 Beam Cannon,2 R R,Unit,Mech Artillery,"Vulnerable (deals no defensive damage), Bombard: 2 (may attack any unit within 2 tiles)",7,4|2,1,R
 Flare Artillery,3 R R,Unit,Mech Artillery,"Range 4 (can attack any unit within 4 tiles in a straight line). Act: Add a charge counter to this unit.
 As an additional cost to attack, remove a charge counter from this unit",8,5,2,R

@@ -1,23 +1,57 @@
 import express from 'express'
 import path from 'path'
-import {fileURLToPath} from 'url'
-import {createServer} from 'http'
+import { fileURLToPath } from 'url'
+import { createServer } from 'http'
 import cors from 'cors'
-import {CONFIG} from '../config'
+import { CONFIG } from '../config'
 import startSocketIO from './sockets'
 import fs from 'fs'
+import Papa, { ParseResult } from "papaparse"
+import { CardInfoT, StratagemCardT } from 'common/types/cards';
+
 
 const port = process.env.PORT || CONFIG.port || 9000
 
 const app = express()
-app.use(cors({origin: CONFIG.cors}))
+app.use(cors({ origin: CONFIG.cors }))
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // this gets all the contents from the unit cards file
-const contents = fs.readFileSync(path.join(__dirname, CONFIG.fileNames.unitCards));
-console.log(contents.toString());
+async function parseCards(fileNames: string[]): Promise<Map<string, CardInfoT>> {
+	let parsedCount = 0;
+	let p: Promise<Map<string, CardInfoT>> = new Promise((resolve, reject) => {
+		let results = new Map<string, CardInfoT>();
+		fileNames.forEach(fileName => {
+			let fullPath = path.join(__dirname, fileName);
+			const file = fs.createReadStream(fullPath);
+
+			console.log("full path is " + fullPath);
+			Papa.parse(file, {
+				header: true,
+				skipEmptyLines: true,
+				complete: (rows: ParseResult<CardInfoT>) => {
+					rows.data.forEach(row => {
+						if (row.name.length === 0 && !(row.description.length === 0)) {
+							reject(`CSV ${fileName} has invalid data. Check that file encoding is UTF-8 and rows for inconsistent missing fields`)
+						}
+						results.set(row.name, row);
+					});
+					parsedCount += 1;
+					if (parsedCount == fileNames.length) {
+						resolve(results);
+					}
+				}
+			})
+		})
+	})
+	return p;
+}
+
+
+let cards = await parseCards(CONFIG.fileNames)
+console.log(cards.get('Starfall'));
 
 app.use(
 	express.static(path.join(__dirname, '..', CONFIG.clientPath), {
@@ -37,6 +71,7 @@ server.listen(port, () => {
 	console.log(`Server listening on port ${port}`)
 })
 
+
 startSocketIO(server)
 
-export {}
+export { }

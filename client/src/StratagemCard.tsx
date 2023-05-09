@@ -1,17 +1,9 @@
+import { StratagemCardT } from "common/types/game-data";
 import React from "react";
+import css from "./Board.module.css"
 
 
-export type StratagemCardProps = {
-    name: string
-    cost: string
-    type: string
-    subtype: string
-    description: string
-    value: string
-}
-
-
-export class StratagemCard extends React.Component<StratagemCardProps> {
+export class StratagemCard extends React.Component<StratagemCardT> {
     render() {
         if (this.props.name === "") {
             return <div></div>;
@@ -25,14 +17,14 @@ export class StratagemCard extends React.Component<StratagemCardProps> {
         if (this.props.value === "G") {
             cardImage = "stratagem-card-gold.png";
         }
-            return <div className="card-container">
-                <img className="portrait-image" src=""></img>
-                <div className="title-text">{this.props.name}</div>
-                <div className="cost-text">{this.props.cost}</div>
-                <div className="type-text">{typeLineText}</div>
-                <div className="description-text">{this.props.description}</div>
-                <div className="value-text">{this.props.value}</div>
-                <img className="card-image" src={cardImage}></img>
+            return <div className={css.cardContainer}>
+                <img className={css.portraitImage} src=""></img>
+                <div className={css.titleText}>{this.props.name}</div>
+                <div className={css.costText}>{this.props.cost}</div>
+                <div className={css.typeText}>{typeLineText}</div>
+                <div className={css.descriptionText}>{this.props.description}</div>
+                <div className={css.valueText}>{this.props.value}</div>
+                <img className={css.cardImage} src={cardImage}></img>
 
             </div>;
     }

@@ -1,10 +1,19 @@
-.battlefield-grid {
+.battlefieldGrid {
     flex-wrap: wrap;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
+    min-width: 575px;
   }
+
+.battlefieldGridCell {
+    width: 100px;
+    height: 80px;
+    border-style: solid;
+    border-color: red;
+    border-width: 2px;
+}
 
 .break {
     flex-basis: 100%;

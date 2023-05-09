@@ -1,5 +1,5 @@
 import React from "react";
-import {UnitCardT} from 'common/types/cards'; 
+import {UnitCardT} from 'common/types/game-data'; 
 
 export class UnitCard extends React.Component<UnitCardT> {
     constructor(props: UnitCardT) {

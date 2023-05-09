@@ -19,13 +19,14 @@ export class StratagemCard extends React.Component<StratagemCardT> {
         }
             return <div className={css.cardContainer}>
                 <img className={css.portraitImage} src=""></img>
+                <div className={css.titleOverlayText}>{this.props.name}</div>
                 <div className={css.titleText}>{this.props.name}</div>
                 <div className={css.costText}>{this.props.cost}</div>
                 <div className={css.typeText}>{typeLineText}</div>
                 <div className={css.descriptionText}>{this.props.description}</div>
                 <div className={css.valueText}>{this.props.value}</div>
                 <img className={css.cardImage} src={cardImage}></img>
-
+                <div className={css.statsOverlayText}>{this.props.value}</div>
             </div>;
     }
 }

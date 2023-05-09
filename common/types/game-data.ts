@@ -2,7 +2,7 @@ export type BaseCardT = {
     name: string
     cost: string
     type: string
-    subtype: string
+    subtype?: string
     description: string
     value: string
 }

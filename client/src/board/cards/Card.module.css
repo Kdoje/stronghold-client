@@ -1,7 +1,7 @@
 
 .cardContainer {
     transform-origin: center center;
-    transform: scale(0.25); /* scales the content automatically */
+    transform: scale(0.3); /* scales the content automatically */
     display: grid;
     grid-template-columns: 1fr;
     margin: -3px -11px;
@@ -21,6 +21,47 @@
     position: relative;
     height: fit-content;
     left: 0px;
+}
+
+.titleOverlayText {
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    font-family: 'Gill Sans MT';
+    color: white;
+    background-color: black;
+    font-size: 40px;
+    position: relative;
+    left: 25px;
+    top: 14px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    height: fit-content;
+    max-width: 85%;
+    overflow-wrap: anywhere;
+}
+
+.statsOverlayText{
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    font-family: 'Gill Sans MT';
+    color: white;
+    background-color: black;
+    font-size: 32px;
+    position: relative;
+    left: 12px;
+    top: 275px;
+    text-align: center;
+    height: fit-content;
+    max-width: 90%;
+    min-width: 90%;
+    overflow-wrap: none;
+}
+
+p {
+    line-height: 0;
 }
 
 .titleText {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnyCardDataT, PlayerData } from "common/types/game-data";
 import css from './Board.module.css'
-import { StratagemCard } from "./StratagemCard";
+import { StratagemCard } from "./cards/StratagemCard";
 
 export default function Board() {
     const [playerData, setPlayerData] = useState<PlayerData[]>([

@@ -1,6 +1,6 @@
 import { StratagemCardT } from "common/types/game-data";
 import React from "react";
-import css from "./Board.module.css"
+import css from "./Card.module.css"
 
 
 export class StratagemCard extends React.Component<StratagemCardT> {

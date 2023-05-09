@@ -1,27 +1,7 @@
-.battlefieldGrid {
-    flex-wrap: wrap;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-    min-width: 575px;
-}
-
-.battlefieldGridCell {
-    width: 100px;
-    height: 80px;
-    border-style: solid;
-    border-color: red;
-    border-width: 2px;
-}
-
-.break {
-    flex-basis: 100%;
-    height: 0;
-}
-
 
 .cardContainer {
+    transform-origin: center center;
+    transform: scale(0.25); /* scales the content automatically */
     display: grid;
     grid-template-columns: 1fr;
     margin: -3px -11px;

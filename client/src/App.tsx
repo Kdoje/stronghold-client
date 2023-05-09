@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import io from 'socket.io-client'
 
-import Board from './Board'
+import Board from './board/Board'
 
 const url = `${window.location.protocol}//${window.location.hostname}:${__PORT__}`
 const socket = io(url);

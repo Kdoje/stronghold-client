@@ -18,8 +18,9 @@ export type StratagemCardT = BaseCardT
 export type AnyCardT = UnitCardT | StratagemCardT
 
 // Used to represent a card on the board
-export type AnyCardDataT = AnyCardT & {
-    annotation: string
+export type AnyCardDataT = {
+    card: AnyCardT
+    annotation?: string
     owner: number
 }
 

@@ -15,11 +15,13 @@
     "preview": "vite preview client/"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },

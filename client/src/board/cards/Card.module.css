@@ -1,7 +1,6 @@
 
 .cardContainer {
     transform-origin: center center;
-    transform: scale(0.3); /* scales the content automatically */
     display: grid;
     grid-template-columns: 1fr;
     margin: -3px -11px;
@@ -58,10 +57,6 @@
     max-width: 90%;
     min-width: 90%;
     overflow-wrap: none;
-}
-
-p {
-    line-height: 0;
 }
 
 .titleText {

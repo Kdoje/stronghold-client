@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, createRef, useRef } from "react";
 import { AnyCardDataT, UnitCardT, PlayerData } from "common/types/game-data";
 import css from './Board.module.css'
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
+import { DndContext } from "@dnd-kit/core";
+import DraggableCard from "./cards/DraggableCard";
+import { Droppable } from "./BoardGridCell";
 
 export default function Board() {
-    const[curIndex, setCurIndex] = useState(0);
+    const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
             deck: [], graveyard: [], damage: [], exile: [], hand: [
@@ -43,28 +46,30 @@ export default function Board() {
         let rowRender = row.map((cell, cIndex) => {
             let card;
             if (cell) {
-                if ((cell.card as UnitCardT).attack) {
-                    let cardData = cell.card as UnitCardT;
-                    card = <UnitCard {...cardData} />;
-                } else {
-                    card = <StratagemCard {...cell.card} />;
-                }
+                card = <DraggableCard {...cell} />
             }
-            return <div key={rIndex + "" + cIndex} className={css.battlefieldGridCell}>
-                {card}
-            </div>
+            return (
+                <Droppable key={`Droppable ${rIndex} ${cIndex}`} id={`${rIndex},${cIndex}`}  {...[rIndex, cIndex]}>
+                    <div className={css.battlefieldGridCell}>
+                        {card}
+                    </div>
+                </Droppable>
+            )
         })
         rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
         return rowRender;
     }))
 
+    // onDragEnd in the dnd context tells us where the card wound up. 
     return (
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
-            <div className={css.battlefieldGrid}>
-                {...boardRender}
-            </div>
+            <DndContext onDragEnd={(event) => { console.log(event) }}>
+                <div className={css.battlefieldGrid}>
+                    {...boardRender}
+                </div>
+            </DndContext>
         </>
     )
 }

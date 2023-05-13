@@ -18,6 +18,10 @@
     align-items: center;
 }
 
+.cardWrapper {
+    scale: .3;
+}
+
 .break {
     flex-basis: 100%;
     height: 0;

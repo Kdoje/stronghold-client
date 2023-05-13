@@ -5,7 +5,6 @@ import css from "./Card.module.css"
 export class UnitCard extends React.Component<UnitCardT> {
     constructor(props: UnitCardT) {
         super(props);
-
     }
 
     render() {

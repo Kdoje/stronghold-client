@@ -19,10 +19,13 @@ export type AnyCardT = UnitCardT | StratagemCardT
 
 // Used to represent a card on the board
 export type AnyCardDataT = {
+    instanceId: string
     card: AnyCardT
     annotation?: string
     owner: number
 }
+
+export type CardInstanceDataNT = AnyCardDataT | null
 
 export type PlayerData = {
     deck: Array<AnyCardT>

@@ -7,9 +7,10 @@ import css from '../Board.module.css' // TODO this should be in the card module
 
 
 export default function DraggableCard(props: AnyCardDataT) {
-    // TODO each card needs a unique instance id so we can track it while moving it
+    // TODO this should be called CardInstance so it can hold the instance id and overlay
+    //  info
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: props.card.name
+        id: props.instanceId,
     });
     const style = transform ? {
         transform: `translate3d(${transform.x*1/.3}px, ${transform.y*1/.3}px, 0)`,
@@ -22,7 +23,7 @@ export default function DraggableCard(props: AnyCardDataT) {
         card = <StratagemCard {...props.card} />;
     }
     return (
-        <div ref={setNodeRef}  className={css.cardWrapper} style={style} {...listeners} {...attributes}>
+        <div ref={setNodeRef}  className={css.instanceWrapper} style={style} {...listeners} {...attributes}>
             {card}
         </div>
     );

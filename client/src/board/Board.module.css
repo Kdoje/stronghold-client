@@ -9,7 +9,7 @@
 
 .battlefieldGridCell {
     width: 120px;
-    height: 120px;
+    height: 110px;
     border-style: solid;
     border-color: red;
     border-width: 2px;
@@ -18,9 +18,9 @@
     align-items: center;
 }
 
-.cardWrapper {
+.instanceWrapper {
     scale: .3;
-}
+} /* TODO: this could be used to render the card instance data (data overlay and annotation)*/
 
 .break {
     flex-basis: 100%;

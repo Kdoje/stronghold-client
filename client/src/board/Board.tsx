@@ -1,9 +1,9 @@
 import { useState, createRef, useRef } from "react";
-import { AnyCardDataT, UnitCardT, PlayerData } from "common/types/game-data";
+import { AnyCardDataT, UnitCardT, PlayerData, CardInstanceDataNT } from "common/types/game-data";
 import css from './Board.module.css'
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import DraggableCard from "./cards/DraggableCard";
 import { Droppable } from "./BoardGridCell";
 
@@ -17,7 +17,8 @@ export default function Board() {
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] },
     ]);
-    const [boardData, setBoardData] = useState<AnyCardDataT[][]>(Array(6).fill(Array(5).fill(null)))
+    const [boardData, setBoardData] = useState<CardInstanceDataNT[][]>(Array(6).fill(Array(5).fill(null)))
+    const [activeZone, setActiveZone] = useState<[number, number]>(); // TODO use this to store the last known zone location (on click)
 
     function addData() {
         // TODO this should send a request with the card names provided in the textbox to put the data
@@ -33,12 +34,28 @@ export default function Board() {
 
     function addCardToBoard() {
         let newBoardData = boardData.map((item) => item.slice());
+        let id = (Math.random() + 1).toString(4)
         newBoardData[0][curIndex] = {
-            card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5|3", move: "1" },
+            instanceId: id,
+            card: {name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5|3", move: "1" },
             owner: 1
         };
         setCurIndex(curVal => curVal += 1);
         setBoardData(newBoardData);
+    }
+
+    function handleDragEnd(event: DragEndEvent) {
+        if (activeZone && event.over) {
+            console.log(event.over.data)
+            let newZone = (event.over.id as string).split(",").map(val => parseInt(val)) as [number, number]
+            // use toString to check if both the tuples are equal
+            if (activeZone.toString() !== newZone.toString()) {
+                let newBoardData = boardData.map((item) => item.slice());
+                newBoardData[newZone[0]][newZone[1]] = boardData[activeZone[0]][activeZone[1]]
+                newBoardData[activeZone[0]][activeZone[1]] = null;
+                setBoardData(newBoardData)
+            }
+        }
     }
 
     let boardRender = [];
@@ -50,7 +67,7 @@ export default function Board() {
             }
             return (
                 <Droppable key={`Droppable ${rIndex} ${cIndex}`} id={`${rIndex},${cIndex}`}  {...[rIndex, cIndex]}>
-                    <div className={css.battlefieldGridCell}>
+                    <div onMouseDown={() => { setActiveZone([rIndex, cIndex]) }} className={css.battlefieldGridCell}>
                         {card}
                     </div>
                 </Droppable>
@@ -65,7 +82,7 @@ export default function Board() {
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
-            <DndContext onDragEnd={(event) => { console.log(event) }}>
+            <DndContext onDragStart={(event) => console.log(event)} onDragEnd={(event) => { handleDragEnd(event) }}>
                 <div className={css.battlefieldGrid}>
                     {...boardRender}
                 </div>

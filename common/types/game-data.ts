@@ -27,7 +27,16 @@ export type CardInstanceT = {
 export type BoardStackInstanceT = null | {
     instances: Array<CardInstanceT>
     attacking: 'N'|'S'|'E'|'W'|null
-    activated: boolean|
+    activated: boolean
+}
+
+// colId is null for zones that are 1 dimmensional (anything but board)
+// index is null for zones that aren't stacks (anything but board)
+export type ZoneIdT = {
+    zoneName: 'Board'
+    rowId: number
+    colId: number | null
+    index: number | null
 }
 
 export type CardInstanceDataNT = CardInstanceT | null

@@ -17,12 +17,12 @@ export default function CardInstance(props: CardInstanceT) {
 
     const cardToRender = props.card
     const style = transform ? {
-
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        position: "fixed"
     } : {
         width: "120px",
         height: "110px",
-    };
+    } as React.CSSProperties;
     let card;
     if ((cardToRender as UnitCardT).attack) {
         let cardData = cardToRender as UnitCardT;
@@ -31,12 +31,10 @@ export default function CardInstance(props: CardInstanceT) {
         card = <StratagemCard {...cardToRender} />;
     }
 
-    // TODO currently this doesn't move the card correctly. It re-parents to
-    // the document root so it always appears on top, but it doesn't 
-    // move correctly
     let result =
         <div ref={setNodeRef}  {...listeners} {...attributes}
-            style={style} className={css.draggableContainer}>
+            style={style}
+            className={css.draggableContainer}>
             <div className={css.cardPreivewContainer}>
                 {card}
             </div>

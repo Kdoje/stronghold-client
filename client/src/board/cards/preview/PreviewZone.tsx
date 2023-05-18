@@ -25,6 +25,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     // the instances need a container and new ID to prevent duplication
     let previewRender: ReactNode[] = [];
 
+    console.log(`zone index is ${props.zone.index}`)
     props.instances.forEach(instance => {
         let id = (Math.random() + 1).toString(4)
         let instanceCopy = { ...instance, instanceId: id }

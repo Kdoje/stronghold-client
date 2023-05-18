@@ -1,10 +1,13 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, useDndContext } from "@dnd-kit/core";
+import {snapCenterToCursor} from "@dnd-kit/modifiers";
 import { BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
 import { ReactNode, useState } from "react";
 import css from './Board.module.css';
 import { BoardGridCell } from "./BoardGridCell";
 import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
+import { createPortal } from "react-dom";
+import CardInstance from "./cards/CardInstance";
 
 export default function Board() {
     const [curIndex, setCurIndex] = useState(0);
@@ -77,7 +80,7 @@ export default function Board() {
                 if (srcZoneLoc.toString() !== destZoneLoc.toString()
                     && sourceZoneData?.instances) {
                     sourceZoneData.instances = sourceZoneData.instances.map((instance) => {
-                        return {...instance, zone: {...destZone}} as CardInstanceT;
+                        return { ...instance, zone: { ...destZone } } as CardInstanceT;
                     })
                     let newBoardData = boardData.map((item) => item.slice());
                     let destZoneData = newBoardData[destZoneLoc[0]][destZoneLoc[1]]
@@ -127,19 +130,21 @@ export default function Board() {
         instances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
 
-    let test : ReactNode;
+
+    let test: ReactNode;
 
     return (
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
-            <DndContext onDragEnd={(event) => { handleDragEnd(event) }}>
+            <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
                 <div className={css.gameBoard}>
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
-                    <PreviewZone {...{ instances: instances, zone: activeZone}} />
+                    <PreviewZone {...{ instances: instances, zone: activeZone }} />
                 </div>
+
             </DndContext>
         </>
     )

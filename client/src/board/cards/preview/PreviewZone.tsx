@@ -28,8 +28,8 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     props.instances.forEach(instance => {
         let id = (Math.random() + 1).toString(4)
         let instanceCopy = { ...instance, instanceId: id }
-        previewRender.push(<div className={css.cardPreivewContainer}>
-            <CardInstance {...instanceCopy} /></div>)
+        previewRender.push(
+            <CardInstance {...instanceCopy} />)
     })
     // render drop points between each
     return <div className={css.previewArea}>{...previewRender}</div>

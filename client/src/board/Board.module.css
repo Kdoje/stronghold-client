@@ -18,8 +18,8 @@
 .previewArea { /* TODO this should be hidden unless there's stuff in it */
     max-height: 720px;
     min-height: 720px;
-    overflow: scroll;
     position: relative;
+    overflow: scroll;
 }
 
 .cardPreivewContainer {

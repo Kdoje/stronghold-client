@@ -18,11 +18,9 @@ export default function CardInstance(props: CardInstanceT) {
     const cardToRender = props.card
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        position: "fixed"
-    } : {
-        width: "120px",
-        height: "110px",
-    } as React.CSSProperties;
+        position: "fixed" // sets parent to viewport and enables dragging
+    } : {} as React.CSSProperties;
+    
     let card;
     if ((cardToRender as UnitCardT).attack) {
         let cardData = cardToRender as UnitCardT;
@@ -33,8 +31,7 @@ export default function CardInstance(props: CardInstanceT) {
 
     let result =
         <div ref={setNodeRef}  {...listeners} {...attributes}
-            style={style}
-            className={css.draggableContainer}>
+            style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer}>
                 {card}
             </div>

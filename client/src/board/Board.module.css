@@ -32,6 +32,14 @@
     position: relative;
 }
 
+.draggableContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75px;
+    height: 97px;
+}
+
 .battlefieldGridCell {
     width: 120px;
     height: 110px;

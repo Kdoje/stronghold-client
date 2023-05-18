@@ -1,15 +1,36 @@
 
 import { CardInstanceT, ZoneIdT } from "common/types/game-data";
-import css from '../../Board.module.css' 
+import css from '../../Board.module.css'
 import CardInstance from "../CardInstance";
+import { useDroppable } from "@dnd-kit/core";
+import { ReactNode } from "react";
 
 export type PreviewZoneDataT = {
     instances: Array<CardInstanceT>
-    zoneId: ZoneIdT
+    zone: ZoneIdT
 }
 
 export default function PreviewZone(props: PreviewZoneDataT) {
-    // TODO this will handle rendering the members of a board stack and 
-    // allow a user to move cards in and out of a stack
-    return <div>{`${props.instances.length}, ${props.zoneId}`}</div>
+
+    function generateIdString() {
+        return `${props.zone.zoneName}, ${props.zone.rowId}, ${props.zone.colId}, ${props.zone.index}`;
+    }
+    // // creates a droppable area with the given zone
+    // const { isOver, setNodeRef } = useDroppable({
+    //     id: generateIdString(),
+    //     data: { zone: props.zone }
+    // });
+
+    // render list of instances if present
+    // the instances need a container and new ID to prevent duplication
+    let previewRender: ReactNode[] = [];
+
+    props.instances.forEach(instance => {
+        let id = (Math.random() + 1).toString(4)
+        let instanceCopy = { ...instance, instanceId: id }
+        previewRender.push(<div className={css.cardPreivewContainer}>
+            <CardInstance {...instanceCopy} /></div>)
+    })
+    // render drop points between each
+    return <div className={css.previewArea}>{...previewRender}</div>
 }

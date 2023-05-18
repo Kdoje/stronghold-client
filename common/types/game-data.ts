@@ -22,6 +22,7 @@ export type CardInstanceT = {
     instanceId: string
     card: AnyCardT
     owner: number
+    zone: ZoneIdT
 }
 
 export type BoardStackInstanceT = null | {
@@ -36,7 +37,7 @@ export type ZoneIdT = {
     zoneName: 'Board'
     rowId: number
     colId: number | null
-    index: number | null
+    index?: number
 }
 
 export type CardInstanceDataNT = CardInstanceT | null

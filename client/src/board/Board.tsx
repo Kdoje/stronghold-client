@@ -1,6 +1,6 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import css from './Board.module.css';
 import { BoardGridCell } from "./BoardGridCell";
 import BoardStackContainer from "./cards/BoardStackContainer";
@@ -20,8 +20,7 @@ export default function Board() {
     const [activeZone, setActiveZone] = useState<ZoneIdT>({
         zoneName: "Board",
         rowId: 0,
-        colId: 0,
-        index: null
+        colId: 0
     });
 
     function addData() {
@@ -41,6 +40,11 @@ export default function Board() {
         let id = (Math.random() + 1).toString(4)
         newBoardData[0][curIndex] = {
             instances: [{
+                zone: {
+                    zoneName: "Board",
+                    rowId: 0,
+                    colId: curIndex,
+                },
                 instanceId: id,
                 owner: 1,
                 card: {
@@ -57,25 +61,33 @@ export default function Board() {
     }
 
     function handleDragEnd(event: DragEndEvent) {
-        console.log(event.over)
-        if (activeZone && event.over?.data.current?.zone) {
-            let destZoneData = event.over.data.current.zone as ZoneIdT
-            let destZoneName = destZoneData.zoneName;
-            if (destZoneName = "Board") {
-                let destZoneLoc = [destZoneData.rowId, destZoneData.colId!]
-                let activeZoneLoc = [activeZone.rowId, activeZone.colId!]
+        if (event.active.data.current?.zone && event.over?.data.current?.zone) {
+            console.log(event)
+            // we need to check the source zone in order to popluate the source data
+            let destZone = event.over.data.current.zone as ZoneIdT
+            let srcZone = event.active.data.current.zone as ZoneIdT
+            let destZoneName = destZone.zoneName;
+            if (destZoneName === "Board") {
+                let destZoneLoc = [destZone.rowId, destZone.colId!]
+                let srcZoneLoc = [srcZone.rowId, srcZone.colId!]
+                let sourceZoneData = boardData[srcZoneLoc[0]][srcZoneLoc[1]];
                 // use toString to check if both the tuples are equal
-                if (activeZoneLoc.toString() !== destZoneLoc.toString()) {
+                // also check the source data is populated, otherwise there's
+                // nothing to move
+                if (srcZoneLoc.toString() !== destZoneLoc.toString()
+                    && sourceZoneData?.instances) {
+                    sourceZoneData.instances = sourceZoneData.instances.map((instance) => {
+                        return {...instance, zone: {...destZone}} as CardInstanceT;
+                    })
                     let newBoardData = boardData.map((item) => item.slice());
                     let destZoneData = newBoardData[destZoneLoc[0]][destZoneLoc[1]]
-                    let sourceZoneData = boardData[activeZoneLoc[0]][activeZoneLoc[1]];
                     // merge dest zone with source zone
                     if (destZoneData) {
                         destZoneData.instances.unshift(...sourceZoneData!.instances)
                     } else {
                         newBoardData[destZoneLoc[0]][destZoneLoc[1]] = sourceZoneData;
                     }
-                    newBoardData[activeZoneLoc[0]][activeZoneLoc[1]] = null;
+                    newBoardData[srcZoneLoc[0]][srcZoneLoc[1]] = null;
                     setBoardData(newBoardData)
                 }
             }
@@ -93,12 +105,12 @@ export default function Board() {
             let zone: ZoneIdT = {
                 zoneName: "Board",
                 rowId: rIndex,
-                colId: cIndex,
-                index: null
+                colId: cIndex
             }
+            // TODO this breaks if active zone isn't set by onMouseDown. I'm not sure why that is
             return (
                 <BoardGridCell key={`Droppable ${rIndex} ${cIndex}`} zone={zone}>
-                    <div onMouseDown={() => { setActiveZone(zone) }} className={css.battlefieldGridCell}>
+                    <div onClick={() => { setActiveZone(zone) }} className={css.battlefieldGridCell}>
                         {card}
                     </div>
                 </BoardGridCell>
@@ -108,23 +120,25 @@ export default function Board() {
         return rowRender;
     }))
 
+    // Sets the instances for the preview display
     let instances: Array<CardInstanceT> = []
-    if (activeZone.colId && activeZone.zoneName === 'Board' &&
+    if (activeZone.colId !== undefined && activeZone.zoneName === "Board" &&
         boardData[activeZone.rowId][activeZone.colId!]?.instances) {
         instances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
 
+    let test : ReactNode;
 
     return (
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
-            <DndContext onDragStart={(event) => console.log(event)} onDragEnd={(event) => { handleDragEnd(event) }}>
+            <DndContext onDragEnd={(event) => { handleDragEnd(event) }}>
                 <div className={css.gameBoard}>
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
-                    <PreviewZone {...{ instances: instances, zoneId: activeZone }} />
+                    <PreviewZone {...{ instances: instances, zone: activeZone}} />
                 </div>
             </DndContext>
         </>

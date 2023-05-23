@@ -1,9 +1,9 @@
 import { DndContext, DragEndEvent, DragOverlay, useDndContext } from "@dnd-kit/core";
-import {snapCenterToCursor} from "@dnd-kit/modifiers";
+import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
 import { ReactNode, useState } from "react";
 import css from './Board.module.css';
-import { BoardGridCell } from "./BoardGridCell";
+import { DropZone } from "./DropZone";
 import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
 import { createPortal } from "react-dom";
@@ -41,22 +41,23 @@ export default function Board() {
     function addCardToBoard() {
         let newBoardData = boardData.map((item) => item.slice());
         let id = (Math.random() + 1).toString(4)
-        newBoardData[0][curIndex] = {
+        let row = Math.floor(curIndex/5)
+        let col = curIndex % 5
+        newBoardData[row][col] = {
             instances: [{
                 zone: {
                     zoneName: "Board",
-                    rowId: 0,
-                    colId: curIndex,
+                    rowId: row,
+                    colId: col
                 },
                 instanceId: id,
                 owner: 1,
                 card: {
-                    name: "Sheoldred, The Apocolypse", description: "Breaks standard",
+                    name: `${curIndex} Sheoldred, The Apocolypse`, description: "Breaks standard",
                     cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A",
                     attack: "4", health: "5|3", move: "1"
                 }
             }],
-            attacking: null,
             activated: false
         };
         setCurIndex(curVal => curVal += 1);
@@ -65,38 +66,74 @@ export default function Board() {
 
     function handleDragEnd(event: DragEndEvent) {
         if (event.active.data.current?.zone && event.over?.data.current?.zone) {
-            console.log(event)
+            console.log(event);
             // we need to check the source zone in order to popluate the source data
             let destZone = event.over.data.current.zone as ZoneIdT
             let srcZone = event.active.data.current.zone as ZoneIdT
             let destZoneName = destZone.zoneName;
             if (destZoneName === "Board") {
-                let destZoneLoc = [destZone.rowId, destZone.colId!]
-                let srcZoneLoc = [srcZone.rowId, srcZone.colId!]
-                let sourceZoneData = boardData[srcZoneLoc[0]][srcZoneLoc[1]];
-                // use toString to check if both the tuples are equal
-                // also check the source data is populated, otherwise there's
-                // nothing to move
-                if (srcZoneLoc.toString() !== destZoneLoc.toString()
-                    && sourceZoneData?.instances) {
-                    sourceZoneData.instances = sourceZoneData.instances.map((instance) => {
-                        return { ...instance, zone: { ...destZone } } as CardInstanceT;
-                    })
+                // set the index as -1 if it's undefined
+                let destZoneLoc = [destZone.rowId, destZone.colId!, destZone.index ??= -1]
+                let srcZoneLoc = [srcZone.rowId, srcZone.colId!, srcZone.index ??= -1] // -1 means index is null
+                console.log(srcZoneLoc)
+                console.log(destZoneLoc);
+
+                if (srcZoneLoc.toString() !== destZoneLoc.toString()) {
+                    let sourceZoneData: CardInstanceT[] = []
                     let newBoardData = boardData.map((item) => item.slice());
-                    let destZoneData = newBoardData[destZoneLoc[0]][destZoneLoc[1]]
-                    // merge dest zone with source zone
-                    if (destZoneData) {
-                        destZoneData.instances.unshift(...sourceZoneData!.instances)
+
+                    // remove copied element at start if only moving a specific card
+                    if (srcZone.index >= 0) {
+                        let elt = boardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances[srcZoneLoc[2]]
+                        sourceZoneData.push(elt);
+                        newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances.splice(srcZoneLoc[2], 1)
+                    // otherwise the source is removed at the end by just setting the entire stack to null
                     } else {
-                        newBoardData[destZoneLoc[0]][destZoneLoc[1]] = sourceZoneData;
+                        sourceZoneData = boardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances
                     }
-                    newBoardData[srcZoneLoc[0]][srcZoneLoc[1]] = null;
+
+                    let destZoneData = boardData[destZoneLoc[0]][destZoneLoc[1]]
+
+                    if (destZoneLoc[2] >= 0) {
+                        if (destZoneData?.instances) {
+                            destZoneData!.instances.splice(destZoneLoc[2], 0, ...sourceZoneData);
+                        } else {
+                            destZoneData = { instances: sourceZoneData, activated: false }
+                        }
+                    } else {
+                        if (destZoneData) {
+                            destZoneData.instances.unshift(...sourceZoneData)
+                        } else {
+                            destZoneData = { instances: sourceZoneData, activated: false }
+                        }
+                    }
+
+                    newBoardData[destZoneLoc[0]][destZoneLoc[1]] = destZoneData;
+
+                    if (srcZoneLoc[2] >= 0) {
+                        newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances;
+                    } else {
+                        newBoardData[srcZoneLoc[0]][srcZoneLoc[1]] = null;
+                    }
+                    // make sure all cards accurately reflect where they are on the board
+                    rezoneBoardData(newBoardData, srcZoneLoc, destZoneLoc)
                     setBoardData(newBoardData)
+                    
                 }
             }
             setActiveZone(event.over.data.current.zone);
         }
     }
+
+    function rezoneBoardData(newBoardData: BoardStackInstanceT[][], srcZoneLoc: number[], destZoneLoc: number[]) {
+        newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]?.instances.forEach((instance) => {
+            instance.zone = { zoneName: "Board", rowId: srcZoneLoc[0], colId: srcZoneLoc[1] }
+        });
+        newBoardData[destZoneLoc[0]][destZoneLoc[1]]?.instances.forEach((instance) => {
+            instance.zone = { zoneName: "Board", rowId: destZoneLoc[0], colId: destZoneLoc[1] }
+        })
+    }
+
 
     let boardRender = [];
     boardRender.push(boardData.map((row, rIndex) => {
@@ -110,13 +147,12 @@ export default function Board() {
                 rowId: rIndex,
                 colId: cIndex
             }
-            // TODO this breaks if active zone isn't set by onMouseDown. I'm not sure why that is
             return (
-                <BoardGridCell key={`Droppable ${rIndex} ${cIndex}`} zone={zone}>
+                <DropZone key={`Droppable ${rIndex} ${cIndex}`} zone={zone}>
                     <div onClick={() => { setActiveZone(zone) }} className={css.battlefieldGridCell}>
                         {card}
                     </div>
-                </BoardGridCell>
+                </DropZone>
             )
         })
         rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
@@ -124,14 +160,11 @@ export default function Board() {
     }))
 
     // Sets the instances for the preview display
-    let instances: Array<CardInstanceT> = []
+    let previewedInstances: Array<CardInstanceT> = []
     if (activeZone.colId !== undefined && activeZone.zoneName === "Board" &&
         boardData[activeZone.rowId][activeZone.colId!]?.instances) {
-        instances = boardData[activeZone.rowId][activeZone.colId!]!.instances
+        previewedInstances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
-
-
-    let test: ReactNode;
 
     return (
         <>
@@ -142,7 +175,7 @@ export default function Board() {
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
-                    <PreviewZone {...{ instances: instances, zone: activeZone }} />
+                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
                 </div>
 
             </DndContext>

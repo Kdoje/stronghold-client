@@ -27,7 +27,7 @@ export type CardInstanceT = {
 
 export type BoardStackInstanceT = null | {
     instances: Array<CardInstanceT>
-    attacking: 'N'|'S'|'E'|'W'|null
+    attacking?: 'N'|'S'|'E'|'W'|undefined
     activated: boolean
 }
 

@@ -2,8 +2,8 @@
 import { CardInstanceT, ZoneIdT } from "common/types/game-data";
 import css from '../../Board.module.css'
 import CardInstance from "../CardInstance";
-import { useDroppable } from "@dnd-kit/core";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { DropZone } from "../../DropZone";
 
 export type PreviewZoneDataT = {
     instances: Array<CardInstanceT>
@@ -12,25 +12,38 @@ export type PreviewZoneDataT = {
 
 export default function PreviewZone(props: PreviewZoneDataT) {
 
-    function generateIdString() {
-        return `${props.zone.zoneName}, ${props.zone.rowId}, ${props.zone.colId}, ${props.zone.index}`;
-    }
-    // // creates a droppable area with the given zone
-    // const { isOver, setNodeRef } = useDroppable({
-    //     id: generateIdString(),
-    //     data: { zone: props.zone }
-    // });
+    const [activeIndex, setActiveIndex] = useState<Number>();
+
+    let dropZoneIndex = 0;
+    let dropZoneId = { ...props.zone, index: dropZoneIndex };
 
     // render list of instances if present
     // the instances need a container and new ID to prevent duplication
     let previewRender: ReactNode[] = [];
 
-    console.log(`zone index is ${props.zone.index}`)
-    props.instances.forEach(instance => {
+    previewRender.push(
+        <DropZone key={`previewDroppable ${dropZoneIndex}`} zone={dropZoneId}>
+            <div className={css.previewDropZone}></div>
+        </DropZone>
+    )
+
+
+    props.instances.forEach((instance) => {
+        // only preview zones care about indexes so set it here
         let id = (Math.random() + 1).toString(4)
-        let instanceCopy = { ...instance, instanceId: id }
+        let instanceZoneId = { ...props.zone, index: dropZoneIndex };
+        dropZoneIndex += 1;
+        let dropZoneId =  { ...props.zone, index: dropZoneIndex };
+
+        let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(
-            <CardInstance {...instanceCopy} />)
+            <CardInstance {...instanceCopy} />
+        )
+        // TODO we shouldn't render this droppable if the given index is the dragged elt
+        previewRender.push(
+            <DropZone key={`previewDroppable ${dropZoneIndex}`} zone={dropZoneId}>
+                <div className={css.previewDropZone}></div>
+            </DropZone>)
     })
     // render drop points between each
     return <div className={css.previewArea}>{...previewRender}</div>

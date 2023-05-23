@@ -23,6 +23,7 @@ export default function CardInstance(props: CardInstanceT) {
     let card;
     if ((cardToRender as UnitCardT).attack) {
         let cardData = cardToRender as UnitCardT;
+        // TODO The card container itself needs to track if the card needs to render the rotation.
         card = <UnitCard  {...cardData} />;
     } else {
         card = <StratagemCard {...cardToRender} />;

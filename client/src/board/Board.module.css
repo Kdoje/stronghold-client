@@ -42,6 +42,13 @@
     height: 97px;
 }
 
+.previewDropZone {
+    width: 120px;
+    height: 35px;
+    border-style: solid;
+    border-color: blue;
+}
+
 .battlefieldGridCell {
     width: 120px;
     height: 110px;

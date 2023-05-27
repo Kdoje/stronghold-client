@@ -36,7 +36,7 @@ export type BoardStackInstanceT = null | {
 export type ZoneIdT = {
     zoneName: 'Board'
     rowId: number
-    colId: number | null
+    colId?: number
     index?: number
 }
 

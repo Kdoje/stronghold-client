@@ -15,7 +15,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     const [activeIndex, setActiveIndex] = useState<Number>();
 
     let dropZoneLoc = 0;
-    let dropZoneId = { ...props.zone};
+    let dropZoneId = { ...props.zone };
     if (props.zone.zoneName === "Board") {
         dropZoneId = { ...props.zone, index: dropZoneLoc };
     }
@@ -31,20 +31,25 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     )
 
 
+    // TODO there's an issue here where the zone below any card sets it one zone lower 
+    // than expected
     props.instances.forEach((instance) => {
         // only preview zones care about indexes so set it here
-        let id = (Math.random() + 1).toString(4)
+        let id = (Math.random() + 1).toString(4);
+        
         let instanceZoneId = props.zone;
         if (props.zone.zoneName === "Board") {
             instanceZoneId = { ...props.zone, index: dropZoneLoc };
-            dropZoneLoc += 1;
-            dropZoneId =  { ...props.zone, index: dropZoneLoc };
-        } else {
-            dropZoneLoc += 1;
-            dropZoneId = { ...props.zone, rowId: dropZoneLoc }
         }
         
+        dropZoneLoc += 1;
         
+        // only the board sets the index, otherwise, set the rowId of the zone
+        if (props.zone.zoneName === "Board") {
+            dropZoneId = { ...props.zone, index: dropZoneLoc };
+        } else {
+            dropZoneId = { ...props.zone, rowId: dropZoneLoc }
+        }
 
         let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(

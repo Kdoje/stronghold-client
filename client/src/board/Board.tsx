@@ -167,15 +167,20 @@ export default function Board() {
         previewedInstances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
 
+    // TODO change the first PreviewZone to be the stack
+    // TODO change the third PreviewZone to be the hand 
     return (
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
             <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
                 <div className={css.gameBoard}>
+                <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
+                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
+                    <div className={css.break}></div>
                     <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
                 </div>
 

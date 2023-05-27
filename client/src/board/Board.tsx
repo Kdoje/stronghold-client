@@ -78,6 +78,7 @@ export default function Board() {
                 console.log(srcZoneLoc)
                 console.log(destZoneLoc);
 
+                // TODO validate the src/dest locs in a function
                 if (srcZoneLoc.toString() !== destZoneLoc.toString()) {
                     let sourceZoneData: CardInstanceT[] = []
                     let newBoardData = boardData.map((item) => item.slice());
@@ -111,7 +112,7 @@ export default function Board() {
                     newBoardData[destZoneLoc[0]][destZoneLoc[1]] = destZoneData;
 
                     if (srcZoneLoc[2] >= 0) {
-                        newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances;
+                        // newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances;
                     } else {
                         newBoardData[srcZoneLoc[0]][srcZoneLoc[1]] = null;
                     }
@@ -139,7 +140,7 @@ export default function Board() {
     boardRender.push(boardData.map((row, rIndex) => {
         let rowRender = row.map((cell, cIndex) => {
             let card;
-            if (cell) {
+            if (cell && cell.instances.length > 0) {
                 card = <BoardStackContainer {...cell} />
             }
             let zone: ZoneIdT = {

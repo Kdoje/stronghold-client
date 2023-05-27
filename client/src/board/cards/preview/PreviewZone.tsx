@@ -14,15 +14,18 @@ export default function PreviewZone(props: PreviewZoneDataT) {
 
     const [activeIndex, setActiveIndex] = useState<Number>();
 
-    let dropZoneIndex = 0;
-    let dropZoneId = { ...props.zone, index: dropZoneIndex };
+    let dropZoneLoc = 0;
+    let dropZoneId = { ...props.zone};
+    if (props.zone.zoneName === "Board") {
+        dropZoneId = { ...props.zone, index: dropZoneLoc };
+    }
 
     // render list of instances if present
     // the instances need a container and new ID to prevent duplication
     let previewRender: ReactNode[] = [];
 
     previewRender.push(
-        <DropZone key={`previewDroppable ${dropZoneIndex}`} zone={dropZoneId}>
+        <DropZone key={`previewDroppable ${dropZoneLoc}`} zone={dropZoneId}>
             <div className={css.previewDropZone}></div>
         </DropZone>
     )
@@ -31,9 +34,17 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     props.instances.forEach((instance) => {
         // only preview zones care about indexes so set it here
         let id = (Math.random() + 1).toString(4)
-        let instanceZoneId = { ...props.zone, index: dropZoneIndex };
-        dropZoneIndex += 1;
-        let dropZoneId =  { ...props.zone, index: dropZoneIndex };
+        let instanceZoneId = props.zone;
+        if (props.zone.zoneName === "Board") {
+            instanceZoneId = { ...props.zone, index: dropZoneLoc };
+            dropZoneLoc += 1;
+            dropZoneId =  { ...props.zone, index: dropZoneLoc };
+        } else {
+            dropZoneLoc += 1;
+            dropZoneId = { ...props.zone, rowId: dropZoneLoc }
+        }
+        
+        
 
         let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(
@@ -41,7 +52,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
         )
         // TODO we shouldn't render this droppable if the given index is the dragged elt
         previewRender.push(
-            <DropZone key={`previewDroppable ${dropZoneIndex}`} zone={dropZoneId}>
+            <DropZone key={`previewDroppable ${dropZoneLoc}`} zone={dropZoneId}>
                 <div className={css.previewDropZone}></div>
             </DropZone>)
     })

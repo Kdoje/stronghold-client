@@ -14,8 +14,14 @@ export default function Board() {
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
             deck: [], graveyard: [], damage: [], exile: [], hand: [
-                { name: "Eat Some Food", description: "stands alone", cost: "1 V", type: "Tactic", value: "V" },
-                { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }]
+                {
+                    zone: { zoneName: "Hand", rowId: 0 }, instanceId: '1', owner: 0,
+                    card: { name: "Eat Some Food", description: "stands alone", cost: "1 V", type: "Tactic", value: "V" }
+                },
+                {
+                    zone: { zoneName: "Hand", rowId: 1 }, instanceId: '2', owner: 0,
+                    card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+                }]
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] },
     ]);
@@ -31,9 +37,13 @@ export default function Board() {
         // into the deck
         console.log("adding data");
         console.log(playerData)
-
-        let newData = playerData.slice()
-        newData[0].hand.push({ name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5|3", move: "1" })
+        let id = (Math.random() + 1).toString(4)
+        let newData = playerData.slice();
+        let rowId = playerData[0].hand.length;
+        newData[0].hand.push( {
+            zone: { zoneName: "Hand", rowId: rowId }, instanceId: id, owner: 0,
+            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+        })
         setPlayerData(newData);
         console.log(newData.length)
     }
@@ -41,7 +51,7 @@ export default function Board() {
     function addCardToBoard() {
         let newBoardData = boardData.map((item) => item.slice());
         let id = (Math.random() + 1).toString(4)
-        let row = Math.floor(curIndex/5)
+        let row = Math.floor(curIndex / 5)
         let col = curIndex % 5
         newBoardData[row][col] = {
             instances: [{
@@ -88,7 +98,7 @@ export default function Board() {
                         let elt = boardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances[srcZoneLoc[2]]
                         sourceZoneData.push(elt);
                         newBoardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances.splice(srcZoneLoc[2], 1)
-                    // otherwise the source is removed at the end by just setting the entire stack to null
+                        // otherwise the source is removed at the end by just setting the entire stack to null
                     } else {
                         sourceZoneData = boardData[srcZoneLoc[0]][srcZoneLoc[1]]!.instances
                     }
@@ -119,7 +129,7 @@ export default function Board() {
                     // make sure all cards accurately reflect where they are on the board
                     rezoneBoardData(newBoardData, srcZoneLoc, destZoneLoc)
                     setBoardData(newBoardData)
-                    
+
                 }
             }
             setActiveZone(event.over.data.current.zone);
@@ -169,19 +179,22 @@ export default function Board() {
 
     // TODO change the first PreviewZone to be the stack
     // TODO change the third PreviewZone to be the hand 
+    // TODO pass the different style data via the params to the preview zone
     return (
         <>
             <button onClick={() => { addData() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
             <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
                 <div className={css.gameBoard}>
-                <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
+                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
                     <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
                     <div className={css.break}></div>
-                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
+                    <PreviewZone {...{
+                        instances: playerData[0].hand, zone: {zoneName: "Hand", rowId: 0}, direction: "horizontal"
+                    }} />
                 </div>
 
             </DndContext>

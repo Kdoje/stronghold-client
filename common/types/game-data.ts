@@ -31,10 +31,12 @@ export type BoardStackInstanceT = null | {
     activated: boolean
 }
 
+export type ZoneNameT = 'Board' | 'Hand'
+
 // colId is null for zones that are 1 dimmensional (anything but board)
 // index is null for zones that aren't stacks (anything but board)
 export type ZoneIdT = {
-    zoneName: 'Board'
+    zoneName: ZoneNameT
     rowId: number
     colId?: number
     index?: number
@@ -47,5 +49,5 @@ export type PlayerData = {
     graveyard: Array<AnyCardT>
     damage: Array<AnyCardT>
     exile: Array<AnyCardT>
-    hand: Array<AnyCardT>
+    hand: Array<CardInstanceT>
 }

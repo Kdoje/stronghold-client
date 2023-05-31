@@ -31,7 +31,7 @@ export type BoardStackInstanceT = null | {
     activated: boolean
 }
 
-export type ZoneNameT = 'Board' | 'Hand'
+export type ZoneNameT = 'Board' | 'Hand' | 'Stack'
 
 // colId is null for zones that are 1 dimmensional (anything but board)
 // index is null for zones that aren't stacks (anything but board)

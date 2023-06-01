@@ -27,9 +27,11 @@ export type CardInstanceT = {
 
 export type BoardStackInstanceT = null | {
     instances: Array<CardInstanceT>
-    attacking?: 'N'|'S'|'E'|'W'|undefined
+    attacking?: AttackDirT
     activated: boolean
 }
+
+export type AttackDirT = 'N'|'S'|'E'|'W'
 
 export type ZoneNameT = 'Board' | 'Hand' | 'Stack'
 

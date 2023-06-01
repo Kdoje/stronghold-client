@@ -34,7 +34,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     let previewRender: ReactNode[] = [];
 
     previewRender.push(
-        <DropZone key={`previewDroppable ${dropZoneLoc}`} zone={dropZoneId}>
+        <DropZone key={`${props.zone.zoneName} ${dropZoneLoc}`} zone={dropZoneId}>
             <div className={dropZoneClass}></div>
         </DropZone>
     )
@@ -62,11 +62,11 @@ export default function PreviewZone(props: PreviewZoneDataT) {
 
         let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(
-            <CardInstance {...instanceCopy} />
+            <CardInstance key={id} {...instanceCopy} />
         )
         // TODO we shouldn't render this droppable if the given index is the dragged elt
         previewRender.push(
-            <DropZone key={`previewDroppable ${dropZoneLoc}`} zone={dropZoneId}>
+            <DropZone key={`${props.zone.zoneName} ${dropZoneLoc}`} zone={dropZoneId}>
                 <div className={dropZoneClass}></div>
             </DropZone>)
     })

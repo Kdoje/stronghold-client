@@ -1,11 +1,12 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
-import { BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
+import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
 import { useState } from "react";
 import css from './Board.module.css';
 import { DropZone } from "./DropZone";
 import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
+import { BoardGridCell } from "./BoardGridCell";
 
 export default function Board() {
     const [curIndex, setCurIndex] = useState(0);
@@ -96,7 +97,6 @@ export default function Board() {
 
     function handleBoardDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[],
         curBoardData: BoardStackInstanceT[][], newBoardData: BoardStackInstanceT[][]) {
-        // TODO we should update this to ensure that it checks if the unit should be attacking
         let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1] // -1 means index is null
 
         let destZoneData = curBoardData[destZoneLoc[0]][destZoneLoc[1]]
@@ -154,6 +154,13 @@ export default function Board() {
         rezoneStackData(newStackData);
     }
 
+    function handleAttacking(attacking: AttackDirT, destZone: ZoneIdT, newBoardData: BoardStackInstanceT[][]) {
+        if (attacking) {
+            newBoardData[destZone.rowId][destZone.colId!] = {...newBoardData[destZone.rowId][destZone.colId!]!, attacking: attacking};
+            setBoardData(newBoardData);
+            console.log(`handling attacking in ${attacking}`)
+        }
+    }
 
 
     function handleDragEnd(event: DragEndEvent) {
@@ -166,10 +173,12 @@ export default function Board() {
             let destZoneName = destZone.zoneName;
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
+            
+            let newBoardData = boardData.map((item) => item.slice());
+            
             if (srcZoneLoc.toString() !== destZoneLoc.toString() || srcZone.zoneName !== destZone.zoneName) {
 
                 let sourceZoneData: CardInstanceT[] = []
-                let newBoardData = boardData.map((item) => item.slice());
                 let newPlayerData = playerData.slice();
                 let newStackData = stackData.slice();
 
@@ -194,6 +203,8 @@ export default function Board() {
                 setPlayerData(newPlayerData);
                 setStackData(newStackData);
             }
+            
+            handleAttacking(event.over.data.current?.attacking, destZone, newBoardData)
         }
         if (event.over?.data.current?.zone.zoneName === "Board") {
             setActiveZone(event.over.data.current!.zone);
@@ -221,25 +232,15 @@ export default function Board() {
 
     let boardRender = [];
     boardRender.push(boardData.map((row, rIndex) => {
-        let rowRender = row.map((cell, cIndex) => {
-            let card;
-            if (cell && cell.instances.length > 0) {
-                card = <BoardStackContainer {...cell} />
-            }
+        let rowRender = row.map((cards, cIndex) => {
             let zone: ZoneIdT = {
                 zoneName: "Board",
                 rowId: rIndex,
                 colId: cIndex
             }
             return (
-                // TODO this should become it's own component so we can add the various buttons and attack zones
-                <div>
-                    <DropZone key={`Droppable ${rIndex} ${cIndex}`} zone={zone}>
-                        <div className={css.battlefieldGridCell}>
-                            {card}
-                        </div>
-                    </DropZone>
-                </div>
+                // TODO we can use onMouseDown for the card to indicate when it should be previewed
+                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{zone: zone, cards: cards}}/>
             )
         })
         rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
@@ -253,7 +254,6 @@ export default function Board() {
         previewedInstances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
 
-    // TODO change the first PreviewZone to be the stack
     return (
         <>
             <button onClick={() => { addCardToHand() }}>{playerData?.length}</button>

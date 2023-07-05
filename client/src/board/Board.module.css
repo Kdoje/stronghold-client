@@ -12,8 +12,8 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
-    min-width: 650px;
-    width: 650px;
+    min-width: 750px;
+    width: 680px;
 }
 
 .cardPreivewContainer {
@@ -36,14 +36,16 @@
 }
 
 .battlefieldGridCell {
-    width: 120px;
-    height: 110px;
+    width: 140px;
+    height: 125px;
     border-style: solid;
     border-color: red;
     border-width: 2px;
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
+    grid-template-rows: 25px 75px 25px;
+    grid-template-columns: 25px 90px 25px;
 }
 
 .instanceWrapper {

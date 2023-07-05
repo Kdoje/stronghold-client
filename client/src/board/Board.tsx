@@ -1,12 +1,13 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import css from './Board.module.css';
 import { DropZone } from "./DropZone";
 import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
 import { BoardGridCell } from "./BoardGridCell";
+import { BoardContext } from "./BoardContext";
 
 export default function Board() {
     const [curIndex, setCurIndex] = useState(0);
@@ -95,23 +96,28 @@ export default function Board() {
     }
 
 
-    function handleBoardDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[],
+    function handleBoardDestData(srcZone: ZoneIdT, destZone: ZoneIdT, sourceZoneData: CardInstanceT[],
         curBoardData: BoardStackInstanceT[][], newBoardData: BoardStackInstanceT[][]) {
         let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1] // -1 means index is null
 
         let destZoneData = curBoardData[destZoneLoc[0]][destZoneLoc[1]]
+        let activated = false;
+
+        if (srcZone.zoneName === 'Board') {
+            activated = curBoardData[srcZone.rowId][srcZone.colId!]!.activated
+        }
 
         if (destZoneLoc[2] >= 0) {
             if (destZoneData?.instances) {
                 destZoneData!.instances.splice(destZoneLoc[2], 0, ...sourceZoneData);
             } else {
-                destZoneData = { instances: sourceZoneData, activated: false }
+                destZoneData = { instances: sourceZoneData, activated: activated }
             }
         } else {
             if (destZoneData) {
                 destZoneData.instances.unshift(...sourceZoneData)
             } else {
-                destZoneData = { instances: sourceZoneData, activated: false }
+                destZoneData = { instances: sourceZoneData, activated: activated }
             }
         }
 
@@ -154,18 +160,41 @@ export default function Board() {
         rezoneStackData(newStackData);
     }
 
-    function handleAttacking(attacking: AttackDirT, destZone: ZoneIdT, newBoardData: BoardStackInstanceT[][]) {
-        if (attacking) {
-            newBoardData[destZone.rowId][destZone.colId!] = {...newBoardData[destZone.rowId][destZone.colId!]!, attacking: attacking};
+    function handleAttacking(attacking: AttackDirT | undefined, zone: ZoneIdT) {
+        if (zone.colId != null && boardData[zone.rowId][zone.colId] != null && attacking) {
+            let newBoardData = boardData.map((item) => item.slice());
+            newBoardData[zone.rowId][zone.colId!] = { ...newBoardData[zone.rowId][zone.colId!]!, attacking: attacking, activated: true };
             setBoardData(newBoardData);
             console.log(`handling attacking in ${attacking}`)
         }
     }
 
+    function handleActivating(zone: ZoneIdT) {
+        if (zone.colId != null && boardData[zone.rowId][zone.colId] != null) {
+            let newBoardData = boardData.map((item) => item.slice());
+            newBoardData[zone.rowId][zone.colId!]!.activated = !boardData[zone.rowId][zone.colId]?.activated
+            if (!newBoardData[zone.rowId][zone.colId!]!.activated) {
+                newBoardData[zone.rowId][zone.colId!]!.attacking = undefined
+            }
+            setBoardData(newBoardData)
+            console.log(`activated ${zone.rowId} ${zone.colId!}`)
+        }
+    }
+
+    const handleActivatingCallback = useCallback((zone: ZoneIdT) => {
+        handleActivating(zone);
+    }, [handleActivating])
+
+    const handleAttackingCallback = useCallback((attacking: AttackDirT | undefined, zone: ZoneIdT) => {
+        handleAttacking(attacking, zone)
+    }, [handleAttacking])
+
+    // TODO create a context that can take handleAttacking and handleActivating so 
+    // child component can access and update the state
+
 
     function handleDragEnd(event: DragEndEvent) {
         if (event.active.data.current?.zone && event.over?.data.current?.zone) {
-            console.log(event);
             // we need to check the source zone in order to popluate the source data
             let destZone = event.over.data.current.zone as ZoneIdT
             let srcZone = event.active.data.current.zone as ZoneIdT
@@ -173,9 +202,9 @@ export default function Board() {
             let destZoneName = destZone.zoneName;
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
-            
+
             let newBoardData = boardData.map((item) => item.slice());
-            
+
             if (srcZoneLoc.toString() !== destZoneLoc.toString() || srcZone.zoneName !== destZone.zoneName) {
 
                 let sourceZoneData: CardInstanceT[] = []
@@ -192,7 +221,7 @@ export default function Board() {
                 }
 
                 if (destZoneName === "Board") {
-                    handleBoardDestData(destZone, sourceZoneData, boardData, newBoardData);
+                    handleBoardDestData(srcZone, destZone, sourceZoneData, boardData, newBoardData);
                     rezoneBoardData(newBoardData, destZoneLoc);
                 } else if (destZoneName === "Hand") {
                     handleHandDestData(destZone, sourceZoneData, playerData, newPlayerData);
@@ -203,8 +232,6 @@ export default function Board() {
                 setPlayerData(newPlayerData);
                 setStackData(newStackData);
             }
-            
-            handleAttacking(event.over.data.current?.attacking, destZone, newBoardData)
         }
         if (event.over?.data.current?.zone.zoneName === "Board") {
             setActiveZone(event.over.data.current!.zone);
@@ -240,7 +267,7 @@ export default function Board() {
             }
             return (
                 // TODO we can use onMouseDown for the card to indicate when it should be previewed
-                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{zone: zone, cards: cards}}/>
+                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{ zone: zone, cards: cards }} />
             )
         })
         rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
@@ -259,17 +286,19 @@ export default function Board() {
             <button onClick={() => { addCardToHand() }}>{playerData?.length}</button>
             <button onClick={() => { addCardToBoard() }}>add card</button>
             <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
-                <div className={css.gameBoard}>
-                    <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 } }} />
-                    <div className={css.battlefieldGrid}>
-                        {...boardRender}
+                <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback }}>
+                    <div className={css.gameBoard}>
+                        <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 } }} />
+                        <div className={css.battlefieldGrid}>
+                            {...boardRender}
+                        </div>
+                        <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
+                        <div className={css.break}></div>
+                        <PreviewZone {...{
+                            instances: playerData[0].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal"
+                        }} />
                     </div>
-                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
-                    <div className={css.break}></div>
-                    <PreviewZone {...{
-                        instances: playerData[0].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal"
-                    }} />
-                </div>
+                </BoardContext.Provider>
 
             </DndContext>
         </>

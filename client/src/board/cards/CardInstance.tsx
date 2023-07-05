@@ -1,12 +1,13 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CardInstanceT, UnitCardT } from "common/types/game-data";
-import React from "react";
+import React, { useContext } from "react";
 import css from '../Board.module.css';
 import { StratagemCard } from "./StratagemCard";
 import { UnitCard } from "./UnitCard";
+import { BoardContext } from "../BoardContext";
 
 
-export default function CardInstance(props: CardInstanceT) {
+export default function CardInstance(props: CardInstanceT & {activated: boolean}) {
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.instanceId,
@@ -19,6 +20,8 @@ export default function CardInstance(props: CardInstanceT) {
         position: "fixed", // sets parent to viewport and enables dragging
         zIndex: 20 // set z index so dragged stuff appears over everything else
     } : {} as React.CSSProperties;
+
+    const rotatedStyle = props.activated ? {rotate: '90deg'} : {} as React.CSSProperties
     
     let card;
     if ((cardToRender as UnitCardT).attack) {
@@ -32,7 +35,7 @@ export default function CardInstance(props: CardInstanceT) {
     let result =
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
-            <div className={css.cardPreivewContainer}>
+            <div className={css.cardPreivewContainer} style={rotatedStyle}>
                 {card}
             </div>
         </div>

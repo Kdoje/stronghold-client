@@ -1,14 +1,18 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useContext } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { AttackDirT, ZoneIdT } from 'common/types/game-data';
+import { BoardContext } from './BoardContext';
 
 export type DropZoneData = {
   zone: ZoneIdT
   attacking?: AttackDirT
+  style?: React.CSSProperties
   children?: ReactNode
 }
 
 export function DropZone(props: DropZoneData) {
+
+  const handleAttack = useContext(BoardContext).handleAttack;
 
   function generateIdString() {
     return `${props.zone.zoneName}, ${props.zone.rowId}, ${props.zone.colId}, ${props.zone.index}, ${props.attacking}`;
@@ -22,7 +26,7 @@ export function DropZone(props: DropZoneData) {
   });
 
   return (
-    <div ref={setNodeRef}>
+    <div ref={setNodeRef} style={props.style} onClick={(e) => {handleAttack(props.attacking, props.zone)}}>
       {props.children}
     </div>
   );

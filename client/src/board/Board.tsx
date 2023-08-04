@@ -278,25 +278,26 @@ export default function Board() {
     }
 
     return (
-        <>
-            <button onClick={() => { addCardToHand() }}>{playerData?.length}</button>
-            <button onClick={() => { addCardToBoard() }}>add card</button>
-            <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
-                <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback }}>
-                    <div className={css.gameBoard}>
-                        <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 } }} />
-                        <div className={css.battlefieldGrid}>
-                            {...boardRender}
-                        </div>
-                        <PreviewZone {...{ instances: previewedInstances, zone: activeZone }} />
-                        <div className={css.break}></div>
-                        <PreviewZone {...{
-                            instances: playerData[0].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal"
-                        }} />
+        <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
+            <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback }}>
+                <div className={css.gameBoard}>
+                    <div className={css.OpUnknownData}>
+                        <button style={{ gridArea: "OpDeck", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData?.length}</button>
+                        <button style={{ gridArea: "OpDamage", height: "fit-content" }} onClick={() => { addCardToBoard() }}>add card</button>
                     </div>
-                </BoardContext.Provider>
+                    <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 }, areaName: "Stack" }} />
+                    <div className={css.battlefieldGrid}>
+                        {...boardRender}
+                    </div>
+                    <PreviewZone {...{ instances: previewedInstances, zone: activeZone, areaName: "CellPreview" }} />
+                    <div className={css.break}></div>
+                    <PreviewZone {...{
+                        instances: playerData[0].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal",
+                        areaName: "PlayerHand"
+                    }} />
+                </div>
+            </BoardContext.Provider>
 
-            </DndContext>
-        </>
+        </DndContext>
     )
 }

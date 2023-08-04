@@ -1,10 +1,61 @@
-.gameBoard {
+/* .gameBoard {
     display: flex;
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-}
+} */
+
+.gameBoard { /* TODO replace this with the gameboard */
+    display: grid; 
+    grid-template-columns: min-content min-content min-content min-content min-content min-content ; 
+    grid-template-rows: min-content min-content min-content; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "OpUnknownData Board Board Board OpKnownData ."
+      "Stack Board Board Board CellPreview CardPreview"
+      "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData ."; 
+  }
+  .PlayerUnknownData {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "PlayerDeck PlayerDmg"; 
+    grid-area: PlayerUnknownData; 
+  }
+  .PlayerDeck { grid-area: PlayerDeck; }
+  .PlayerDmg { grid-area: PlayerDmg; }
+  .PlayerHand { grid-area: PlayerHand; }
+  .PlayerKnownData {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "PlayerGy PlayerBanish"; 
+    grid-area: PlayerKnownData; 
+  }
+  .PlayerGy { grid-area: PlayerGy; }
+  .PlayerBanish { grid-area: PlayerBanish; }
+  .OpUnknownData {
+    display: grid; 
+    grid-template-columns: min-content min-content; 
+    grid-template-rows: min-content min-content; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "OpAvatar OpHand" 
+      "OpDeck OpDamage"; 
+    grid-area: OpUnknownData; 
+  }
+  .OpDeck { grid-area: OpDeck; }
+  .OpDmg { grid-area: OpDmg; }
+  .OpGY { grid-area: OpGY; }
+  .OpBanish { grid-area: OpBanish; }
+  .Stack { grid-area: Stack; }
+  .CardPreview { grid-area: CardPreview; }
+  .Board { grid-area: Board; }
 
 .battlefieldGrid {
     flex-wrap: wrap;
@@ -12,8 +63,9 @@
     align-items: center;
     justify-content: flex-start;
     flex-direction: row;
-    min-width: 750px;
-    width: 680px;
+    width: fit-content;
+    height: fit-content;
+    grid-area: Board
 }
 
 .cardPreivewContainer {
@@ -58,9 +110,8 @@
 }
 
 .previewAreaVertical { /* TODO this should be hidden unless there's stuff in it */
-    max-height: 720px;
-    min-height: 720px;
-    min-width: 100px;
+    min-height: 500px;
+    max-width: 150px;
     position: relative;
     overflow: scroll;
     overflow-x: hidden;

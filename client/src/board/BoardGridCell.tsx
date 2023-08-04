@@ -15,13 +15,8 @@ export function BoardGridCell(props: BoardGridCellData) {
     let stackInstance;
 
     if (props.cards && props.cards.instances.length > 0) {
-        // TODO The board stack instance needs to set it's margins and rotation based on activated/
-        // attacking direction
         stackInstance = <BoardStackContainer {...props.cards!} />
     }
-
-    // TODO the attack zones should be buttons that on click set where the card is attacking
-    // that means we'll need to have functions from the board to bubble up state
 
     // TODO we'll put buttons to add foundries, gold card, annotation and wielder in the corners
     return (

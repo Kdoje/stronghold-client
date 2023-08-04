@@ -189,10 +189,6 @@ export default function Board() {
         handleAttacking(attacking, zone)
     }, [handleAttacking])
 
-    // TODO create a context that can take handleAttacking and handleActivating so 
-    // child component can access and update the state
-
-
     function handleDragEnd(event: DragEndEvent) {
         if (event.active.data.current?.zone && event.over?.data.current?.zone) {
             // we need to check the source zone in order to popluate the source data

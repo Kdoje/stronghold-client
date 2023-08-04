@@ -7,7 +7,7 @@ import { UnitCard } from "./UnitCard";
 import { BoardContext } from "../BoardContext";
 
 
-export default function CardInstance(props: CardInstanceT & {activated: boolean}) {
+export default function CardInstance(props: CardInstanceT & { activated: boolean }) {
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.instanceId,
@@ -18,25 +18,27 @@ export default function CardInstance(props: CardInstanceT & {activated: boolean}
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         position: "fixed", // sets parent to viewport and enables dragging
-        zIndex: 20 // set z index so dragged stuff appears over everything else
+        zIndex: 20, // set z index so dragged stuff appears over everything else
     } : {} as React.CSSProperties;
 
-    const rotatedStyle = props.activated ? {rotate: '90deg'} : {} as React.CSSProperties
-    
+    const rotatedStyle = props.activated ? { rotate: '90deg' } : {} as React.CSSProperties
+
     let card;
     if ((cardToRender as UnitCardT).attack) {
         let cardData = cardToRender as UnitCardT;
-        // TODO The card container itself needs to track if the card needs to render the rotation.
         card = <UnitCard  {...cardData} />;
     } else {
         card = <StratagemCard {...cardToRender} />;
     }
 
+    // TODO set the outline color to the owner's color
     let result =
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle}>
-                {card}
+                <div style={{ outline: "solid red 15px"}}> 
+                    {card}
+                </div>
             </div>
         </div>
 

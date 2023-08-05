@@ -1,12 +1,5 @@
-/* .gameBoard {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-} */
 
-.gameBoard { /* TODO replace this with the gameboard */
+.gameBoard {
     display: grid; 
     grid-template-columns: min-content min-content min-content min-content min-content min-content ; 
     grid-template-rows: min-content min-content min-content; 
@@ -69,14 +62,27 @@
 }
 
 .cardPreivewContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-content: center;
+    place-items: center;
     width: 120px;
     height: 110px;
     border-width: 2px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     scale: .3;
     position: relative;
+}
+
+.cardAnnotation {
+  grid-row: 1;
+  grid-column: 1;
+  z-index: 3;
+  color: white;
+  background-color: black;
+  overflow-wrap: anywhere;
+  text-align: center;
+  font-size: 45px;
+  padding: 7px;
 }
 
 .draggableContainer {
@@ -84,7 +90,7 @@
     justify-content: center;
     align-items: center;
     width: 75px;
-    height: 97px;
+    height: 80px;
 }
 
 .battlefieldGridCell {
@@ -100,10 +106,6 @@
     grid-template-columns: 25px 90px 25px;
 }
 
-.instanceWrapper {
-    scale: .3;
-} /* TODO: this could be used to render the card instance data (data overlay and annotation)*/
-
 .break {
     flex-basis: 100%;
     height: 0;
@@ -111,6 +113,7 @@
 
 .previewAreaVertical { /* TODO this should be hidden unless there's stuff in it */
     min-height: 500px;
+    max-height: 500px;
     max-width: 150px;
     position: relative;
     overflow: scroll;

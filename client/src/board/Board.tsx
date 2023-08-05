@@ -102,22 +102,26 @@ export default function Board() {
 
         let destZoneData = curBoardData[destZoneLoc[0]][destZoneLoc[1]]
         let activated = false;
+        let annotation = undefined;
 
         if (srcZone.zoneName === 'Board') {
             activated = curBoardData[srcZone.rowId][srcZone.colId!]!.activated
+            if (srcZone.colId !== undefined && srcZone.index === -1) { // if this comes from the board stack, preserve the annotation
+                annotation = curBoardData[srcZone.rowId][srcZone.colId!]?.annotation
+            }
         }
 
         if (destZoneLoc[2] >= 0) {
             if (destZoneData?.instances) {
                 destZoneData!.instances.splice(destZoneLoc[2], 0, ...sourceZoneData);
             } else {
-                destZoneData = { instances: sourceZoneData, activated: activated }
+                destZoneData = { instances: sourceZoneData, activated: activated, annotation: annotation }
             }
         } else {
             if (destZoneData) {
                 destZoneData.instances.unshift(...sourceZoneData)
             } else {
-                destZoneData = { instances: sourceZoneData, activated: activated }
+                destZoneData = { instances: sourceZoneData, activated: activated, annotation: annotation }
             }
         }
 
@@ -181,6 +185,16 @@ export default function Board() {
         }
     }
 
+    function setAnnotation(zone: ZoneIdT, annotation: string|undefined) {
+        if (zone.colId != null && boardData[zone.rowId][zone.colId] != null) {
+            let newBoardData = boardData.map((item) => item.slice());
+            newBoardData[zone.rowId][zone.colId!]!.annotation = annotation
+            setBoardData(newBoardData)
+            console.log(`updated annotation ${zone.rowId} ${zone.colId!} to ${annotation}`)
+        }
+
+    }
+
     const handleActivatingCallback = useCallback((zone: ZoneIdT) => {
         handleActivating(zone);
     }, [handleActivating])
@@ -188,6 +202,10 @@ export default function Board() {
     const handleAttackingCallback = useCallback((attacking: AttackDirT | undefined, zone: ZoneIdT) => {
         handleAttacking(attacking, zone)
     }, [handleAttacking])
+
+    const setAnnotationCallback = useCallback((zone: ZoneIdT, annotation: string|undefined) => {
+        setAnnotation(zone, annotation);
+    }, [setAnnotation])
 
     function handleDragEnd(event: DragEndEvent) {
         if (event.active.data.current?.zone && event.over?.data.current?.zone) {
@@ -279,7 +297,7 @@ export default function Board() {
 
     return (
         <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
-            <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback }}>
+            <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback }}>
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>
                         <button style={{ gridArea: "OpDeck", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData?.length}</button>

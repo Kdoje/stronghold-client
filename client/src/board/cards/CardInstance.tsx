@@ -7,7 +7,7 @@ import { UnitCard } from "./UnitCard";
 import { BoardContext } from "../BoardContext";
 
 
-export default function CardInstance(props: CardInstanceT & { activated: boolean }) {
+export default function CardInstance(props: CardInstanceT & { activated: boolean, annotation?: string }) {
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.instanceId,
@@ -31,12 +31,17 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
         card = <StratagemCard {...cardToRender} />;
     }
 
+    // add the annotation on the card if it exists
+    let annotationRender = props.annotation ?
+        <div className={css.cardAnnotation}>{props.annotation}</div> : null;
+
     // TODO set the outline color to the owner's color
     let result =
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle}>
-                <div style={{ outline: "solid red 15px"}}> 
+                {annotationRender}
+                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}>
                     {card}
                 </div>
             </div>

@@ -29,6 +29,7 @@ export type BoardStackInstanceT = null | {
     instances: Array<CardInstanceT>
     attacking?: AttackDirT
     activated: boolean
+    annotation?: string
 }
 
 export type AttackDirT = 'N'|'S'|'E'|'W'

@@ -33,9 +33,8 @@ export default function BoardStackContainer(props: BoardStackInstanceT) {
             break;
     }
 
-
     return <div onMouseDown={(e) => { onClick(e); }}
         style={style}>
-        <CardInstance {...props!.instances[0]} activated={props!.activated} />
+        <CardInstance {...props!.instances[0]} activated={props!.activated} annotation={props?.annotation} />
     </div>
 }

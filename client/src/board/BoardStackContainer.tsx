@@ -1,8 +1,8 @@
 import { BoardStackInstanceT } from 'common/types/game-data';
 import css from '../Board.module.css';
-import CardInstance from './CardInstance';
+import CardInstance from './cards/CardInstance';
 import { useContext } from 'react';
-import { BoardContext } from '../BoardContext';
+import { BoardContext } from './BoardContext'
 
 
 export default function BoardStackContainer(props: BoardStackInstanceT) {

@@ -9,16 +9,6 @@ import CardInstance from './cards/CardInstance';
 
 
 export default function PileContainer(props: {cards: Array<CardInstanceT>, zoneName: ZoneNameT, faceup: boolean}) {
-    // const handleActivate = useContext(BoardContext).handleActivate;
-
-
-    // function onClick(e: React.MouseEvent) {
-    //     if (props?.instances[0].zone && e.detail >= 2) {
-    //         handleActivate(props?.instances[0].zone);
-    //     }
-    // }
-
-    // let style = {}
 
     let pile = <div className={css.draggableContainer}>
         <div className={css.cardPreivewContainer}>

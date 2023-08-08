@@ -1,5 +1,6 @@
 .gameBoard {
   display: grid;
+  place-items: center;
   grid-template-columns: min-content min-content min-content min-content min-content min-content;
   grid-template-rows: min-content min-content min-content;
   gap: 10px 10px;
@@ -14,6 +15,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   gap: 10px;
+  height: fit-content;
   grid-template-areas:
     "PlayerDmg PlayerDeck";
   grid-area: PlayerUnknownData;
@@ -26,6 +28,9 @@
   align-content: center;
   align-items: center;
   justify-content: space-evenly;
+  border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
 .PlayerDmg {
@@ -35,6 +40,9 @@
   align-content: center;
   align-items: center;
   justify-content: space-evenly;
+  border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
 .PlayerHand {
@@ -45,7 +53,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  gap: 100px;
+  gap: 10px;
+  height: fit-content;
   grid-template-areas:
     "PlayerGy PlayerExile";
   grid-area: PlayerKnownData;
@@ -59,6 +68,8 @@
   align-items: center;
   justify-content: space-evenly;
   border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
 .PlayerExile {
@@ -69,37 +80,89 @@
   align-items: center;
   justify-content: space-evenly;
   border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
 .OpUnknownData {
   display: grid;
   grid-template-columns: min-content min-content;
   grid-template-rows: min-content min-content;
-  gap: 0px 0px;
+  gap: 10px;
   grid-template-areas:
     "OpAvatar OpHand"
-    "OpDeck OpDamage";
+    "OpDamage OpDeck";
   grid-area: OpUnknownData;
+}
+
+.OpKnownData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  height: min-content;
+  gap: 10px;
+  grid-template-areas:
+    "OpGraveyard OpExile";
+  grid-area: OpKnownData;
+
 }
 
 .OpAvatar {
   grid-area: OpAvatar;
 }
 
+.OpHand {
+  grid-area: OpHand;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-around;
+  gap: 6px;
+}
+
 .OpDeck {
   grid-area: OpDeck;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
-.OpDmg {
-  grid-area: OpDmg;
+.OpDamage {
+  grid-area: OpDamage;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 10px;
+  width: fit-content;
+  gap: 6px;
 }
 
-.OpGY {
-  grid-area: OpGY;
+.OpGraveyard {
+  grid-area: OpGraveyard;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 6px;
 }
 
-.OpBanish {
-  grid-area: OpBanish;
+.OpExile {
+  grid-area: OpExile;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 6px;
 }
 
 .Stack {

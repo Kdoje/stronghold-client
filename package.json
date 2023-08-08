@@ -9,7 +9,7 @@
   },
   "scripts": {
     "client:dev": "vite client/",
-    "build": "tsc --p client/ && vite build client/",
+    "build": "vite build client/",
     "server:dev": "nodemon --exec 'ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json' server/index.ts",
     "server": "ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json server/index.ts",
     "preview": "vite preview client/"

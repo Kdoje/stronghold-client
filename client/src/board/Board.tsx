@@ -14,6 +14,7 @@ import PileContainer from "./PileContainer";
 import { assert } from "console";
 import CardInstance from "./cards/CardInstance";
 import { Socket } from "socket.io-client";
+import OpDataContainer from "./OpDataContainer";
 
 export default function Board(props: {socket: Socket}) {
     const [playerId, setPlayerId] = useState(0);
@@ -433,6 +434,10 @@ export default function Board(props: {socket: Socket}) {
         card = <StratagemCard {...focusedCard.card} />;
     }
 
+    function getOpId() {
+        return (playerId + 1) % 2;
+    }
+
 
     return (
         <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
@@ -444,8 +449,30 @@ export default function Board(props: {socket: Socket}) {
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>
                         <button style={{ gridArea: "OpAvatar", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData[(playerId + 1)%2].deck.length}</button>
-                        <button style={{ gridArea: "OpHand", height: "fit-content" }} onClick={() => { addCardToBoard() }}>add card</button>
-                        <button style={{ gridArea: "OpDamage", height: "fit-content" }} onClick={() => { addCardToDmg() }}>GY</button>
+                        <div className={css.OpHand} onClick={() => { addCardToBoard() }}>
+                            <div style={{width: "max-content"}}>O HAND: {playerData[getOpId()].hand.length}</div>
+                            <OpDataContainer cards={playerData[getOpId()].hand} faceup={false} />
+                        </div>
+                        <div className={css.OpDeck} onClick={() => { addCardToBoard() }}>
+                            <div style={{width: "max-content"}}>O DECK: {playerData[getOpId()].deck.length}</div>
+                            <OpDataContainer cards={playerData[getOpId()].deck} faceup={false} />
+                        </div>
+                        <div className={css.OpDamage} onClick={() => { addCardToBoard() }}>
+                            <div style={{width: "max-content"}}>O DMG: {playerData[getOpId()].damage.length}</div>
+                            <OpDataContainer cards={playerData[getOpId()].damage} faceup={false} />
+                        </div>
+                    </div>
+                    <div className={css.OpKnownData}>
+                        <div className={css.OpGraveyard} onClick={() => { addCardToBoard() }}>
+                            <div>O GY: {playerData[getOpId()].graveyard.length}</div>
+                            <OpDataContainer cards={playerData[getOpId()].graveyard} faceup={true} />
+                        </div>
+                    </div>
+                    <div className={css.OpKnownData}>
+                        <div className={css.OpExile} onClick={() => { addCardToBoard() }}>
+                            <div>O EX: {playerData[getOpId()].exile.length}</div>
+                            <OpDataContainer cards={playerData[getOpId()].exile} faceup={true} />
+                        </div>
                     </div>
                     <div className={css.PlayerUnknownData}>
                         <div className={css.PlayerDeck}>
@@ -461,13 +488,13 @@ export default function Board(props: {socket: Socket}) {
                     </div>
                     <div className={css.PlayerKnownData}>
                         <div className={css.PlayerGy}>
-                            <div>GY: {playerData[playerId].graveyard.length}</div>
+                            <div style={{padding: "0px 0px 5px 0px"}}>GY: {playerData[playerId].graveyard.length}</div>
                             <PileContainer {...{cards: playerData[playerId].graveyard, zoneName:"Graveyard", faceup: true}}/>
                        </div>
                     </div>
                     <div className={css.PlayerKnownData}>
                         <div className={css.PlayerExile}>
-                            <div>EXILE: {playerData[playerId].exile.length}</div>
+                            <div style={{padding: "0px 0px 5px 0px"}}>EXILE: {playerData[playerId].exile.length}</div>
                             <PileContainer {...{cards: playerData[playerId].exile, zoneName: "Exile", faceup: true}}/>
                        </div>
                     </div>

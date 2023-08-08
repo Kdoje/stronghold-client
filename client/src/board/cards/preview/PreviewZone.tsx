@@ -4,6 +4,8 @@ import css from '../../Board.module.css'
 import CardInstance from "../CardInstance";
 import { ReactNode, useState } from "react";
 import { DropZone } from "../../DropZone";
+import React, { useContext } from "react";
+import { BoardContext } from "../../BoardContext";
 
 export type PreviewZoneDataT = {
     instances: Array<CardInstanceT>
@@ -61,9 +63,8 @@ export default function PreviewZone(props: PreviewZoneDataT) {
             dropZoneId = { ...props.zone, rowId: dropZoneLoc }
         }
 
-        let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(
-            <CardInstance key={id} {...instanceCopy} activated={false}/>
+            <CardInstance key={id} {...instance} instanceId={id} zone={instanceZoneId} activated={false}/>
         )
         // TODO we shouldn't render this droppable if the given index is the dragged elt
         previewRender.push(

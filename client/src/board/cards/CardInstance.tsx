@@ -14,8 +14,6 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
         data: { zone: props.zone, cardInstance: props }
     });
 
-    const setFocusedCard = useContext(BoardContext).setFocusedCard;
-
     const cardToRender = props.card
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -39,12 +37,12 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
 
     // TODO set the outline color to the owner's color
     let result =
+
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle}>
                 {annotationRender}
-                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}
-                    onMouseDown={(e) => {setFocusedCard(props)}}>
+                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}>
                     {card}
                 </div>
             </div>

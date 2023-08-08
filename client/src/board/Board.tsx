@@ -313,6 +313,10 @@ export default function Board() {
         if (event.over?.data.current?.zone.zoneName === "Board") {
             setActiveZone(event.over.data.current!.zone);
         }
+        if (["Deck", "Damage"].indexOf(event.active.data.current?.zone.zoneName) === -1) {
+            console.log(event)
+            setFocusedCard(event.active.data.current?.cardInstance);
+        }
     }
 
     function rezoneBoardData(newBoardData: BoardStackInstanceT[][], zoneLoc: number[]) {
@@ -383,8 +387,7 @@ export default function Board() {
     return (
         <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
             <BoardContext.Provider value={{
-                handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback,
-                setFocusedCard: setFocusedCardCallback
+                handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback
             }}>
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>

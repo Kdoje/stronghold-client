@@ -181,24 +181,41 @@ export default function Board(props: {socket: Socket}) {
         setAndPostFoundryData(newFoundryData);
     }
 
-    function setPlayerDeckData(cards: Array<AnyCardT>) {
+    function setPlayerDeckData(cards: Array<AnyCardT>, wielder?: AnyCardT) {
+        clearPlayerData();
         let newData = playerData.slice();
-        let rowId = 0;
+        shuffle(cards, newData);
+
+        let id = (Math.random() + 1).toString(4);
+        if (wielder) {
+            newData[playerId].hand.push({
+                zone: { zoneName: "Hand", rowId: 0 }, instanceId: id, owner: playerId,
+                card: { ...wielder }
+            })
+        }
+        setAndPostPlayerData(newData);
+    }
+
+    function shuffle(cards: AnyCardT[], newData: PlayerData[]) {
+        let m = cards.length;
+        while (m) {
+            const i = Math.floor(Math.random() * m--);
+            [cards[m], cards[i]] = [cards[i], cards[m]];
+        }
+        newData[playerId].deck = [];
         cards.forEach((val, index) => {
-            
+            let id = (Math.random() + 1).toString(4);
+            newData[playerId].deck.push({
+                zone: { zoneName: "Deck", rowId: index }, instanceId: id, owner: playerId,
+                card: { ...val }
+            });
         });
     }
 
-    function addCardToDmg() {
+    function handleShuffle() {
         let newData = playerData.slice();
-        let rowId = playerData[playerId].damage.length;
-        let id = (Math.random() + 1).toString(4)
-        newData[0].damage.push({
-            zone: { zoneName: "Damage", rowId: rowId }, instanceId: id, owner: playerId,
-            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
-        })
+        shuffle(newData[playerId].deck.map((inst) => {return inst.card}), newData);
         setAndPostPlayerData(newData);
-        console.log(newData.length)
     }
 
     /**
@@ -571,9 +588,9 @@ export default function Board(props: {socket: Socket}) {
                     }} />
                     <div className={css.CardPreview}>{card}</div>
                     <div className={css.DeckSettings}>
-                        <DeckOptionsContainer setDeck={(cards) => { }}
-                            resetPlayer={() => { clearPlayerData(); }}
-                            shuffleDeck={() => { }} />
+                        <DeckOptionsContainer setDeck={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
+                            resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
+                            shuffleDeck={() => { handleShuffle(); }} />
                     </div>
                 </div>
             </BoardContext.Provider>

@@ -8,12 +8,15 @@ import startSocketIO from './sockets'
 import fs from 'fs'
 import Papa, { ParseResult } from "papaparse"
 import { AnyCardT, StratagemCardT, UnitCardT } from 'common/types/game-data';
+import bodyParser from 'body-parser';
 
 
 const port = process.env.PORT || CONFIG.port || 9000
 
 const app = express()
 app.use(cors({ origin: CONFIG.cors }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -63,6 +66,22 @@ app.use(
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', CONFIG.clientPath, 'index.html'))
+})
+
+app.post('/decklist', (req, res) => {
+	let decklistReq = req.body.decklist.split(/[\r\n]+/);
+	let decklistResp: AnyCardT[] = [];
+	console.log(decklistReq)
+	decklistReq.forEach((cardDetails: string) => {
+		let qtyIndex = cardDetails.indexOf(" ");
+		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
+		if (cards.get(cardName)) {
+			for (let i = 0; i < parseInt(quantity); i++) 
+				decklistResp.push(cards.get(cardName)!);
+			}
+		})
+	res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({deck: decklistResp, wielder: cards.get("The Novice")}));
 })
 
 

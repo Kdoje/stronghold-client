@@ -2,7 +2,7 @@ import React from "react";
 import {UnitCardT} from 'common/types/game-data'; 
 import css from "./Card.module.css"
 
-export class UnitCard extends React.Component<UnitCardT> {
+export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: boolean}> {
     constructor(props: UnitCardT) {
         super(props);
     }
@@ -34,7 +34,7 @@ export class UnitCard extends React.Component<UnitCardT> {
 
         let elt = <div className={css.cardContainer}>
             <img className={css.portraitImage} src=""></img>
-            <div className={css.titleOverlayText}>{this.props.name}</div>
+            <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name : undefined}</div>
             <div className={css.titleText}>{this.props.name}</div>
             <div className={css.costText}>{this.props.cost}</div>
             <div className={css.typeText}>{this.props.type} - {this.props.subtype}</div>
@@ -45,7 +45,7 @@ export class UnitCard extends React.Component<UnitCardT> {
             <div className={css.valueText}>{this.props.value}</div>
             <div className={css.attackText}>{this.props.attack}</div>
             <img className={css.cardImage} src={cardImage}></img>
-            <div className={css.statsOverlayText}>{statsText}</div>
+            <div className={css.statsOverlayText}>{this.props.displayOverlay ? statsText : undefined}</div>
         </div>;
 
         return elt;

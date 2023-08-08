@@ -14,6 +14,8 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
         data: { zone: props.zone, cardInstance: props }
     });
 
+    const setFocusedCard = useContext(BoardContext).setFocusedCard;
+
     const cardToRender = props.card
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -26,9 +28,9 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
     let card;
     if ((cardToRender as UnitCardT).attack) {
         let cardData = cardToRender as UnitCardT;
-        card = <UnitCard  {...cardData} />;
+        card = <UnitCard  {...cardData} displayOverlay={true} />;
     } else {
-        card = <StratagemCard {...cardToRender} />;
+        card = <StratagemCard {...cardToRender} displayOverlay={true} />;
     }
 
     // add the annotation on the card if it exists
@@ -41,7 +43,8 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle}>
                 {annotationRender}
-                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}>
+                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}
+                    onMouseDown={(e) => {setFocusedCard(props)}}>
                     {card}
                 </div>
             </div>

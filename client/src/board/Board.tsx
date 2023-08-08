@@ -1,6 +1,8 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
-import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT } from "common/types/game-data";
+import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT } from "common/types/game-data";
+import { StratagemCard } from "./cards/StratagemCard";
+import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useState } from "react";
 import css from './Board.module.css';
 import { DropZone } from "./DropZone";
@@ -10,6 +12,7 @@ import { BoardGridCell } from "./BoardGridCell";
 import { BoardContext } from "./BoardContext";
 import PileContainer from "./PileContainer";
 import { assert } from "console";
+import CardInstance from "./cards/CardInstance";
 
 export default function Board() {
     const [curIndex, setCurIndex] = useState(0);
@@ -29,7 +32,7 @@ export default function Board() {
                 },
                 {
                     zone: { zoneName: "Hand", rowId: 1 }, instanceId: '2', owner: 0,
-                    card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+                    card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
                 }]
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] },
@@ -43,6 +46,8 @@ export default function Board() {
         colId: 0
     });
 
+    const [focusedCard, setFocusedCard] = useState<CardInstanceT|undefined>(undefined);
+
     function addCardToHand() {
         // TODO this should send a request with the card names provided in the textbox to put the data
         // into the deck
@@ -53,7 +58,7 @@ export default function Board() {
         let rowId = playerData[0].hand.length;
         newData[0].hand.push({
             zone: { zoneName: "Hand", rowId: rowId }, instanceId: id, owner: 0,
-            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
         })
         setPlayerData(newData);
         console.log(newData.length)
@@ -75,7 +80,7 @@ export default function Board() {
                 owner: 1,
                 card: {
                     name: `${curIndex} Sheoldred, The Apocolypse`, description: "Breaks standard",
-                    cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A",
+                    cost: "5", type: "Unit", subtype: "Insectoid Horror", value: " ",
                     attack: "4", health: "5|3", move: "1"
                 }
             }],
@@ -91,7 +96,7 @@ export default function Board() {
         let id = (Math.random() + 1).toString(4)
         newData[0].damage.push({
             zone: { zoneName: "Damage", rowId: rowId }, instanceId: id, owner: 0,
-            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
         })
         setPlayerData(newData);
         console.log(newData.length)
@@ -257,6 +262,10 @@ export default function Board() {
         setAnnotation(zone, annotation);
     }, [setAnnotation])
 
+    const setFocusedCardCallback = useCallback((card: CardInstanceT) => {
+        setFocusedCard(card);
+    }, [setFocusedCard]);
+
     function handleDragEnd(event: DragEndEvent) {
         if (event.active.data.current?.zone && event.over?.data.current?.zone) {
             // we need to check the source zone in order to popluate the source data
@@ -361,9 +370,22 @@ export default function Board() {
         previewedInstances = boardData[activeZone.rowId][activeZone.colId!]!.instances
     }
 
+    // Sets the individual card preview
+    let card;
+    if (focusedCard && (focusedCard.card as UnitCardT).attack) {
+        let cardData = focusedCard.card as UnitCardT;
+        card = <UnitCard  {...cardData} />;
+    } else if (focusedCard) {
+        card = <StratagemCard {...focusedCard.card} />;
+    }
+
+
     return (
         <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
-            <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback }}>
+            <BoardContext.Provider value={{
+                handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback,
+                setFocusedCard: setFocusedCardCallback
+            }}>
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>
                         <button style={{ gridArea: "OpAvatar", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData?.length}</button>
@@ -404,6 +426,7 @@ export default function Board() {
                         instances: playerData[0].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal",
                         areaName: "PlayerHand"
                     }} />
+                    <div className={css.CardPreview}>{card}</div>
                 </div>
             </BoardContext.Provider>
 

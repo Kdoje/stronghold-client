@@ -10,6 +10,7 @@ import e from 'cors';
 export type BoardGridCellData = {
     zone: ZoneIdT
     cards?: BoardStackInstanceT
+    foundry: number
 }
 
 export function BoardGridCell(props: BoardGridCellData) {
@@ -18,8 +19,10 @@ export function BoardGridCell(props: BoardGridCellData) {
     let annotationButton;
 
     const setAnnotation = useContext(BoardContext).setAnnotation;
+    const updateFoundryData = useContext(BoardContext).updateFoundryData;
+    const getPlayerId = useContext(BoardContext).getPlayerId;
 
-    function onClick(e: React.MouseEvent) {
+    function onAnnotationClick(e: React.MouseEvent) {
         if (props?.cards) {
             let annotation = prompt("Enter Annotation", props.cards!.annotation);
             if (annotation != null && annotation != "") {
@@ -30,11 +33,32 @@ export function BoardGridCell(props: BoardGridCellData) {
         }
     }
 
+    function onFoundryClick(e: React.MouseEvent) {
+        if (props.foundry === -1) {
+          updateFoundryData(props.zone, getPlayerId()); 
+        } else if (props.foundry === getPlayerId()) {
+            updateFoundryData(props.zone, -1);
+        }
+    }
+
+    let foundryColor = "white";
+
+    if (props.foundry === 0) {
+        foundryColor = "red";
+    } else if (props.foundry === 1) {
+        foundryColor = "green";
+    }
+
+    let foundryButton = <button
+        style={{ gridRow: 0, gridColumn: 3, display: "table-cell", verticalAlign: "middle", zIndex: 4, backgroundColor: `${foundryColor}` }}
+        onClick={onFoundryClick}>F
+    </button>
+
     if (props.cards && props.cards.instances.length > 0) {
         stackInstance = <BoardStackContainer {...props.cards!} />
         annotationButton = <button
-            style={{ gridRow: 0, gridColumn: 0, display: "table-cell", verticalAlign: "middle", zIndex: 4 }} 
-            onClick={onClick}>
+            style={{ gridRow: 0, gridColumn: 0, display: "table-cell", verticalAlign: "middle", zIndex: 4 }}
+            onClick={onAnnotationClick}>
             A
         </button>
     }
@@ -72,6 +96,7 @@ export function BoardGridCell(props: BoardGridCellData) {
                 }}>
                 </DropZone>
                 {annotationButton}
+                {foundryButton}
             </div>
 
         </div>

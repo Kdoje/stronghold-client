@@ -6,13 +6,15 @@ export type BoardContextT = {
     handleAttack: (attacking: AttackDirT | undefined, zone: ZoneIdT) => void
     setAnnotation: (zone: ZoneIdT, annotation: string|undefined) => void
     getPlayerId: () => number
+    updateFoundryData: (zone: ZoneIdT, owner: number) => void
 } 
 
 let defaultContext = {
     handleActivate: (zone: ZoneIdT) => {},
     handleAttack: (attacking: AttackDirT | undefined, zone: ZoneIdT) => {},
     setAnnotation: (zone: ZoneIdT, annotation: string|undefined) => {},
-    getPlayerId: () => 0
+    getPlayerId: () => 0,
+    updateFoundryData: (zone: ZoneIdT, owner: number) => {}
 } as BoardContextT
 
 export const BoardContext = createContext(defaultContext);

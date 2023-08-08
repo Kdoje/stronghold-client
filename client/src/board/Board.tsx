@@ -50,6 +50,12 @@ export default function Board(props: {socket: Socket}) {
         setStackData(data);
     }
 
+    const [foundryData, setFoundryData] = useState<number[][]>(Array(6).fill(Array(5).fill(-1)));
+    function setAndPostFoundryData(data: number[][]) {
+        props.socket.emit("foundryData", {playerId: playerId, foundryData: data})
+        setFoundryData(data);
+    }
+
     const [boardData, setBoardData] = useState<BoardStackInstanceT[][]>(Array(6).fill(Array(5).fill(null)));
     function setAndPostBoardData(data: BoardStackInstanceT[][]) {
         props.socket.emit("boardData", {playerId: playerId, boardData: data})
@@ -74,6 +80,8 @@ export default function Board(props: {socket: Socket}) {
             setPlayerData(args[0].playerData);
         } else if (event == "stackData") {
             setStackData(args[0].stackData);
+        } else if (event == "foundryData") {
+            setFoundryData(args[0].foundryData);
         }
     })
 
@@ -279,6 +287,14 @@ export default function Board(props: {socket: Socket}) {
 
     }
 
+    function updateFoundryData(zone: ZoneIdT, owner: number) {
+        if (zone.zoneName === "Board") {
+            let newFoundryData = foundryData.map((item) => item.slice());
+            newFoundryData[zone.rowId][zone.colId!] = owner;
+            setAndPostFoundryData(newFoundryData);
+        }
+    }
+
     const handleActivatingCallback = useCallback((zone: ZoneIdT) => {
         handleActivating(zone);
     }, [handleActivating])
@@ -290,6 +306,10 @@ export default function Board(props: {socket: Socket}) {
     const setAnnotationCallback = useCallback((zone: ZoneIdT, annotation: string | undefined) => {
         setAnnotation(zone, annotation);
     }, [setAnnotation])
+
+    const updateFoundryDataCallback = useCallback((zone: ZoneIdT, owner: number) => {
+        updateFoundryData(zone, owner);
+    }, [updateFoundryData])
 
     const getPlayerId = useCallback(() => {
         return playerId;
@@ -390,7 +410,7 @@ export default function Board(props: {socket: Socket}) {
             }
             return (
                 // TODO this needs to also render the data for whether a foundry is present
-                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{ zone: zone, cards: cards }} />
+                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{ zone: zone, cards: cards, foundry: foundryData[rIndex][cIndex] }} />
             )
         })
         rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
@@ -418,7 +438,8 @@ export default function Board(props: {socket: Socket}) {
         <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
             <BoardContext.Provider value={{
                 handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, 
-                setAnnotation: setAnnotationCallback, getPlayerId: getPlayerId
+                setAnnotation: setAnnotationCallback, getPlayerId: getPlayerId,
+                updateFoundryData: updateFoundryDataCallback
             }}>
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>

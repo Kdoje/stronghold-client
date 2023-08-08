@@ -1,6 +1,6 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
-import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT } from "common/types/game-data";
+import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT } from "common/types/game-data";
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useEffect, useState } from "react";
@@ -15,6 +15,7 @@ import { assert } from "console";
 import CardInstance from "./cards/CardInstance";
 import { Socket } from "socket.io-client";
 import OpDataContainer from "./OpDataContainer";
+import DeckOptionsContainer from "./DeckOptionsContainer";
 
 export default function Board(props: {socket: Socket}) {
     const [playerId, setPlayerId] = useState(0);
@@ -126,6 +127,66 @@ export default function Board(props: {socket: Socket}) {
         };
         setCurIndex(curVal => curVal += 1);
         setAndPostBoardData(newBoardData);
+    }
+
+    function clearPlayerData() {
+        let newBoardData = boardData.map((item) => item.slice());
+        let newPlayerData = playerData.slice();
+        for (let rIndex = 0; rIndex < newBoardData.length; rIndex++) {
+            for (let cIndex = 0; cIndex < newBoardData[rIndex].length; cIndex++) {
+                for (let i = (newBoardData[rIndex][cIndex]?.instances.length ?? 0) - 1; i >= 0; i--) {
+                    if (newBoardData[rIndex][cIndex]?.instances[i].owner === playerId) {
+                        newBoardData[rIndex][cIndex]?.instances.splice(i, 1);
+                        if (newBoardData[rIndex][cIndex]?.annotation !== undefined) {
+                            newBoardData[rIndex][cIndex]!.annotation = undefined;
+                        }
+                        if (newBoardData[rIndex][cIndex]?.activated !== undefined) {
+                            newBoardData[rIndex][cIndex]!.activated = false;
+                        }
+                        if (newBoardData[rIndex][cIndex]?.attacking !== undefined) {
+                            newBoardData[rIndex][cIndex]!.attacking = undefined;
+                        }
+                    }
+                }
+            }
+        }
+
+        let newFoundryData = foundryData.map((item) => item.slice());
+        for (let rIndex = 0; rIndex < newFoundryData.length; rIndex++) {
+            for (let cIndex = 0; cIndex < newFoundryData[rIndex].length; cIndex++) {
+                if (newFoundryData[rIndex][cIndex] === playerId) {
+                    newFoundryData[rIndex][cIndex] = -1;
+                }
+            }
+        }
+
+        let newStackData = stackData.slice();
+        for (let i = 0; i < newStackData.length; i++) {
+            if (newStackData[i].owner === playerId) {
+                newStackData.splice(i, 1);
+            }
+        }
+       
+        newPlayerData[playerId].graveyard = [];
+        newPlayerData[playerId].damage = [];
+        newPlayerData[playerId].exile = [];
+        newPlayerData[playerId].hand = [];
+        newPlayerData[playerId].deck = [];
+         
+        // TODO this needs to rezone the board data to avoid bugs, but these
+        // are non-game breaking so low priority
+        setAndPostBoardData(newBoardData);
+        setAndPostPlayerData(newPlayerData);
+        setAndPostStackData(newStackData);
+        setAndPostFoundryData(newFoundryData);
+    }
+
+    function setPlayerDeckData(cards: Array<AnyCardT>) {
+        let newData = playerData.slice();
+        let rowId = 0;
+        cards.forEach((val, index) => {
+            
+        });
     }
 
     function addCardToDmg() {
@@ -509,6 +570,11 @@ export default function Board(props: {socket: Socket}) {
                         areaName: "PlayerHand"
                     }} />
                     <div className={css.CardPreview}>{card}</div>
+                    <div className={css.DeckSettings}>
+                        <DeckOptionsContainer setDeck={(cards) => { }}
+                            resetPlayer={() => { clearPlayerData(); }}
+                            shuffleDeck={() => { }} />
+                    </div>
                 </div>
             </BoardContext.Provider>
 

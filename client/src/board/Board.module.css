@@ -7,7 +7,11 @@
   grid-template-areas:
     "OpUnknownData Board Board Board OpKnownData ."
     "Stack Board Board Board CellPreview CardPreview"
-    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData .";
+    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData DeckSettings";
+}
+
+.DeckSettings {
+  grid-area: DeckSettings;
 }
 
 .PlayerUnknownData {

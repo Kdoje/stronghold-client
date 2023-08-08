@@ -15,7 +15,7 @@ function connect() {
     var item = document.createElement('li');
     item.textContent = msg;
   });
-  socket.emit("hi, it's me")
+  socket.emit("aaa", {val1: "event_name", val2: "hi, it's me"})
 }
 
 function App() {
@@ -52,9 +52,9 @@ function App() {
   }
 
   function gameApp() {
-    console.log(socket);
+    console.log(typeof socket);
     return (
-      <Board />
+      <Board {...{socket: socket}}/>
     )
   }
   return gameApp();

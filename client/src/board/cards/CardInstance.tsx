@@ -14,6 +14,10 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
         data: { zone: props.zone, cardInstance: props }
     });
 
+    const getPlayerId = useContext(BoardContext).getPlayerId;
+
+    let color = props.owner == 0 ? 'red' : 'green';
+
     const cardToRender = props.card
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -42,7 +46,7 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle}>
                 {annotationRender}
-                <div style={{ outline: "solid red 15px", gridRow: 1, gridColumn: 1 }}>
+                <div style={{ outline: `solid ${color} 15px`, gridRow: 1, gridColumn: 1 }}>
                     {card}
                 </div>
             </div>

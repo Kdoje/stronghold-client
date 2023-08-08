@@ -45,7 +45,8 @@ export default function PreviewZone(props: PreviewZoneDataT) {
 
     // TODO there's an issue here where the zone below any card sets it one zone lower 
     // than expected
-    props.instances.forEach((instance) => {
+    let instances = props.instances ? props.instances : []
+    instances.forEach((instance) => {
         // only preview zones care about indexes so set it here
         let id = (Math.random() + 1).toString(4);
         

@@ -34,7 +34,7 @@ export type BoardStackInstanceT = null | {
 
 export type AttackDirT = 'N'|'S'|'E'|'W'
 
-export type ZoneNameT = 'Board' | 'Hand' | 'Stack'
+export type ZoneNameT = 'Board' | 'Hand' | 'Stack' | 'Deck' | 'Damage' | 'Exile' | 'Graveyard'
 
 // colId is null for zones that are 1 dimmensional (anything but board)
 // index is null for zones that aren't stacks (anything but board)
@@ -48,9 +48,9 @@ export type ZoneIdT = {
 export type CardInstanceDataNT = CardInstanceT | null
 
 export type PlayerData = {
-    deck: Array<AnyCardT>
-    graveyard: Array<AnyCardT>
-    damage: Array<AnyCardT>
-    exile: Array<AnyCardT>
+    deck: Array<CardInstanceT>
+    graveyard: Array<CardInstanceT>
+    damage: Array<CardInstanceT>
+    exile: Array<CardInstanceT>
     hand: Array<CardInstanceT>
 }

@@ -8,12 +8,21 @@ import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
 import { BoardGridCell } from "./BoardGridCell";
 import { BoardContext } from "./BoardContext";
+import PileContainer from "./PileContainer";
+import { assert } from "console";
 
 export default function Board() {
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
-            deck: [], graveyard: [], damage: [], exile: [], hand: [
+            deck: [{
+                zone: { zoneName: "Deck", rowId: 1 }, instanceId: '4', owner: 0,
+                card: { name: "Deck card 1", description: "stands alone", cost: "1 V", 
+                type: "Tactic", value: "V" }
+            }],
+            graveyard: [], 
+            damage: [],
+            exile: [], hand: [
                 {
                     zone: { zoneName: "Hand", rowId: 0 }, instanceId: '1', owner: 0,
                     card: { name: "Eat Some Food", description: "stands alone", cost: "1 V", type: "Tactic", value: "V" }
@@ -74,6 +83,18 @@ export default function Board() {
         };
         setCurIndex(curVal => curVal += 1);
         setBoardData(newBoardData);
+    }
+
+    function addCardToDmg() {
+        let newData = playerData.slice();
+        let rowId = playerData[0].damage.length;
+        let id = (Math.random() + 1).toString(4)
+        newData[0].damage.push({
+            zone: { zoneName: "Damage", rowId: rowId }, instanceId: id, owner: 0,
+            card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "2 A A", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+        })
+        setPlayerData(newData);
+        console.log(newData.length)
     }
 
     /**
@@ -137,13 +158,13 @@ export default function Board() {
         let elt = curPlayerData[0].hand[srcZone.rowId];
         sourceZoneData.push(elt);
         newPlayerData[0].hand.splice(srcZone.rowId, 1)
-        rezoneHandData(newPlayerData);
+        rezonePlayerData(newPlayerData);
         return sourceZoneData;
     }
 
     function handleHandDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
         newPlayerData[0].hand.splice(destZone.rowId, 0, ...sourceZoneData);
-        rezoneHandData(newPlayerData);
+        rezonePlayerData(newPlayerData);
     }
 
     /**
@@ -162,6 +183,35 @@ export default function Board() {
     function handleStackDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curStackData: CardInstanceT[], newStackData: CardInstanceT[]) {
         newStackData.splice(destZone.rowId, 0, ...sourceZoneData);
         rezoneStackData(newStackData);
+    }
+
+    function handlePileSourceData(srcZone: ZoneIdT, curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
+        let sourceZoneData: CardInstanceT[] = []
+        if (srcZone.zoneName === "Deck") {
+            sourceZoneData.push(newPlayerData[0].deck.shift()!);
+        } else if (srcZone.zoneName === "Exile") {
+            sourceZoneData.push(newPlayerData[0].exile.shift()!);
+        } else if (srcZone.zoneName === "Graveyard") {
+            sourceZoneData.push(newPlayerData[0].graveyard.shift()!);
+        } else {
+            sourceZoneData.push(newPlayerData[0].damage.shift()!);
+        }
+        rezonePlayerData(newPlayerData);
+        return sourceZoneData
+    }
+
+    function handlePileDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
+        
+        if (destZone.zoneName === "Deck") {
+            newPlayerData[0].deck.unshift(...sourceZoneData);
+        } else if (destZone.zoneName === "Exile") {
+            newPlayerData[0].exile.unshift(...sourceZoneData);
+        } else if (destZone.zoneName === "Graveyard") {
+            newPlayerData[0].graveyard.unshift(...sourceZoneData);
+        } else {
+            newPlayerData[0].damage.unshift(...sourceZoneData);
+        }
+        rezonePlayerData(newPlayerData);
     }
 
     function handleAttacking(attacking: AttackDirT | undefined, zone: ZoneIdT) {
@@ -185,7 +235,7 @@ export default function Board() {
         }
     }
 
-    function setAnnotation(zone: ZoneIdT, annotation: string|undefined) {
+    function setAnnotation(zone: ZoneIdT, annotation: string | undefined) {
         if (zone.colId != null && boardData[zone.rowId][zone.colId] != null) {
             let newBoardData = boardData.map((item) => item.slice());
             newBoardData[zone.rowId][zone.colId!]!.annotation = annotation
@@ -203,7 +253,7 @@ export default function Board() {
         handleAttacking(attacking, zone)
     }, [handleAttacking])
 
-    const setAnnotationCallback = useCallback((zone: ZoneIdT, annotation: string|undefined) => {
+    const setAnnotationCallback = useCallback((zone: ZoneIdT, annotation: string | undefined) => {
         setAnnotation(zone, annotation);
     }, [setAnnotation])
 
@@ -232,6 +282,8 @@ export default function Board() {
                     sourceZoneData = handleHandSourceData(srcZone, playerData, newPlayerData);
                 } else if (srcZoneName === "Stack") {
                     sourceZoneData = handleStackSourceData(srcZone, stackData, newStackData);
+                } else {
+                    sourceZoneData = handlePileSourceData(srcZone, playerData, newPlayerData);
                 }
 
                 if (destZoneName === "Board") {
@@ -241,6 +293,8 @@ export default function Board() {
                     handleHandDestData(destZone, sourceZoneData, playerData, newPlayerData);
                 } else if (destZoneName === "Stack") {
                     handleStackDestData(destZone, sourceZoneData, stackData, newStackData);
+                } else {
+                    handlePileDestData(destZone, sourceZoneData, playerData, newPlayerData);
                 }
                 setBoardData(newBoardData);
                 setPlayerData(newPlayerData);
@@ -258,9 +312,21 @@ export default function Board() {
         });
     }
 
-    function rezoneHandData(newPlayerData: PlayerData[]) {
+    function rezonePlayerData(newPlayerData: PlayerData[]) {
         newPlayerData[0].hand.forEach((instance, index) => {
             instance.zone = { zoneName: "Hand", rowId: index }
+        });
+        newPlayerData[0].deck.forEach((instance, index) => {
+            instance.zone = { zoneName: "Deck", rowId: index }
+        });
+        newPlayerData[0].exile.forEach((instance, index) => {
+            instance.zone = { zoneName: "Exile", rowId: index }
+        });
+        newPlayerData[0].graveyard.forEach((instance, index) => {
+            instance.zone = { zoneName: "Graveyard", rowId: index }
+        });
+        newPlayerData[0].damage.forEach((instance, index) => {
+            instance.zone = { zoneName: "Damage", rowId: index }
         });
     }
 
@@ -300,8 +366,33 @@ export default function Board() {
             <BoardContext.Provider value={{ handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, setAnnotation: setAnnotationCallback }}>
                 <div className={css.gameBoard}>
                     <div className={css.OpUnknownData}>
-                        <button style={{ gridArea: "OpDeck", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData?.length}</button>
-                        <button style={{ gridArea: "OpDamage", height: "fit-content" }} onClick={() => { addCardToBoard() }}>add card</button>
+                        <button style={{ gridArea: "OpAvatar", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData?.length}</button>
+                        <button style={{ gridArea: "OpHand", height: "fit-content" }} onClick={() => { addCardToBoard() }}>add card</button>
+                        <button style={{ gridArea: "OpDamage", height: "fit-content" }} onClick={() => { addCardToDmg() }}>GY</button>
+                    </div>
+                    <div className={css.PlayerUnknownData}>
+                        <div className={css.PlayerDeck}>
+                            <div>DECK: {playerData[0].deck.length}</div>
+                            <PileContainer {...{cards: playerData[0].deck, zoneName:"Deck", faceup: false}}/>
+                       </div>
+                    </div>
+                    <div className={css.PlayerUnknownData}>
+                        <div className={css.PlayerDmg}>
+                            <div>DMG: {playerData[0].damage.length}</div>
+                            <PileContainer {...{cards: playerData[0].damage, zoneName: "Damage", faceup: false}}/>
+                       </div>
+                    </div>
+                    <div className={css.PlayerKnownData}>
+                        <div className={css.PlayerGy}>
+                            <div>GY: {playerData[0].graveyard.length}</div>
+                            <PileContainer {...{cards: playerData[0].graveyard, zoneName:"Graveyard", faceup: true}}/>
+                       </div>
+                    </div>
+                    <div className={css.PlayerKnownData}>
+                        <div className={css.PlayerExile}>
+                            <div>EXILE: {playerData[0].exile.length}</div>
+                            <PileContainer {...{cards: playerData[0].exile, zoneName: "Exile", faceup: true}}/>
+                       </div>
                     </div>
                     <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 }, areaName: "Stack" }} />
                     <div className={css.battlefieldGrid}>

@@ -63,7 +63,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
 
         let instanceCopy = { ...instance, instanceId: id, zone: instanceZoneId }
         previewRender.push(
-            <CardInstance key={id} {...instanceCopy} />
+            <CardInstance key={id} {...instanceCopy} activated={false}/>
         )
         // TODO we shouldn't render this droppable if the given index is the dragged elt
         previewRender.push(

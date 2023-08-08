@@ -52,6 +52,7 @@ function App() {
   }
 
   function gameApp() {
+    console.log(socket);
     return (
       <Board />
     )

@@ -1,76 +1,140 @@
-
 .gameBoard {
-    display: grid; 
-    grid-template-columns: min-content min-content min-content min-content min-content min-content ; 
-    grid-template-rows: min-content min-content min-content; 
-    gap: 0px 0px; 
-    grid-template-areas: 
-      "OpUnknownData Board Board Board OpKnownData ."
-      "Stack Board Board Board CellPreview CardPreview"
-      "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData ."; 
-  }
-  .PlayerUnknownData {
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    grid-template-rows: 1fr; 
-    gap: 0px 0px; 
-    grid-template-areas: 
-      "PlayerDeck PlayerDmg"; 
-    grid-area: PlayerUnknownData; 
-  }
-  .PlayerDeck { grid-area: PlayerDeck; }
-  .PlayerDmg { grid-area: PlayerDmg; }
-  .PlayerHand { grid-area: PlayerHand; }
-  .PlayerKnownData {
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    grid-template-rows: 1fr; 
-    gap: 0px 0px; 
-    grid-template-areas: 
-      "PlayerGy PlayerBanish"; 
-    grid-area: PlayerKnownData; 
-  }
-  .PlayerGy { grid-area: PlayerGy; }
-  .PlayerBanish { grid-area: PlayerBanish; }
-  .OpUnknownData {
-    display: grid; 
-    grid-template-columns: min-content min-content; 
-    grid-template-rows: min-content min-content; 
-    gap: 0px 0px; 
-    grid-template-areas: 
-      "OpAvatar OpHand" 
-      "OpDeck OpDamage"; 
-    grid-area: OpUnknownData; 
-  }
-  .OpDeck { grid-area: OpDeck; }
-  .OpDmg { grid-area: OpDmg; }
-  .OpGY { grid-area: OpGY; }
-  .OpBanish { grid-area: OpBanish; }
-  .Stack { grid-area: Stack; }
-  .CardPreview { grid-area: CardPreview; }
-  .Board { grid-area: Board; }
+  display: grid;
+  grid-template-columns: min-content min-content min-content min-content min-content min-content;
+  grid-template-rows: min-content min-content min-content;
+  gap: 10px 10px;
+  grid-template-areas:
+    "OpUnknownData Board Board Board OpKnownData ."
+    "Stack Board Board Board CellPreview CardPreview"
+    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData .";
+}
+
+.PlayerUnknownData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 10px;
+  grid-template-areas:
+    "PlayerDmg PlayerDeck";
+  grid-area: PlayerUnknownData;
+}
+
+.PlayerDeck {
+  grid-area: PlayerDeck;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.PlayerDmg {
+  grid-area: PlayerDmg;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.PlayerHand {
+  grid-area: PlayerHand;
+}
+
+.PlayerKnownData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 100px;
+  grid-template-areas:
+    "PlayerGy PlayerExile";
+  grid-area: PlayerKnownData;
+}
+
+.PlayerGy {
+  grid-area: PlayerGy;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 10px;
+}
+
+.PlayerExile {
+  grid-area: PlayerExile;
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 10px;
+}
+
+.OpUnknownData {
+  display: grid;
+  grid-template-columns: min-content min-content;
+  grid-template-rows: min-content min-content;
+  gap: 0px 0px;
+  grid-template-areas:
+    "OpAvatar OpHand"
+    "OpDeck OpDamage";
+  grid-area: OpUnknownData;
+}
+
+.OpAvatar {
+  grid-area: OpAvatar;
+}
+
+.OpDeck {
+  grid-area: OpDeck;
+}
+
+.OpDmg {
+  grid-area: OpDmg;
+}
+
+.OpGY {
+  grid-area: OpGY;
+}
+
+.OpBanish {
+  grid-area: OpBanish;
+}
+
+.Stack {
+  grid-area: Stack;
+}
+
+.CardPreview {
+  grid-area: CardPreview;
+}
+
+.Board {
+  grid-area: Board;
+}
 
 .battlefieldGrid {
-    flex-wrap: wrap;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-    width: fit-content;
-    height: fit-content;
-    grid-area: Board
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  width: fit-content;
+  height: fit-content;
+  grid-area: Board
 }
 
 .cardPreivewContainer {
-    display: grid;
-    grid-template-columns: 1fr;
-    place-content: center;
-    place-items: center;
-    width: 120px;
-    height: 110px;
-    border-width: 2px;
-    scale: .3;
-    position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-content: center;
+  place-items: center;
+  width: 120px;
+  height: 110px;
+  border-width: 2px;
+  scale: .3;
+  position: relative;
 }
 
 .cardAnnotation {
@@ -86,71 +150,71 @@
 }
 
 .draggableContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 75px;
-    height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  height: 80px;
 }
 
 .battlefieldGridCell {
-    width: 140px;
-    height: 125px;
-    border-style: solid;
-    border-color: red;
-    border-width: 2px;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    grid-template-rows: 25px 75px 25px;
-    grid-template-columns: 25px 90px 25px;
+  width: 140px;
+  height: 125px;
+  border-style: solid;
+  border-color: red;
+  border-width: 2px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-rows: 25px 75px 25px;
+  grid-template-columns: 25px 90px 25px;
 }
 
 .break {
-    flex-basis: 100%;
-    height: 0;
+  flex-basis: 100%;
+  height: 0;
 }
 
-.previewAreaVertical { /* TODO this should be hidden unless there's stuff in it */
-    min-height: 500px;
-    max-height: 500px;
-    max-width: 150px;
-    position: relative;
-    overflow: scroll;
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    border: grey;
-    border-style: solid;
+.previewAreaVertical {
+  /* TODO this should be hidden unless there's stuff in it */
+  min-height: 500px;
+  max-height: 500px;
+  max-width: 150px;
+  position: relative;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: grey;
+  border-style: solid;
 }
 
 .previewAreaHorizontal {
-    min-width: 720px;
-    max-width: 720px;
-    position: relative;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    border: grey;
-    border-style: solid;
-    justify-items: center;
+  min-width: 720px;
+  max-width: 720px;
+  position: relative;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border: grey;
+  border-style: solid;
+  justify-items: center;
 }
 
 .previewDropZone {
-    border-style: solid;
-    border-color: blue;
+  border-style: solid;
+  border-color: blue;
 }
 
 .verticalDropZone {
-    width: 120px;
-    height: 35px;
+  width: 120px;
+  height: 35px;
 }
 
 .horizontalDropZone {
-    width: 35px;
-    height: 120px;
+  width: 35px;
+  height: 120px;
 }
-

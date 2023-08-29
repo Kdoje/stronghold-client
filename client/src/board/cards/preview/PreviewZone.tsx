@@ -73,7 +73,6 @@ export default function PreviewZone(props: PreviewZoneDataT) {
                 <div className={dropZoneClass}></div>
             </DropZone>)
     })
-    // TODO provide the grid area name in the data
-    // render drop points between each
+
     return <div className={previewAreaName} style={{gridArea: `${props.areaName}`}}>{...previewRender}</div>
 }

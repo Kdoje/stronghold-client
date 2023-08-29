@@ -40,6 +40,5 @@ export default function OpDataContainer(props: { cards: Array<CardInstanceT>, fa
         </div>
     }
 
-    // TODO this should have a style to place the pile, and indicator for face up/facedown, then the facedown instance
     return pile;
 }

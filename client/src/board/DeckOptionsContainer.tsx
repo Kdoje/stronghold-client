@@ -22,6 +22,7 @@ export default function DeckOptionsContainer(props: {
         backgroundColor: `${color}`
     }
 
+    // TODO this needs to create a more sensible popup the user can interact with
     async function onSetDeckClick(e: React.MouseEvent) {
         let decklist = prompt("Enter decklist as qty cardname");
         let requestOptions = {

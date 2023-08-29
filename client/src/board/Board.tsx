@@ -18,7 +18,6 @@ import OpDataContainer from "./OpDataContainer";
 import DeckOptionsContainer from "./DeckOptionsContainer";
 
 export default function Board(props: {socket: Socket}) {
-    // TODO KL this just needs to connect to the socket on mount
     const [playerId, setPlayerId] = useState(0);
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
@@ -98,8 +97,6 @@ export default function Board(props: {socket: Socket}) {
     })
 
     function addCardToHand() {
-        // TODO this should send a request with the card names provided in the textbox to put the data
-        // into the deck
         console.log("adding data");
         console.log(playerData)
         let id = (Math.random() + 1).toString(4)
@@ -498,7 +495,6 @@ export default function Board(props: {socket: Socket}) {
                 colId: cIndex
             }
             return (
-                // TODO this needs to also render the data for whether a foundry is present
                 <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{ zone: zone, cards: cards, foundry: foundryData[rIndex][cIndex] }} />
             )
         })

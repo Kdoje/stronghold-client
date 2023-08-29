@@ -63,7 +63,6 @@ export function BoardGridCell(props: BoardGridCellData) {
         </button>
     }
 
-    // TODO we'll put buttons to add foundries, gold card, annotation and wielder in the corners
     return (
         <div>
 

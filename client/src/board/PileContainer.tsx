@@ -24,7 +24,6 @@ export default function PileContainer(props: {cards: Array<CardInstanceT>, zoneN
         }
     }
 
-    // TODO this should have a style to place the pile, and indicator for face up/facedown, then the facedown instance
     return <DropZone zone={{zoneName: props.zoneName, rowId: 0}}>
         {pile}
     </DropZone>

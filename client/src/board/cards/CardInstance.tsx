@@ -39,7 +39,6 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
     let annotationRender = props.annotation ?
         <div className={css.cardAnnotation}>{props.annotation}</div> : null;
 
-    // TODO set the outline color to the owner's color
     let result =
 
         <div ref={setNodeRef}  {...listeners} {...attributes}

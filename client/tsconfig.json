@@ -4,7 +4,8 @@
     "baseUrl": "src",
     "paths": {
 			"server/*": ["../../server/*"],
-			"common/*": ["../../common/*"]
+			"common/*": ["../../common/*"],
+      "config/*": ["../../config/*"]
 		},
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],

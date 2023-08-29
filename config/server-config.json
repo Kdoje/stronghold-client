@@ -1,5 +1,6 @@
 {
 	"port": 9000,
+	"protocol": "https",
 	"clientDevPort": 3002,
 	"clientPath": "client/dist",
 	"cors": [

@@ -1,17 +1,16 @@
 name,cost,type,subtype,description,attack,health,move,value
-Beam Cannon,2 R R,Unit,Mech Artillery,"Vulnerable (deals no defensive damage), Bombard: 2 (may attack any unit within 2 tiles)",7,4|2,1,R
-Flare Artillery,3 R R,Unit,Mech Artillery,"Range 4 (can attack any unit within 4 tiles in a straight line). Act: Add a charge counter to this unit.
-As an additional cost to attack, remove a charge counter from this unit",8,5,2,R
-Frontline Gunner,1 R,Unit,Humanoid,Act: Adjacent artillery units get +2 atk until end of turn,1,3,2,R
-Rattlegeist,1 R,Unit,Spirit,"R, Sacrifice this unit: Incinerate target deploying unit",2,2,3,
-Thunderburst Walker,R,Unit,Mech Artillery,Range 2 (can attack any unit within 2 tiles in a straight line).  This unit can defend adjacent tiles,1,2,2,R
-Nullifier Drone,R,Unit,Mech,Act + sacrifice this unit: Target adjacent unit becomes a 0/1/0 and loses all abilites.,2,1,3,R
-,,,,,,,,
-"Orlak, The Mad King",2 N,Unit,Beast,"Whenever Orlak attacks, sacrifice target adjacent friendly unit",6,6|3,3,N
-Orlak's Acolyte,2 N,Unit,Beast,"You may incinerate X cards from your hand to pay X generic resources to deploy this unit. When this unit dies, deal 2 damage to all wielders",5,4,4,N
-Raging Ape,N,Unit,Beast,Rampage (this unit gains +1/+1 whenever you deal non-combat damage),1,2,3,N
-Herald of the Jungle,N,Unit,Beast,Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance),1,2,3,N
-Jungle Opportunist,1 N,Unit,Beast,Rampage (this unit gains +1/+1 whenever you deal non-combat damage). Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance).,1,1,2,N
+Berserker,1,Unit,Infantry,Battle ready (enters the field refreshed). Battlecry(when this unit enters the battlefield): get +0/+0/+1 ,2,1,1,1
+Ballista,3,Unit,Artillery,Ballista can only attack units up to 4 tiles in front of it,3,1,1,1
+Captain,2,Unit,Infantry,Units in front of Captain get +1/+0/+0,2,1,1,1
+Sargent,2,Unit,Infantry,Battlecry (when this unit enters the battlefield): draw a card,1,1,1,1
+Archer,2,Unit,Infantry,Range 2 (can attack any unit within 2 tiles in a straight line).  ,3,1,2,1
+Knight,1,Unit,Infantry,,1,1,2,1
+Assassin,1,Unit,Infantry,Assassin can move through enemy units. Sacrifice Assassin if it's attacked,3,1,2,1
+Strike Lead,2,Unit,Infantry,Adjacent Units get +1/+1/+0,1,1,1,1
+Barracks,1,Structure,,Infantry deployed near Barracks get +1/+1/+0 this turn,,3,,1
+Dire Rescue,1,Tactic,,Rampage (this unit gains +1/+1 whenever you deal non-combat damage),1,2,3,1
+Bolster,2,Tactic,,Technician (this unit gains +1/+1 whenever you deploy non-unit ordinance),1,2,3,1
+Dig in,2,Stratagem,,Target a tile adjacent to you. Units adjacent to target tile gain +2/+2 this turn,,,,1
 Nexus Drake,N,Unit,Avian Beast,"Airborne (can move ""over"" units). Rampage (this unit gains +1/+1 whenever you deal non-combat damage).",2,1,2,N
 Pyrokin Crusader,1 N,Unit,Humanoid,Battlecry (triggers when this unit enters the battlefield): Incinerate the top 2 cards of your damage pile. You may play one this turn,2,2,3,N
 ,,,,,,,,

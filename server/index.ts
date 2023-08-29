@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { createServer } from 'http'
+import { createServer } from 'https'
 import cors from 'cors'
 import { CONFIG } from '../config'
 import startSocketIO from './sockets'
@@ -85,7 +85,7 @@ app.post('/decklist', (req, res) => {
 })
 
 
-const server = createServer(app)
+const server = createServer({key: fs.readFileSync(path.join(__dirname, "resources/key.pem")), cert: fs.readFileSync(path.join(__dirname, "resources/cert.pem"))}, app)
 
 
 server.listen(port, () => {

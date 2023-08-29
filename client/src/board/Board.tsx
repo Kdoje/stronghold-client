@@ -18,6 +18,7 @@ import OpDataContainer from "./OpDataContainer";
 import DeckOptionsContainer from "./DeckOptionsContainer";
 
 export default function Board(props: {socket: Socket}) {
+    // TODO KL this just needs to connect to the socket on mount
     const [playerId, setPlayerId] = useState(0);
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
@@ -41,6 +42,15 @@ export default function Board(props: {socket: Socket}) {
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] },
     ]);
+
+    useEffect(() => {
+        console.log("posting data");
+        setAndPostBoardData(boardData);
+        setAndPostPlayerData(playerData);
+        setAndPostStackData(stackData);
+        setAndPostFoundryData(foundryData)
+    }, [])
+
     function setAndPostPlayerData(data: PlayerData[]) {
         props.socket.emit("playerData", {playerId: playerId, playerData: data})
         setPlayerData(data);

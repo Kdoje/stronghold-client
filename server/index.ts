@@ -54,9 +54,6 @@ async function parseCards(fileNames: string[]): Promise<Map<string, AnyCardT>> {
 
 
 let cards = await parseCards(CONFIG.fileNames)
-console.log(cards.get('Bane of the Jungle'));
-console.log("attack" in (cards.get('Starfall'))!); // check if card has a specific field
-console.log((<UnitCardT>cards.get('Bane of the Jungle')).attack) // cast card to another type and access those fields
 
 app.use(
 	express.static(path.join(__dirname, '..', CONFIG.clientPath), {

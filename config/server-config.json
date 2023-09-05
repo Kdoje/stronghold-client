@@ -7,7 +7,6 @@
 		"http://localhost:3002"
 	],
 	"fileNames": [
-		"resources/units-v2.csv",
-		"resources/stratagems-v2.csv"
+		"resources/Card DataBase - Set 1.0 cards.csv"
 	]
 }

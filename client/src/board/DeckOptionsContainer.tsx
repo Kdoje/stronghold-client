@@ -4,6 +4,7 @@ import CardInstance from './cards/CardInstance';
 import { useContext, useState } from 'react';
 import { BoardContext } from './BoardContext'
 import { getUrl } from '../utils/FetchUtils';
+import DeckEntry from '../deck/DeckEntry';
 
 
 export default function DeckOptionsContainer(props: {
@@ -13,7 +14,7 @@ export default function DeckOptionsContainer(props: {
 }) {
 
     const [deckData, setDeckData] = useState<{ cards: Array<AnyCardT>, wielder?: AnyCardT }>({ cards: [] });
-
+    const [showDeckModal, setShowDeckModal] = useState<boolean>(false);
     const getPlayerId = useContext(BoardContext).getPlayerId;
     let color = getPlayerId() === 0 ? "red" : "green";
 
@@ -23,12 +24,11 @@ export default function DeckOptionsContainer(props: {
     }
 
     // TODO this needs to create a more sensible popup the user can interact with
-    async function onSetDeckClick(e: React.MouseEvent) {
-        let decklist = prompt("Enter decklist as qty cardname");
+    async function onSetDeckClick(inputData: string) {
         let requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ decklist: decklist })
+            body: JSON.stringify({ decklist: inputData })
         };
         
         const response = await fetch(`${getUrl()}/decklist`, requestOptions);
@@ -36,13 +36,17 @@ export default function DeckOptionsContainer(props: {
         console.log("got decklist");
         console.log(data.deck)
         setDeckData({ cards: data.deck, wielder: data.wielder });
-        props.setDeck(data.deck, data.wielder)
+        props.setDeck(data.deck, data.wielder);
+        setShowDeckModal(false);
     }
 
     return <div
         style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "15px" }}>
-        <button style={DECK_BUTTON_STYLE} onClick={onSetDeckClick}>SET DECK</button>
+        <button style={DECK_BUTTON_STYLE} onClick={() => setShowDeckModal(true)}>SET DECK</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.shuffleDeck() }}>SHUFFLE</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.resetPlayer(deckData.cards, deckData.wielder) }}>RESET</button>
+        <div>{showDeckModal ? (
+            <DeckEntry onAccept={(inputData) => onSetDeckClick(inputData)} onClose={() => setShowDeckModal(false)} />
+            ) : null}</div>
     </div>
 }

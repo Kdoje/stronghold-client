@@ -19,7 +19,7 @@ export class StratagemCard extends React.Component<StratagemCardT & {displayOver
         }
             return <div className={css.cardContainer}>
                 <img className={css.portraitImage} src=""></img>
-                <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name : undefined}</div>
+                <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name + ": " + this.props.cost : undefined}</div>
                 <div className={css.titleText}>{this.props.name}</div>
                 <div className={css.costText}>{this.props.cost}</div>
                 <div className={css.typeText}>{typeLineText}</div>

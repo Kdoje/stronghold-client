@@ -16,11 +16,8 @@ export type PreviewZoneDataT = {
 
 export default function PreviewZone(props: PreviewZoneDataT) {
 
-    let dropZoneLoc = 0;
-    let dropZoneId = { ...props.zone };
-    if (props.zone.zoneName === "Board") {
-        dropZoneId = { ...props.zone, index: dropZoneLoc };
-    }
+    let instanceIndex = 0;
+    const getActiveCard = useContext(BoardContext).getActiveCard;
 
     let dropZoneDirection = css.horizontalDropZone;
     let previewAreaName = css.previewAreaHorizontal
@@ -32,46 +29,76 @@ export default function PreviewZone(props: PreviewZoneDataT) {
 
     let dropZoneClass = `${css.previewDropZone} ${dropZoneDirection}`;
 
+    function setActualDropZoneIndex(actualDropZoneId: ZoneIdT, zoneIndex: number) {
+        if (props.zone.zoneName === "Board") {
+            actualDropZoneId.index = zoneIndex;
+        } else {
+            actualDropZoneId.rowId = zoneIndex;
+        }
+    }
+
+    function getActualDropZoneId(activeCard: CardInstanceT | undefined, zoneIndex: number): ZoneIdT | undefined {
+        let actualDropZoneId = { ...props.zone }
+
+        // if the current card is in the zone we're previewing
+        if (activeCard && activeCard.zone.zoneName === props.zone.zoneName) {
+            // get the active zone index (be it row, or index)
+            let activeZoneIndex = activeCard.zone.rowId;
+            if (activeCard.zone.zoneName === "Board") {
+                activeZoneIndex = activeCard.zone.index ?? -1;
+            }
+            // then determine whether we should render the drop zone, and if so, what the index should be
+            if (zoneIndex === activeZoneIndex) {
+                return undefined;
+            } else if (zoneIndex >= activeZoneIndex && activeZoneIndex != -1) {
+                setActualDropZoneIndex(actualDropZoneId, zoneIndex - 1);
+            } else {
+                setActualDropZoneIndex(actualDropZoneId, zoneIndex);
+            }
+        } else {
+            setActualDropZoneIndex(actualDropZoneId, zoneIndex);
+        }
+        return actualDropZoneId
+    }
+
     // render list of instances if present
     // the instances need a container and new ID to prevent duplication
     let previewRender: ReactNode[] = [];
 
-    previewRender.push(
-        <DropZone key={`${props.zone.zoneName} ${dropZoneLoc}`} zone={dropZoneId}>
-            <div className={dropZoneClass}></div>
-        </DropZone>
-    )
+    let dropZone = getActualDropZoneId(getActiveCard(), 0);
+    if (dropZone) {
+        previewRender.push(
+            <DropZone key={`${props.zone.zoneName} ${instanceIndex}`} zone={dropZone}>
+                <div className={dropZoneClass}></div>
+            </DropZone>
+        )
+    }
 
 
-    // TODO there's an issue here where the zone below any card sets it one zone lower 
-    // than expected
     let instances = props.instances ? props.instances : []
     instances.forEach((instance) => {
-        // only preview zones care about indexes so set it here
-        let id = (Math.random() + 1).toString(4);
+        // use a consistent id for the previewed instances
+        let id = instance.instanceId + '-preview';
         
         let instanceZoneId = instance.zone;
         if (props.zone.zoneName === "Board") {
-            instanceZoneId = { ...props.zone, index: dropZoneLoc };
+            instanceZoneId = { ...props.zone, index: instanceIndex };
         }
         
-        dropZoneLoc += 1;
-        
-        // only the board sets the index, otherwise, set the rowId of the zone
-        if (props.zone.zoneName === "Board") {
-            dropZoneId = { ...props.zone, index: dropZoneLoc };
-        } else {
-            dropZoneId = { ...props.zone, rowId: dropZoneLoc }
-        }
+        instanceIndex += 1;
 
         previewRender.push(
             <CardInstance key={id} {...instance} instanceId={id} zone={instanceZoneId} activated={false}/>
         )
-        // TODO we shouldn't render this droppable if the given index is the dragged elt
-        previewRender.push(
-            <DropZone key={`${props.zone.zoneName} ${dropZoneLoc}`} zone={dropZoneId}>
-                <div className={dropZoneClass}></div>
-            </DropZone>)
+        // use the getActualDropZoneId to determine whether we should render a drop zone
+        let dropZoneId = getActualDropZoneId(getActiveCard(), instanceIndex);
+        if (dropZoneId) {
+            previewRender.push(
+                <DropZone key={`${props.zone.zoneName} ${instanceIndex}`} zone={dropZoneId}>
+                    <div className={dropZoneClass}></div>
+                </DropZone>
+                )
+        }
     })
 
     return <div className={previewAreaName} style={{gridArea: `${props.areaName}`}}>{...previewRender}</div>

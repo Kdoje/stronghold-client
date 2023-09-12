@@ -34,7 +34,7 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
 
         let elt = <div className={css.cardContainer}>
             <img className={css.portraitImage} src=""></img>
-            <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name : undefined}</div>
+            <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name + ":" + this.props.cost : undefined}</div>
             <div className={css.titleText}>{this.props.name}</div>
             <div className={css.costText}>{this.props.cost}</div>
             <div className={css.typeText}>{this.props.type} - {this.props.subtype}</div>

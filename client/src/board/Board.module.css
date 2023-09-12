@@ -258,6 +258,7 @@
 }
 
 .previewAreaHorizontal {
+  margin-top: 10px;
   min-width: 720px;
   max-width: 720px;
   position: relative;

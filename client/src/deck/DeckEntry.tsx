@@ -6,7 +6,6 @@ function DeckEntry(props: { onClose: () => void, onAccept: (inputData: string) =
     const modalEl = document.getElementById('modal')
     const inputRef = useRef<HTMLTextAreaElement | null>(null)
     function acceptInput() {
-        console.log("accepting input")
         if (!inputRef.current) {
             props.onAccept("");
         }

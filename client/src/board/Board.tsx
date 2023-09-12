@@ -1,33 +1,32 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT } from "common/types/game-data";
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useEffect, useState } from "react";
 import css from './Board.module.css';
-import { DropZone } from "./DropZone";
-import BoardStackContainer from "./cards/BoardStackContainer";
 import PreviewZone from "./cards/preview/PreviewZone";
 import { BoardGridCell } from "./BoardGridCell";
 import { BoardContext } from "./BoardContext";
-import PileContainer from "./PileContainer";
-import { assert } from "console";
 import CardInstance from "./cards/CardInstance";
 import { Socket } from "socket.io-client";
-import OpDataContainer from "./OpDataContainer";
 import DeckOptionsContainer from "./DeckOptionsContainer";
+import PlayerDataDisplay from "./PlayerDataDisplay";
+import FacedownCardInstance from "./cards/FacedownCardInstance";
 
-export default function Board(props: {socket: Socket}) {
+export default function Board(props: { socket: Socket }) {
     const [playerId, setPlayerId] = useState(0);
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
             deck: [{
                 zone: { zoneName: "Deck", rowId: 1 }, instanceId: '4', owner: 0,
-                card: { name: "Deck card 1", description: "stands alone", cost: "1 V", 
-                type: "Tactic", value: "V" }
+                card: {
+                    name: "Deck card 1", description: "stands alone", cost: "1 V",
+                    type: "Tactic", value: "V"
+                }
             }],
-            graveyard: [], 
+            graveyard: [],
             damage: [],
             exile: [], hand: [
                 {
@@ -43,7 +42,6 @@ export default function Board(props: {socket: Socket}) {
     ]);
 
     useEffect(() => {
-        console.log("posting data");
         setAndPostBoardData(boardData);
         setAndPostPlayerData(playerData);
         setAndPostStackData(stackData);
@@ -51,25 +49,25 @@ export default function Board(props: {socket: Socket}) {
     }, [])
 
     function setAndPostPlayerData(data: PlayerData[]) {
-        props.socket.emit("playerData", {playerId: playerId, playerData: data})
+        props.socket.emit("playerData", { playerId: playerId, playerData: data })
         setPlayerData(data);
     }
 
     const [stackData, setStackData] = useState<CardInstanceT[]>([]);
     function setAndPostStackData(data: CardInstanceT[]) {
-        props.socket.emit("stackData", {playerId: playerId, stackData: data})
+        props.socket.emit("stackData", { playerId: playerId, stackData: data })
         setStackData(data);
     }
 
     const [foundryData, setFoundryData] = useState<number[][]>(Array(6).fill(Array(5).fill(-1)));
     function setAndPostFoundryData(data: number[][]) {
-        props.socket.emit("foundryData", {playerId: playerId, foundryData: data})
+        props.socket.emit("foundryData", { playerId: playerId, foundryData: data })
         setFoundryData(data);
     }
 
     const [boardData, setBoardData] = useState<BoardStackInstanceT[][]>(Array(6).fill(Array(5).fill(null)));
     function setAndPostBoardData(data: BoardStackInstanceT[][]) {
-        props.socket.emit("boardData", {playerId: playerId, boardData: data})
+        props.socket.emit("boardData", { playerId: playerId, boardData: data })
         setBoardData(data);
     }
 
@@ -79,9 +77,19 @@ export default function Board(props: {socket: Socket}) {
         colId: 0
     });
 
-    const [focusedCard, setFocusedCard] = useState<CardInstanceT|undefined>(undefined);
+    const [focusedCard, setFocusedCard] = useState<CardInstanceT | undefined>(undefined);
+    const [activeCard, setActiveCard] = useState<CardInstanceT | undefined>(undefined);
 
-    props.socket.onAny((event, ...args)=> {
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 1,
+            },
+        })
+    )
+
+    props.socket.onAny((event, ...args) => {
         if (event === "playerId") {
             setPlayerId(args[0]);
         }
@@ -97,8 +105,6 @@ export default function Board(props: {socket: Socket}) {
     })
 
     function addCardToHand() {
-        console.log("adding data");
-        console.log(playerData)
         let id = (Math.random() + 1).toString(4)
         let newData = playerData.slice();
         let rowId = playerData[playerId].hand.length;
@@ -107,7 +113,6 @@ export default function Board(props: {socket: Socket}) {
             card: { name: `${rowId}: Sheoldred, The Apocolypse`, description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
         })
         setAndPostPlayerData(newData);
-        console.log(newData.length)
     }
 
     function addCardToBoard() {
@@ -173,13 +178,13 @@ export default function Board(props: {socket: Socket}) {
                 newStackData.splice(i, 1);
             }
         }
-       
+
         newPlayerData[playerId].graveyard = [];
         newPlayerData[playerId].damage = [];
         newPlayerData[playerId].exile = [];
         newPlayerData[playerId].hand = [];
         newPlayerData[playerId].deck = [];
-         
+
         // TODO this needs to rezone the board data to avoid bugs, but these
         // are non-game breaking so low priority
         setAndPostBoardData(newBoardData);
@@ -221,7 +226,7 @@ export default function Board(props: {socket: Socket}) {
 
     function handleShuffle() {
         let newData = playerData.slice();
-        shuffle(newData[playerId].deck.map((inst) => {return inst.card}), newData);
+        shuffle(newData[playerId].deck.map((inst) => { return inst.card }), newData);
         setAndPostPlayerData(newData);
     }
 
@@ -329,7 +334,6 @@ export default function Board(props: {socket: Socket}) {
     }
 
     function handlePileDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
-        
         if (destZone.zoneName === "Deck") {
             newPlayerData[playerId].deck.unshift(...sourceZoneData);
         } else if (destZone.zoneName === "Exile") {
@@ -347,7 +351,6 @@ export default function Board(props: {socket: Socket}) {
             let newBoardData = boardData.map((item) => item.slice());
             newBoardData[zone.rowId][zone.colId!] = { ...newBoardData[zone.rowId][zone.colId!]!, attacking: attacking, activated: true };
             setAndPostBoardData(newBoardData);
-            console.log(`handling attacking in ${attacking}`)
         }
     }
 
@@ -359,7 +362,6 @@ export default function Board(props: {socket: Socket}) {
                 newBoardData[zone.rowId][zone.colId!]!.attacking = undefined
             }
             setAndPostBoardData(newBoardData)
-            console.log(`activated ${zone.rowId} ${zone.colId!}`)
         }
     }
 
@@ -368,7 +370,6 @@ export default function Board(props: {socket: Socket}) {
             let newBoardData = boardData.map((item) => item.slice());
             newBoardData[zone.rowId][zone.colId!]!.annotation = annotation
             setAndPostBoardData(newBoardData)
-            console.log(`updated annotation ${zone.rowId} ${zone.colId!} to ${annotation}`)
         }
 
     }
@@ -401,19 +402,41 @@ export default function Board(props: {socket: Socket}) {
         return playerId;
     }, [playerId])
 
+    
+    function isCardFaceup(focusedCard: CardInstanceT) {
+        return ["Deck", "Damage"].indexOf(focusedCard.zone.zoneName) === -1;
+    }
+
+    const setFocusedCardCallback = useCallback((card: CardInstanceT) => {
+        if (isCardFaceup(card)) {
+            if (card.zone.zoneName === "Board") {
+                setActiveZone(card.zone);
+            }
+            setFocusedCard(card);
+        }
+    }, [setFocusedCard])
+
+    const getActiveCardCallback = useCallback(() => {
+        return activeCard;
+    }, [activeCard])
+
+    function handleDragStart(event: DragStartEvent) {
+        setFocusedCard(event.active.data.current!.cardInstance)
+        setActiveCard(event.active.data.current!.cardInstance)
+    }
+
     function handleDragEnd(event: DragEndEvent) {
-        if (event.active.data.current?.zone && event.over?.data.current?.zone) {
+        if (focusedCard?.zone && event.over?.data.current?.zone) {
             // we need to check the source zone in order to popluate the source data
             let destZone = event.over.data.current.zone as ZoneIdT
-            let srcZone = event.active.data.current.zone as ZoneIdT
+            let srcZone = focusedCard.zone as ZoneIdT
             let srcZoneName = srcZone.zoneName;
             let destZoneName = destZone.zoneName;
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
 
             let newBoardData = boardData.map((item) => item.slice());
-
-            if (srcZoneLoc.toString() !== destZoneLoc.toString() || srcZone.zoneName !== destZone.zoneName) {
+            if (isMoveValid(srcZoneLoc, destZoneLoc, srcZone, destZone)) {
 
                 let sourceZoneData: CardInstanceT[] = []
                 let newPlayerData = playerData.slice();
@@ -443,16 +466,22 @@ export default function Board(props: {socket: Socket}) {
                 setAndPostBoardData(newBoardData);
                 setAndPostPlayerData(newPlayerData);
                 setAndPostStackData(newStackData);
-                props.socket.emit("boardData", {playerId: playerId, boardData: newBoardData})
+                props.socket.emit("boardData", { playerId: playerId, boardData: newBoardData })
             }
         }
         if (event.over?.data.current?.zone.zoneName === "Board") {
             setActiveZone(event.over.data.current!.zone);
         }
-        if (["Deck", "Damage"].indexOf(event.active.data.current?.zone.zoneName) === -1) {
-            console.log(event)
-            setFocusedCard(event.active.data.current?.cardInstance);
+        setActiveCard(undefined);
+    }
+
+    function isMoveValid(srcZoneLoc: number[], destZoneLoc: number[], srcZone: ZoneIdT, destZone: ZoneIdT) {
+        if (srcZone.zoneName === "Board" && destZone.zoneName === "Board") {
+            // prevent moving a parent into itself via the preview zone
+            return !(srcZone.rowId === destZone.rowId && srcZone.colId === destZone.colId
+                && (srcZone.index ?? -1) === -1);
         }
+        return srcZoneLoc.toString() !== destZoneLoc.toString() || srcZone.zoneName !== destZone.zoneName;
     }
 
     function rezoneBoardData(newBoardData: BoardStackInstanceT[][], zoneLoc: number[]) {
@@ -511,82 +540,44 @@ export default function Board(props: {socket: Socket}) {
 
     // Sets the individual card preview
     let card;
-    if (focusedCard && (focusedCard.card as UnitCardT).attack) {
-        let cardData = focusedCard.card as UnitCardT;
-        card = <UnitCard  {...cardData} />;
-    } else if (focusedCard) {
-        card = <StratagemCard {...focusedCard.card} />;
+    if (focusedCard && isCardFaceup(focusedCard)) {
+        if ((focusedCard.card as UnitCardT).attack) {
+            let cardData = focusedCard.card as UnitCardT;
+            card = <UnitCard  {...cardData} />;
+        } else if (focusedCard) {
+            card = <StratagemCard {...focusedCard.card} />;
+        }
     }
 
     function getOpId() {
         return (playerId + 1) % 2;
     }
 
-
     return (
-        <DndContext onDragEnd={(event) => { handleDragEnd(event) }} modifiers={[snapCenterToCursor]}>
+        <DndContext
+            onDragStart={(event) => { handleDragStart(event) }}
+            onDragEnd={(event) => { handleDragEnd(event) }}
+            sensors={sensors}
+            modifiers={[snapCenterToCursor]}>
             <BoardContext.Provider value={{
-                handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback, 
+                handleActivate: handleActivatingCallback, handleAttack: handleAttackingCallback,
                 setAnnotation: setAnnotationCallback, getPlayerId: getPlayerId,
-                updateFoundryData: updateFoundryDataCallback
+                updateFoundryData: updateFoundryDataCallback,
+                setFocusedCard: setFocusedCardCallback,
+                getActiveCard: getActiveCardCallback
             }}>
                 <div className={css.gameBoard}>
-                    <div className={css.OpUnknownData}>
-                        <button style={{ gridArea: "OpAvatar", height: "fit-content" }} onClick={() => { addCardToHand() }}>{playerData[(playerId + 1)%2].deck.length}</button>
-                        <div className={css.OpHand} onClick={() => { addCardToBoard() }}>
-                            <div style={{width: "max-content"}}>O HAND: {playerData[getOpId()].hand.length}</div>
-                            <OpDataContainer cards={playerData[getOpId()].hand} faceup={false} />
-                        </div>
-                        <div className={css.OpDeck} onClick={() => { addCardToBoard() }}>
-                            <div style={{width: "max-content"}}>O DECK: {playerData[getOpId()].deck.length}</div>
-                            <OpDataContainer cards={playerData[getOpId()].deck} faceup={false} />
-                        </div>
-                        <div className={css.OpDamage} onClick={() => { addCardToBoard() }}>
-                            <div style={{width: "max-content"}}>O DMG: {playerData[getOpId()].damage.length}</div>
-                            <OpDataContainer cards={playerData[getOpId()].damage} faceup={false} />
-                        </div>
-                    </div>
-                    <div className={css.OpKnownData}>
-                        <div className={css.OpGraveyard} onClick={() => { addCardToBoard() }}>
-                            <div>O GY: {playerData[getOpId()].graveyard.length}</div>
-                            <OpDataContainer cards={playerData[getOpId()].graveyard} faceup={true} />
-                        </div>
-                    </div>
-                    <div className={css.OpKnownData}>
-                        <div className={css.OpExile} onClick={() => { addCardToBoard() }}>
-                            <div>O EX: {playerData[getOpId()].exile.length}</div>
-                            <OpDataContainer cards={playerData[getOpId()].exile} faceup={true} />
-                        </div>
-                    </div>
-                    <div className={css.PlayerUnknownData}>
-                        <div className={css.PlayerDeck}>
-                            <div>DECK: {playerData[playerId].deck.length}</div>
-                            <PileContainer {...{cards: playerData[playerId].deck, zoneName:"Deck", faceup: false}}/>
-                       </div>
-                    </div>
-                    <div className={css.PlayerUnknownData}>
-                        <div className={css.PlayerDmg}>
-                            <div>DMG: {playerData[playerId].damage.length}</div>
-                            <PileContainer {...{cards: playerData[playerId].damage, zoneName: "Damage", faceup: false}}/>
-                       </div>
-                    </div>
-                    <div className={css.PlayerKnownData}>
-                        <div className={css.PlayerGy}>
-                            <div style={{padding: "0px 0px 5px 0px"}}>GY: {playerData[playerId].graveyard.length}</div>
-                            <PileContainer {...{cards: playerData[playerId].graveyard, zoneName:"Graveyard", faceup: true}}/>
-                       </div>
-                    </div>
-                    <div className={css.PlayerKnownData}>
-                        <div className={css.PlayerExile}>
-                            <div style={{padding: "0px 0px 5px 0px"}}>EXILE: {playerData[playerId].exile.length}</div>
-                            <PileContainer {...{cards: playerData[playerId].exile, zoneName: "Exile", faceup: true}}/>
-                       </div>
-                    </div>
+                    <PlayerDataDisplay playerData={playerData} playerId={playerId}
+                        addCardToHand={addCardToHand}
+                        addCardToBoard={addCardToBoard}
+                        opId={getOpId()}
+                    />
                     <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 }, areaName: "Stack" }} />
                     <div className={css.battlefieldGrid}>
                         {...boardRender}
                     </div>
                     <PreviewZone {...{ instances: previewedInstances, zone: activeZone, areaName: "CellPreview" }} />
+                    <div style={{gridArea: "PlayerHand", position: "relative", marginTop: "-158px"}}>{`In Hand: ${playerData[playerId].hand.length}`}</div>
                     <div className={css.break}></div>
                     <PreviewZone {...{
                         instances: playerData[playerId].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal",
@@ -600,7 +591,16 @@ export default function Board(props: {socket: Socket}) {
                     </div>
                 </div>
             </BoardContext.Provider>
-
+            <DragOverlay dropAnimation={null}>
+                {focusedCard ? (
+                    (isCardFaceup(focusedCard)) ?
+                        <CardInstance {...focusedCard}
+                            activated={(focusedCard.zone.zoneName === "Board")
+                                && (boardData[focusedCard.zone.rowId][focusedCard.zone.colId!]
+                                    ?.activated ?? false)} />
+                        : <FacedownCardInstance {...focusedCard} />
+                ) : null}
+            </DragOverlay>
         </DndContext>
     )
 }

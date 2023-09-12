@@ -7,8 +7,9 @@ import { BoardContext } from '../BoardContext';
 
 export default function BoardStackContainer(props: BoardStackInstanceT) {
     const handleActivate = useContext(BoardContext).handleActivate;
+    const setFocusedCard = useContext(BoardContext).setFocusedCard;
 
-
+    
     function onClick(e: React.MouseEvent) {
         if (props?.instances[0].zone && e.detail >= 2) {
             handleActivate(props?.instances[0].zone);
@@ -33,7 +34,7 @@ export default function BoardStackContainer(props: BoardStackInstanceT) {
             break;
     }
 
-    return <div onMouseDown={(e) => { onClick(e); }}
+    return <div onClickCapture={onClick}
         style={style}>
         <CardInstance {...props!.instances[0]} activated={props!.activated} annotation={props?.annotation} />
     </div>

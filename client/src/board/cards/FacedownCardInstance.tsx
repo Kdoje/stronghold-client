@@ -14,11 +14,12 @@ export default function FacedownCardInstance(props: CardInstanceT) {
     });
 
     const cardToRender = props.card
-    const style = transform ? {
+    const style = /* transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         position: "fixed", // sets parent to viewport and enables dragging
         zIndex: 20, // set z index so dragged stuff appears over everything else
-    } : {} as React.CSSProperties;
+    } : */
+    {} as React.CSSProperties;
 
 
     let card;

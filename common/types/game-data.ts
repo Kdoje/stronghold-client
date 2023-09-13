@@ -36,6 +36,10 @@ export type AttackDirT = 'N'|'S'|'E'|'W'
 
 export type ZoneNameT = 'Board' | 'Hand' | 'Stack' | 'Deck' | 'Damage' | 'Exile' | 'Graveyard'
 
+export enum PhaseName {
+    Refresh, Draw, Movements, Attacks, Defenders, Damage, Deployment, End
+}
+
 // colId is null for zones that are 1 dimmensional (anything but board)
 // index is null for zones that aren't stacks (anything but board)
 export type ZoneIdT = {

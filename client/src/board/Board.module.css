@@ -5,9 +5,9 @@
   grid-template-rows: min-content min-content min-content;
   gap: 10px 10px;
   grid-template-areas:
-    "OpUnknownData Board Board Board OpKnownData ."
-    "Stack Board Board Board CellPreview CardPreview"
-    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData DeckSettings";
+    "OpUnknownData Board Board Board OpKnownData . ."
+    "Stack Board Board Board CellPreview CardPreview Phase"
+    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData DeckSettings .";
 }
 
 .DeckSettings {
@@ -175,10 +175,20 @@
 
 .CardPreview {
   grid-area: CardPreview;
+  min-width: 226px;
 }
 
 .Board {
   grid-area: Board;
+}
+
+.Phase {
+  grid-area: Phase;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 15px;
+  justify-self: left;
 }
 
 .battlefieldGrid {

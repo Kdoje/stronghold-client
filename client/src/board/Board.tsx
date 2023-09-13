@@ -1,6 +1,6 @@
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
-import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT } from "common/types/game-data";
+import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName } from "common/types/game-data";
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { Socket } from "socket.io-client";
 import DeckOptionsContainer from "./DeckOptionsContainer";
 import PlayerDataDisplay from "./PlayerDataDisplay";
 import FacedownCardInstance from "./cards/FacedownCardInstance";
+import PhaseSelector from "./PhaseSelector";
 
 export default function Board(props: { socket: Socket }) {
     const [playerId, setPlayerId] = useState(0);
@@ -79,6 +80,11 @@ export default function Board(props: { socket: Socket }) {
 
     const [focusedCard, setFocusedCard] = useState<CardInstanceT | undefined>(undefined);
     const [activeCard, setActiveCard] = useState<CardInstanceT | undefined>(undefined);
+    const [curPhase, setCurPhase] = useState<PhaseName>(PhaseName['Refresh']);
+    function setAndPostCurPhase(data: PhaseName) {
+        props.socket.emit("phaseData", { playerId: playerId, curPhase: data })
+        setCurPhase(data);
+    }
 
 
     const sensors = useSensors(
@@ -101,6 +107,8 @@ export default function Board(props: { socket: Socket }) {
             setStackData(args[0].stackData);
         } else if (event == "foundryData") {
             setFoundryData(args[0].foundryData);
+        } else if (event === "phaseData") {
+            setCurPhase(args[0].curPhase);
         }
     })
 
@@ -191,6 +199,7 @@ export default function Board(props: { socket: Socket }) {
         setAndPostPlayerData(newPlayerData);
         setAndPostStackData(newStackData);
         setAndPostFoundryData(newFoundryData);
+        setAndPostCurPhase(PhaseName.Refresh);
     }
 
     function setPlayerDeckData(cards: Array<AnyCardT>, wielder?: AnyCardT) {
@@ -589,6 +598,7 @@ export default function Board(props: { socket: Socket }) {
                             resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
                             shuffleDeck={() => { handleShuffle(); }} />
                     </div>
+                    <PhaseSelector setPhase={setAndPostCurPhase} phase={curPhase}/>
                 </div>
             </BoardContext.Provider>
             <DragOverlay dropAnimation={null}>

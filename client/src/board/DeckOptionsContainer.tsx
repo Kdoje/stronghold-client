@@ -10,7 +10,8 @@ import DeckEntry from '../deck/DeckEntry';
 export default function DeckOptionsContainer(props: {
     setDeck: (cards: Array<AnyCardT>, wielder: AnyCardT) => void,
     shuffleDeck: () => void,
-    resetPlayer: (cards: Array<AnyCardT>, wielder?: AnyCardT) => void
+    resetPlayer: (cards: Array<AnyCardT>, wielder?: AnyCardT) => void,
+    closePreview: () => void
 }) {
 
     const [deckData, setDeckData] = useState<{ cards: Array<AnyCardT>, wielder?: AnyCardT }>({ cards: [] });
@@ -19,11 +20,12 @@ export default function DeckOptionsContainer(props: {
     let color = getPlayerId() === 0 ? "red" : "green";
 
     const DECK_BUTTON_STYLE = {
+        maxWidth: "100px",
+        minWidth: "100px",
         height: "35px",
         backgroundColor: `${color}`
     }
 
-    // TODO this needs to create a more sensible popup the user can interact with
     async function onSetDeckClick(inputData: string) {
         let requestOptions = {
             method: 'POST',
@@ -41,10 +43,13 @@ export default function DeckOptionsContainer(props: {
     }
 
     return <div
-        style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "15px" }}>
+        style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "15px",
+        maxHeight: "100px",
+        flexWrap: "wrap"}}>
         <button style={DECK_BUTTON_STYLE} onClick={() => setShowDeckModal(true)}>SET DECK</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.shuffleDeck() }}>SHUFFLE</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.resetPlayer(deckData.cards, deckData.wielder) }}>RESET</button>
+        <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.closePreview() }}>CLOSE PREVEIW</button>
         <div>{showDeckModal ? (
             <DeckEntry onAccept={(inputData) => onSetDeckClick(inputData)} onClose={() => setShowDeckModal(false)} />
             ) : null}</div>

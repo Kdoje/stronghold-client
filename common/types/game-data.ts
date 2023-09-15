@@ -42,11 +42,13 @@ export enum PhaseName {
 
 // colId is null for zones that are 1 dimmensional (anything but board)
 // index is null for zones that aren't stacks (anything but board)
+// playerId is null for zone that aren't owned by a player (stack and board)
 export type ZoneIdT = {
     zoneName: ZoneNameT
     rowId: number
     colId?: number
     index?: number
+    playerId?: number
 }
 
 export type CardInstanceDataNT = CardInstanceT | null

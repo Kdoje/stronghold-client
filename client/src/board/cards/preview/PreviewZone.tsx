@@ -83,7 +83,9 @@ export default function PreviewZone(props: PreviewZoneDataT) {
         let instanceZoneId = instance.zone;
         if (props.zone.zoneName === "Board") {
             instanceZoneId = { ...props.zone, index: instanceIndex };
-        }
+        } else {
+            instanceZoneId = { ...props.zone, rowId: instanceIndex };
+        } 
         
         instanceIndex += 1;
 

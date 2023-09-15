@@ -12,6 +12,7 @@
 
 .DeckSettings {
   grid-area: DeckSettings;
+  max-height: 100px;
 }
 
 .PlayerUnknownData {
@@ -253,7 +254,6 @@
 }
 
 .previewAreaVertical {
-  /* TODO this should be hidden unless there's stuff in it */
   min-height: 500px;
   max-height: 500px;
   max-width: 150px;

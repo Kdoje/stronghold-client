@@ -24,7 +24,7 @@ export default function PileContainer(props: {cards: Array<CardInstanceT>, zoneN
         }
     }
 
-    return <DropZone zone={{zoneName: props.zoneName, rowId: 0}}>
+    return <DropZone style={{minHeight: "75px", minWidth: "75px"}} zone={{zoneName: props.zoneName, rowId: 0}}>
         {pile}
     </DropZone>
 }

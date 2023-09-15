@@ -328,6 +328,7 @@ export default function Board(props: { socket: Socket }) {
     }
 
     function handlePileSourceData(srcZone: ZoneIdT, curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
+        // TODO this needs to handle re-ordering the cards as well
         let sourceZoneData: CardInstanceT[] = []
         if (srcZone.zoneName === "Deck") {
             sourceZoneData.push(newPlayerData[playerId].deck.shift()!);
@@ -343,6 +344,7 @@ export default function Board(props: { socket: Socket }) {
     }
 
     function handlePileDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
+        // TODO this needs to handle re-ordering the cards as well
         if (destZone.zoneName === "Deck") {
             newPlayerData[playerId].deck.unshift(...sourceZoneData);
         } else if (destZone.zoneName === "Exile") {
@@ -407,6 +409,10 @@ export default function Board(props: { socket: Socket }) {
         updateFoundryData(zone, owner);
     }, [updateFoundryData])
 
+    const updateActiveZoneCallback = useCallback((zone: ZoneIdT) => {
+        setActiveZone(zone);
+    }, [setActiveZone])
+
     const getPlayerId = useCallback(() => {
         return playerId;
     }, [playerId])
@@ -435,6 +441,7 @@ export default function Board(props: { socket: Socket }) {
     }
 
     function handleDragEnd(event: DragEndEvent) {
+        console.log("moving", focusedCard, event)
         if (focusedCard?.zone && event.over?.data.current?.zone) {
             // we need to check the source zone in order to popluate the source data
             let destZone = event.over.data.current.zone as ZoneIdT
@@ -443,7 +450,7 @@ export default function Board(props: { socket: Socket }) {
             let destZoneName = destZone.zoneName;
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
-
+            console.log("moving", focusedCard, destZone)
             let newBoardData = boardData.map((item) => item.slice());
             if (isMoveValid(srcZoneLoc, destZoneLoc, srcZone, destZone)) {
 
@@ -485,6 +492,12 @@ export default function Board(props: { socket: Socket }) {
     }
 
     function isMoveValid(srcZoneLoc: number[], destZoneLoc: number[], srcZone: ZoneIdT, destZone: ZoneIdT) {
+        let srcPlayerId = srcZone.playerId ?? playerId;
+        let destPlayerId = destZone.playerId ?? playerId;
+        if (!(srcPlayerId === playerId) || !(destPlayerId === playerId)) {
+           console.log("move failed", srcZone, destZone)
+            return false
+        }
         if (srcZone.zoneName === "Board" && destZone.zoneName === "Board") {
             // prevent moving a parent into itself via the preview zone
             return !(srcZone.rowId === destZone.rowId && srcZone.colId === destZone.colId
@@ -541,10 +554,21 @@ export default function Board(props: { socket: Socket }) {
     }))
 
     // Sets the instances for the preview display
-    let previewedInstances: Array<CardInstanceT> = []
+    let previewedInstances: Array<CardInstanceT> = boardData[0][0]?.instances ?? []
     if (activeZone.colId !== undefined && activeZone.zoneName === "Board" &&
         boardData[activeZone.rowId][activeZone.colId!]?.instances) {
         previewedInstances = boardData[activeZone.rowId][activeZone.colId!]!.instances
+    } else {
+        // TODO we should create a method to get the zone data with the zone name
+        if (activeZone.zoneName === "Deck") {
+            previewedInstances = playerData[activeZone.playerId ?? playerId].deck;
+        } else if (activeZone.zoneName === "Damage") {
+            previewedInstances = playerData[activeZone.playerId ?? playerId].damage;
+        } else if (activeZone.zoneName === "Exile") {
+            previewedInstances = playerData[activeZone.playerId ?? playerId].exile;
+        } else if (activeZone.zoneName === "Graveyard") {
+            previewedInstances = playerData[activeZone.playerId ?? playerId].graveyard;
+        }
     }
 
     // Sets the individual card preview
@@ -579,6 +603,7 @@ export default function Board(props: { socket: Socket }) {
                     <PlayerDataDisplay playerData={playerData} playerId={playerId}
                         addCardToHand={addCardToHand}
                         addCardToBoard={addCardToBoard}
+                        setActiveZone={updateActiveZoneCallback}
                         opId={getOpId()}
                     />
                     <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 }, areaName: "Stack" }} />
@@ -596,7 +621,8 @@ export default function Board(props: { socket: Socket }) {
                     <div className={css.DeckSettings}>
                         <DeckOptionsContainer setDeck={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
                             resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
-                            shuffleDeck={() => { handleShuffle(); }} />
+                            shuffleDeck={() => { handleShuffle(); }}
+                            closePreview={() => { setActiveZone({zoneName: "Board", rowId: 0, colId: 0})}} />
                     </div>
                     <PhaseSelector setPhase={setAndPostCurPhase} phase={curPhase}/>
                 </div>

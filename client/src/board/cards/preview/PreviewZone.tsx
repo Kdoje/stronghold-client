@@ -2,10 +2,11 @@
 import { CardInstanceT, ZoneIdT } from "common/types/game-data";
 import css from '../../Board.module.css'
 import CardInstance from "../CardInstance";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { DropZone } from "../../DropZone";
 import React, { useContext } from "react";
 import { BoardContext } from "../../BoardContext";
+import e from "cors";
 
 export type PreviewZoneDataT = {
     instances: Array<CardInstanceT>
@@ -18,11 +19,13 @@ export const PREVIEW_ID_POSTFIX = '-preview'
 
 export default function PreviewZone(props: PreviewZoneDataT) {
 
+    const previewElt = useRef<HTMLDivElement|null>(null)
+    
     let instanceIndex = 0;
     const getActiveCard = useContext(BoardContext).getActiveCard;
 
     let dropZoneDirection = css.horizontalDropZone;
-    let previewAreaName = css.previewAreaHorizontal
+    let previewAreaName = css.previewAreaHorizontal;
 
     if ((props.direction ?? "vertical") === "vertical") {
         dropZoneDirection = css.verticalDropZone;
@@ -105,5 +108,29 @@ export default function PreviewZone(props: PreviewZoneDataT) {
         }
     })
 
-    return <div className={previewAreaName} style={{gridArea: `${props.areaName}`}}>{...previewRender}</div>
+    useEffect(() => {
+        if (previewElt.current !== null) {
+            if ((props.direction ?? "vertical") === "horizontal") {
+                // get the ref to the element then add:
+                previewElt.current.addEventListener('wheel', (e) => {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        previewElt.current.scrollLeft += e.deltaY;
+                    }
+                });
+            }
+        } else {
+            throw new Error("preview elt not found, can't enable scrolling.")
+        }
+    })
+
+    function handleRef(e){
+        e.preventDefault();
+        e.currentTarget.scrollLeft += e.deltaY; 
+     }
+
+
+    return <div ref={previewElt} className={previewAreaName} style={{ gridArea: `${props.areaName}` }}>
+        {...previewRender}
+        </div>
 }

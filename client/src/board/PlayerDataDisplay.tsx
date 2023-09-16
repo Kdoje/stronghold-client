@@ -63,7 +63,7 @@ export default function PlayerDataDisplay(props: {
                 </div>
             </div>
             <div className={css.PlayerUnknownData}>
-                <div className={css.PlayerDeck} onDoubleClickCapture={() => { updatePlayerActiveZone("Deck"); console.log("hi")}}>
+                <div className={css.PlayerDeck} onDoubleClickCapture={() => { updatePlayerActiveZone("Deck")}}>
                     <div>DECK: {playerData[playerId].deck.length}</div>
                     <PileContainer {...{ cards: playerData[playerId].deck, zoneName: "Deck", faceup: false }} />
                 </div>

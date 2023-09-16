@@ -21,7 +21,7 @@ export default function Board(props: { socket: Socket }) {
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
             deck: [{
-                zone: { zoneName: "Deck", rowId: 1 }, instanceId: '4', owner: 0,
+                zone: { zoneName: "Deck", rowId: 0 }, instanceId: '4', owner: 0,
                 card: {
                     name: "Deck card 1", description: "stands alone", cost: "1 V",
                     type: "Tactic", value: "V"
@@ -247,6 +247,7 @@ export default function Board(props: { socket: Socket }) {
             amount = Math.min(deckLength, amount * 2);
             let damageCards = newData[playerId].deck.splice(deckLength - amount, amount);
             newData[playerId].damage.unshift(...damageCards);
+            rezonePlayerData(newData)
             setAndPostPlayerData(newData);
         }
     }
@@ -439,9 +440,9 @@ export default function Board(props: { socket: Socket }) {
         || focusedCard.instanceId.toString().includes(PREVIEW_ID_POSTFIX);
     }
 
-    const setFocusedCardCallback = useCallback((card: CardInstanceT) => {
+    const setFocusedCardCallback = useCallback((card: CardInstanceT, setZone?: boolean) => {
         if (isCardVisible(card)) {
-            if (card.zone.zoneName === "Board") {
+            if (card.zone.zoneName === "Board" && (setZone ?? true)) {
                 setActiveZone(card.zone);
             }
             setFocusedCard(card);
@@ -458,7 +459,6 @@ export default function Board(props: { socket: Socket }) {
     }
 
     function handleDragEnd(event: DragEndEvent) {
-        console.log("moving", focusedCard, event)
         if (focusedCard?.zone && event.over?.data.current?.zone) {
             // we need to check the source zone in order to popluate the source data
             let destZone = event.over.data.current.zone as ZoneIdT
@@ -467,7 +467,6 @@ export default function Board(props: { socket: Socket }) {
             let destZoneName = destZone.zoneName;
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
-            console.log("moving", focusedCard, destZone)
             let newBoardData = boardData.map((item) => item.slice());
             if (isMoveValid(srcZoneLoc, destZoneLoc, srcZone, destZone)) {
 
@@ -645,7 +644,7 @@ export default function Board(props: { socket: Socket }) {
                 {focusedCard ? (
                     (isCardVisible(focusedCard) || focusedCard.instanceId.toString().includes(PREVIEW_ID_POSTFIX)) ?
                         <CardInstance {...focusedCard}
-                            activated={(focusedCard.zone.zoneName === "Board")
+                            activated={(focusedCard.zone.zoneName === "Board") && !focusedCard.instanceId.toString().includes(PREVIEW_ID_POSTFIX)
                                 && (boardData[focusedCard.zone.rowId][focusedCard.zone.colId!]
                                     ?.activated ?? false)} />
                         : <FacedownCardInstance {...focusedCard} />

@@ -19,7 +19,9 @@
     grid-column-start: 1;
     position: relative;
     height: fit-content;
-    left: 0px;
+    transform-origin: left;
+    left: 32px;
+    top: 30px;
 }
 
 .titleOverlayText {

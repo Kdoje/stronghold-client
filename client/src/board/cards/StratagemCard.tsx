@@ -1,6 +1,7 @@
 import { StratagemCardT } from "common/types/game-data";
 import React from "react";
 import css from "./Card.module.css"
+import {Md5} from 'ts-md5';
 
 
 export class StratagemCard extends React.Component<StratagemCardT & {displayOverlay?: boolean}> {
@@ -17,8 +18,10 @@ export class StratagemCard extends React.Component<StratagemCardT & {displayOver
         if (this.props.value === "G") {
             cardImage = "stratagem-card-gold.png";
         }
+        let imgSrc = `https://www.gravatar.com/avatar/${Md5.hashStr(this.props.name)}?s=180&d=retro&r=G`
+
             return <div className={css.cardContainer}>
-                <img className={css.portraitImage} src=""></img>
+                <img className={css.portraitImage} src={imgSrc}></img>
                 <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name + ": " + this.props.cost : undefined}</div>
                 <div className={css.titleText}>{this.props.name}</div>
                 <div className={css.costText}>{this.props.cost}</div>

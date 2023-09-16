@@ -1,6 +1,7 @@
 import React from "react";
 import {UnitCardT} from 'common/types/game-data'; 
 import css from "./Card.module.css"
+import {Md5} from 'ts-md5';
 
 export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: boolean}> {
     constructor(props: UnitCardT) {
@@ -32,8 +33,10 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
         statsText += this.props.attack  + " / ";
         statsText += this.props.health;
 
+        let imgSrc = `https://www.gravatar.com/avatar/${Md5.hashStr(this.props.name)}?s=180&d=retro&r=G`
+
         let elt = <div className={css.cardContainer}>
-            <img className={css.portraitImage} src=""></img>
+            <img className={css.portraitImage} src={imgSrc}></img>
             <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name + ":" + this.props.cost : undefined}</div>
             <div className={css.titleText}>{this.props.name}</div>
             <div className={css.costText}>{this.props.cost}</div>

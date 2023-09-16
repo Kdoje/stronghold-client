@@ -43,7 +43,16 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
 
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
-            <div className={css.cardPreivewContainer} style={rotatedStyle} onClickCapture={() => {
+            <div className={css.cardPreivewContainer} style={rotatedStyle} 
+            onPointerOver={
+                (e) => {
+                    console.log(e.buttons);
+                    if (e.buttons === 0 || e.buttons === 3) {
+                        setFocusedCard(props, false);
+                    }
+                }
+            }
+            onClickCapture={() => {
                 setFocusedCard(props);
             }}>
                 {annotationRender}

@@ -7,7 +7,7 @@ export type BoardContextT = {
     setAnnotation: (zone: ZoneIdT, annotation: string|undefined) => void
     getPlayerId: () => number
     updateFoundryData: (zone: ZoneIdT, owner: number) => void
-    setFocusedCard: (card: CardInstanceT) => void
+    setFocusedCard: (card: CardInstanceT, setZone?: boolean) => void
     getActiveCard: () => CardInstanceT | undefined
 } 
 

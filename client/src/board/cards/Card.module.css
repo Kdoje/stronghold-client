@@ -122,6 +122,7 @@
     align-items: center;
     justify-content: left;
     text-align: left;
+    line-height: 10px;
 }
 
 .moveText {

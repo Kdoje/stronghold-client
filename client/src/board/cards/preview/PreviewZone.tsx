@@ -14,6 +14,8 @@ export type PreviewZoneDataT = {
     areaName: string
 }
 
+export const PREVIEW_ID_POSTFIX = '-preview' 
+
 export default function PreviewZone(props: PreviewZoneDataT) {
 
     let instanceIndex = 0;
@@ -78,7 +80,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
     let instances = props.instances ? props.instances : []
     instances.forEach((instance) => {
         // use a consistent id for the previewed instances
-        let id = instance.instanceId + '-preview';
+        let id = instance.instanceId + PREVIEW_ID_POSTFIX;
         
         let instanceZoneId = instance.zone;
         if (props.zone.zoneName === "Board") {

@@ -5,7 +5,7 @@ import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useEffect, useState } from "react";
 import css from './Board.module.css';
-import PreviewZone from "./cards/preview/PreviewZone";
+import PreviewZone, { PREVIEW_ID_POSTFIX } from "./cards/preview/PreviewZone";
 import { BoardGridCell } from "./BoardGridCell";
 import { BoardContext } from "./BoardContext";
 import CardInstance from "./cards/CardInstance";
@@ -239,6 +239,22 @@ export default function Board(props: { socket: Socket }) {
         setAndPostPlayerData(newData);
     }
 
+    function handleTakeDamage(amount: number) {
+        if (amount > 0) {
+            let newData = playerData.slice();
+            let deckLength = newData[playerId].deck.length
+            // damage is twice the amount off the bottom
+            amount = Math.min(deckLength, amount * 2);
+            let damageCards = newData[playerId].deck.splice(deckLength - amount, amount);
+            newData[playerId].damage.unshift(...damageCards);
+            setAndPostPlayerData(newData);
+        }
+    }
+
+    function getOpId() {
+        return (playerId + 1) % 2;
+    }
+
     /**
      * 
      * @param newBoardData the board data after the source zone data has been moved
@@ -331,13 +347,13 @@ export default function Board(props: { socket: Socket }) {
         // TODO this needs to handle re-ordering the cards as well
         let sourceZoneData: CardInstanceT[] = []
         if (srcZone.zoneName === "Deck") {
-            sourceZoneData.push(newPlayerData[playerId].deck.shift()!);
+            sourceZoneData.push(newPlayerData[playerId].deck.splice(srcZone.rowId, 1)[0]);
         } else if (srcZone.zoneName === "Exile") {
-            sourceZoneData.push(newPlayerData[playerId].exile.shift()!);
+            sourceZoneData.push(newPlayerData[playerId].exile.splice(srcZone.rowId, 1)[0]);
         } else if (srcZone.zoneName === "Graveyard") {
-            sourceZoneData.push(newPlayerData[playerId].graveyard.shift()!);
+            sourceZoneData.push(newPlayerData[playerId].graveyard.splice(srcZone.rowId, 1)[0]);
         } else {
-            sourceZoneData.push(newPlayerData[playerId].damage.shift()!);
+            sourceZoneData.push(newPlayerData[playerId].damage.splice(srcZone.rowId, 1)[0]);
         }
         rezonePlayerData(newPlayerData);
         return sourceZoneData
@@ -346,13 +362,13 @@ export default function Board(props: { socket: Socket }) {
     function handlePileDestData(destZone: ZoneIdT, sourceZoneData: CardInstanceT[], curPlayerData: PlayerData[], newPlayerData: PlayerData[]) {
         // TODO this needs to handle re-ordering the cards as well
         if (destZone.zoneName === "Deck") {
-            newPlayerData[playerId].deck.unshift(...sourceZoneData);
+            newPlayerData[playerId].deck.splice(destZone.rowId, 0, ...sourceZoneData);
         } else if (destZone.zoneName === "Exile") {
-            newPlayerData[playerId].exile.unshift(...sourceZoneData);
+            newPlayerData[playerId].exile.splice(destZone.rowId, 0,...sourceZoneData);
         } else if (destZone.zoneName === "Graveyard") {
-            newPlayerData[playerId].graveyard.unshift(...sourceZoneData);
+            newPlayerData[playerId].graveyard.splice(destZone.rowId, 0, ...sourceZoneData);
         } else {
-            newPlayerData[playerId].damage.unshift(...sourceZoneData);
+            newPlayerData[playerId].damage.splice(destZone.rowId, 0, ...sourceZoneData);
         }
         rezonePlayerData(newPlayerData);
     }
@@ -418,12 +434,13 @@ export default function Board(props: { socket: Socket }) {
     }, [playerId])
 
     
-    function isCardFaceup(focusedCard: CardInstanceT) {
-        return ["Deck", "Damage"].indexOf(focusedCard.zone.zoneName) === -1;
+    function isCardVisible(focusedCard: CardInstanceT) {
+        return ["Deck", "Damage"].indexOf(focusedCard.zone.zoneName) === -1
+        || focusedCard.instanceId.toString().includes(PREVIEW_ID_POSTFIX);
     }
 
     const setFocusedCardCallback = useCallback((card: CardInstanceT) => {
-        if (isCardFaceup(card)) {
+        if (isCardVisible(card)) {
             if (card.zone.zoneName === "Board") {
                 setActiveZone(card.zone);
             }
@@ -573,17 +590,13 @@ export default function Board(props: { socket: Socket }) {
 
     // Sets the individual card preview
     let card;
-    if (focusedCard && isCardFaceup(focusedCard)) {
+    if (focusedCard && isCardVisible(focusedCard)) {
         if ((focusedCard.card as UnitCardT).attack) {
             let cardData = focusedCard.card as UnitCardT;
             card = <UnitCard  {...cardData} />;
         } else if (focusedCard) {
             card = <StratagemCard {...focusedCard.card} />;
         }
-    }
-
-    function getOpId() {
-        return (playerId + 1) % 2;
     }
 
     return (
@@ -611,7 +624,7 @@ export default function Board(props: { socket: Socket }) {
                         {...boardRender}
                     </div>
                     <PreviewZone {...{ instances: previewedInstances, zone: activeZone, areaName: "CellPreview" }} />
-                    <div style={{gridArea: "PlayerHand", position: "relative", marginTop: "-158px"}}>{`In Hand: ${playerData[playerId].hand.length}`}</div>
+                    <div style={{ gridArea: "PlayerHand", position: "relative", marginTop: "-130px", zIndex: 2, backgroundColor: "white" }}>{`In Hand: ${playerData[playerId].hand.length}`}</div>
                     <div className={css.break}></div>
                     <PreviewZone {...{
                         instances: playerData[playerId].hand, zone: { zoneName: "Hand", rowId: 0 }, direction: "horizontal",
@@ -622,14 +635,15 @@ export default function Board(props: { socket: Socket }) {
                         <DeckOptionsContainer setDeck={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
                             resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
                             shuffleDeck={() => { handleShuffle(); }}
-                            closePreview={() => { setActiveZone({zoneName: "Board", rowId: 0, colId: 0})}} />
+                            closePreview={() => { setActiveZone({zoneName: "Board", rowId: 0, colId: 0})}}
+                            takeDamage={(amount) => {handleTakeDamage(amount)}} />
                     </div>
                     <PhaseSelector setPhase={setAndPostCurPhase} phase={curPhase}/>
                 </div>
             </BoardContext.Provider>
             <DragOverlay dropAnimation={null}>
                 {focusedCard ? (
-                    (isCardFaceup(focusedCard)) ?
+                    (isCardVisible(focusedCard) || focusedCard.instanceId.toString().includes(PREVIEW_ID_POSTFIX)) ?
                         <CardInstance {...focusedCard}
                             activated={(focusedCard.zone.zoneName === "Board")
                                 && (boardData[focusedCard.zone.rowId][focusedCard.zone.colId!]

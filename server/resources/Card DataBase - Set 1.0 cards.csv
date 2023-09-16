@@ -1,8 +1,8 @@
 name,cost,type,subtype,description,attack,health,move,value,Notes
 The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,
-Spike bomb,3,Structure,,"When deployed, Spike Bomb deals 1 damage to each adjacent unit.
+Spike Bomb,3,Structure,,"When deployed, Spike Bomb deals 1 damage to each adjacent unit.
 At the start of the next turn, sacrifice it. It pushes and deals 3 damage to each adjacent unit",,3,,,
-Black hole,2,Environ,,"Reaction: Gravity Well: When a unit enters a tile within range 2, this pulls the unit. 
+Black Hole,2,Environ,,"Reaction: Gravity Well: When a unit enters a tile within range 2, this pulls the unit. 
 Sacrifice any unit that occupies this tile",,,,,
 Mountain range,2,Environ,,This tile and tiles <|> are Volcanic. This deals 1 damage to units that exit this tile and tiles <|>. ,,,,,
 Distortion Crystal,3,Structure,,Units around Distortion Crystal cannot move or attack,,,,,

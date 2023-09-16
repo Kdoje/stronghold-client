@@ -268,7 +268,7 @@
 }
 
 .previewAreaHorizontal {
-  margin-top: 10px;
+  margin-top: 0px;
   min-width: 720px;
   max-width: 720px;
   position: relative;
@@ -280,6 +280,7 @@
   border: grey;
   border-style: solid;
   justify-items: center;
+  height: 125px;
 }
 
 .previewDropZone {
@@ -294,5 +295,5 @@
 
 .horizontalDropZone {
   width: 35px;
-  height: 120px;
+  height: 100px;
 }

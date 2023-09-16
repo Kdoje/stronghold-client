@@ -28,7 +28,7 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
             })
         }
 
-        let statsText =  this.props.value + ": " + this.props.move + " / " ;
+        let statsText = this.props.move + " / " ;
         statsText += this.props.attack  + " / ";
         statsText += this.props.health;
 

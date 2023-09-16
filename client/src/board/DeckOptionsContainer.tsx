@@ -1,17 +1,16 @@
-import { AnyCardT, BoardStackInstanceT } from 'common/types/game-data';
-import css from '../Board.module.css';
-import CardInstance from './cards/CardInstance';
+import { AnyCardT } from 'common/types/game-data';
 import { useContext, useState } from 'react';
-import { BoardContext } from './BoardContext'
-import { getUrl } from '../utils/FetchUtils';
 import DeckEntry from '../deck/DeckEntry';
+import { getUrl } from '../utils/FetchUtils';
+import { BoardContext } from './BoardContext';
 
 
 export default function DeckOptionsContainer(props: {
     setDeck: (cards: Array<AnyCardT>, wielder: AnyCardT) => void,
     shuffleDeck: () => void,
     resetPlayer: (cards: Array<AnyCardT>, wielder?: AnyCardT) => void,
-    closePreview: () => void
+    closePreview: () => void,
+    takeDamage: (amount: number) => void
 }) {
 
     const [deckData, setDeckData] = useState<{ cards: Array<AnyCardT>, wielder?: AnyCardT }>({ cards: [] });
@@ -42,6 +41,12 @@ export default function DeckOptionsContainer(props: {
         setShowDeckModal(false);
     }
 
+    function onTakeDamageClick() {
+        // TODO make this a nice pop-up too
+        let damageAmount = parseInt(prompt("Enter Damage Amount") ?? "0") || 0;
+        props.takeDamage(damageAmount);
+    }
+
     return <div
         style={{ display: "flex", flexDirection: "column", justifyContent: "space-around", gap: "15px",
         maxHeight: "100px",
@@ -50,6 +55,7 @@ export default function DeckOptionsContainer(props: {
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.shuffleDeck() }}>SHUFFLE</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.resetPlayer(deckData.cards, deckData.wielder) }}>RESET</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.closePreview() }}>CLOSE PREVEIW</button>
+        <button style={DECK_BUTTON_STYLE} onClick={(e) => {onTakeDamageClick()}}>TAKE DAMAGE</button>
         <div>{showDeckModal ? (
             <DeckEntry onAccept={(inputData) => onSetDeckClick(inputData)} onClose={() => setShowDeckModal(false)} />
             ) : null}</div>

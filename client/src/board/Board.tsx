@@ -39,14 +39,17 @@ export default function Board(props: { socket: Socket }) {
                     card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
                 }]
         },
-        { deck: [], graveyard: [], damage: [], exile: [], hand: [] },
+        { deck: [], graveyard: [], damage: [], exile: [], hand: [] }
     ]);
+    // TODO initialize phase correctly
+    const [curPhase, setCurPhase] = useState<PhaseName>("Refresh" as unknown as PhaseName);
 
     useEffect(() => {
         setAndPostBoardData(boardData);
         setAndPostPlayerData(playerData);
         setAndPostStackData(stackData);
-        setAndPostFoundryData(foundryData)
+        setAndPostFoundryData(foundryData);
+        setAndPostCurPhase(curPhase);
     }, [])
 
     function setAndPostPlayerData(data: PlayerData[]) {
@@ -80,7 +83,6 @@ export default function Board(props: { socket: Socket }) {
 
     const [focusedCard, setFocusedCard] = useState<CardInstanceT | undefined>(undefined);
     const [activeCard, setActiveCard] = useState<CardInstanceT | undefined>(undefined);
-    const [curPhase, setCurPhase] = useState<PhaseName>(PhaseName['Refresh']);
     function setAndPostCurPhase(data: PhaseName) {
         props.socket.emit("phaseData", { playerId: playerId, curPhase: data })
         setCurPhase(data);

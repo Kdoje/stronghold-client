@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 
-import Board from './board/Board'
+import Board from './game/board/Board'
 import { getUrl } from './utils/FetchUtils'
 
 let url = getUrl()

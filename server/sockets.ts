@@ -1,5 +1,6 @@
 import {Server} from 'socket.io'
 import {CONFIG} from '../config'
+import { PLAYER_CONNECTED, PLAYER_ID } from '../common/MessageTypes';
 import http from 'http'
 
 
@@ -15,20 +16,21 @@ function startSocketIO(server: http.Server) {
 
 	io.on('connection', (socket) => {
 		console.log('client connected')
-		socket.emit("playerId", curPlayer);
-		curPlayer += 1;
-		curPlayer %= 2;
 
-        // TODO this should use a much simpler process of waiting for 2 players to connect, then starting
-        // a session
-	
+
 		socket.onAny((event, message) => {
-			console.log('[received] ', event, ': ', message)
-			io.emit(event, message);
-		
+			if (event === PLAYER_CONNECTED) {
+				socket.emit(PLAYER_ID, curPlayer);
+				curPlayer += 1;
+				curPlayer %= 2;
+				console.log("curPlayer is ", curPlayer)
+			} else {
+				//console.log('[received] ', event, ': ', message)
+				io.emit(event, message);
+			}
 		})
 		socket.on('disconnect', () => {
-			
+
 		})
 	})
 }

@@ -1,6 +1,7 @@
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName } from "common/types/game-data";
+import { PLAYER_CONNECTED } from "common/MessageTypes";
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
 import { useCallback, useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import FacedownCardInstance from "./cards/FacedownCardInstance";
 import PhaseSelector from "./PhaseSelector";
 
 export default function Board(props: { socket: Socket }) {
+    let connected = false;
     const [playerId, setPlayerId] = useState(0);
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
@@ -41,16 +43,8 @@ export default function Board(props: { socket: Socket }) {
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] }
     ]);
-    // TODO initialize phase correctly
-    const [curPhase, setCurPhase] = useState<PhaseName>("Refresh" as unknown as PhaseName);
 
-    useEffect(() => {
-        setAndPostBoardData(boardData);
-        setAndPostPlayerData(playerData);
-        setAndPostStackData(stackData);
-        setAndPostFoundryData(foundryData);
-        setAndPostCurPhase(curPhase);
-    }, [])
+    const [curPhase, setCurPhase] = useState<PhaseName>("Refresh" as unknown as PhaseName);
 
     function setAndPostPlayerData(data: PlayerData[]) {
         props.socket.emit("playerData", { playerId: playerId, playerData: data })
@@ -113,6 +107,18 @@ export default function Board(props: { socket: Socket }) {
             setCurPhase(args[0].curPhase);
         }
     })
+
+    useEffect(() => {
+        if (!connected) {
+            props.socket.emit(PLAYER_CONNECTED, [])
+            connected = true;
+        }
+        setAndPostBoardData(boardData);
+        setAndPostPlayerData(playerData);
+        setAndPostStackData(stackData);
+        setAndPostFoundryData(foundryData);
+        setAndPostCurPhase(curPhase);
+    }, [])
 
     function addCardToHand() {
         let id = (Math.random() + 1).toString(4)
@@ -201,7 +207,7 @@ export default function Board(props: { socket: Socket }) {
         setAndPostPlayerData(newPlayerData);
         setAndPostStackData(newStackData);
         setAndPostFoundryData(newFoundryData);
-        setAndPostCurPhase(PhaseName.Refresh);
+        setAndPostCurPhase("Refresh" as unknown as PhaseName);
     }
 
     function setPlayerDeckData(cards: Array<AnyCardT>, wielder?: AnyCardT) {

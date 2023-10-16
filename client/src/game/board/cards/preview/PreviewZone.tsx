@@ -124,12 +124,6 @@ export default function PreviewZone(props: PreviewZoneDataT) {
         }
     })
 
-    function handleRef(e){
-        e.preventDefault();
-        e.currentTarget.scrollLeft += e.deltaY; 
-     }
-
-
     return <div ref={previewElt} className={previewAreaName} style={{ gridArea: `${props.areaName}` }}>
         {...previewRender}
         </div>

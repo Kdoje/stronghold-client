@@ -1,7 +1,7 @@
 import { AnyCardT } from 'common/types/game-data';
 import { useContext, useState } from 'react';
 import DeckEntry from '../deck/DeckEntry';
-import { getUrl } from '../utils/FetchUtils';
+import { getUrl } from '../../utils/FetchUtils';
 import { BoardContext } from './BoardContext';
 
 

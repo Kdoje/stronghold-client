@@ -1,19 +1,44 @@
 import io from 'socket.io-client'
-
-import Board from './board/Board'
+import Board from './game/board/Board'
 import { getUrl } from './utils/FetchUtils'
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
+import  {GAME_BOARD, DECK_EDITOR, MAIN_MENU} from 'common/Routes'
+import MainMenu from './MainMenu/MainMenu';
 
-let url = getUrl()
 
-console.log(`connecting to url ${url}`)
-const socket = io(url);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div><Outlet/></div>,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to={MAIN_MENU}/>
+      },
+      {
+        path: MAIN_MENU,
+        element: <MainMenu/>
+      },
+      {
+        path: DECK_EDITOR,
+        element: <div>Fuck me</div>
+      },
+      {
+        path: GAME_BOARD,
+        element: <Board socket={io(getUrl())}/>
+      }
+    ]
+  }
+]);
 
 function App() {
-  function gameApp() {
-    return (
-      <Board {...{socket: socket}}/>
-    )
-  }
-  return gameApp();
+  return (
+    <RouterProvider router={router} />
+  )
 }
 export default App

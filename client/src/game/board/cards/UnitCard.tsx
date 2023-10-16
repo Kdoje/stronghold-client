@@ -29,9 +29,8 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
             })
         }
 
-        let statsText = this.props.move + "M " ;
-        statsText += this.props.attack  + "A ";
-        statsText += this.props.health + "H";
+        let statsText = <div className={css.statsOverlayContainer}><p className={css.statsOverlayText}>{this.props.move}</p>
+        <p className={css.statsOverlayText}>{this.props.attack}/{initialHealth}</p></div>
 
         let imgSrc = `https://www.gravatar.com/avatar/${Md5.hashStr(this.props.name)}?s=180&d=retro&r=G`
 
@@ -48,7 +47,7 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
             <div className={css.valueText}>{this.props.value}</div>
             <div className={css.attackText}>{this.props.attack}</div>
             <img className={css.cardImage} src={cardImage}></img>
-            <div className={css.statsOverlayText}>{this.props.displayOverlay ? statsText : undefined}</div>
+            {this.props.displayOverlay ? statsText : undefined}
         </div>;
 
         return elt;

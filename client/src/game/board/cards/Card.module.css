@@ -44,21 +44,30 @@
 }
 
 .statsOverlayText{
+    font-family: 'Gill Sans MT';
+    color: white;
+    font-size: 32px;
+    align-self: center;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.statsOverlayContainer{
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    background-color: black;
     z-index: 2;
     grid-row-start: 1;
     grid-column-start: 1;
-    font-family: 'Gill Sans MT';
-    color: white;
-    background-color: black;
-    font-size: 32px;
-    position: relative;
-    left: 12px;
-    top: 275px;
-    text-align: center;
-    height: fit-content;
     max-width: 90%;
     min-width: 90%;
     overflow-wrap: none;
+    left: 12px;
+    top: 280px;
+    max-height: 35px;
 }
 
 .titleText {

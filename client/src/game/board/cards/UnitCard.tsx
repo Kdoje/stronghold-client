@@ -29,7 +29,7 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
             })
         }
 
-        let statsText = <div className={css.statsOverlayText}>
+        let statsText = <div className={css.statsOverlayContainer}>
             <p className={css.statsOverlayText}>{this.props.move}</p>
             <p className={css.statsOverlayText}>{this.props.attack}/{initialHealth}</p>
         </div>

@@ -29,7 +29,6 @@ export class StratagemCard extends React.Component<StratagemCardT & {displayOver
                 <div className={css.descriptionText}>{this.props.description}</div>
                 <div className={css.valueText}>{this.props.value}</div>
                 <img className={css.cardImage} src={cardImage}></img>
-                <div className={css.statsOverlayText}>{this.props.displayOverlay ? this.props.value : undefined}</div>
             </div>;
     }
 }

@@ -1,0 +1,102 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 10vh 35vh 5vh 45vh;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "navBar navBar navBar"
+        "cardPool cardPool cardPool"
+        "deckMetadata deckMetadata deckMetadata"
+        "deckContents deckContents deckContents";
+}
+
+.navBar {
+    grid-area: navBar;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "title . deckGenerationSettings";
+}
+
+.title {
+    grid-area: title;
+    font-size: 30px;
+    justify-content: left;
+    display: flex;
+}
+
+.titleText {
+    align-self: center;
+    font-size: 25px;
+    margin: 5px;
+}
+
+.deckGenerationSettings {
+    grid-area: deckGenerationSettings;
+    align-self: center;
+    display: flex;
+    justify-content: right;
+}
+
+.deckMetadata {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "curveMetadata . sizeMetadata";
+    grid-area: deckMetadata;
+    min-height: 50px;
+    background-color: lightblue;
+}
+
+.sizeMetadata {
+    grid-area: sizeMetadata;
+    text-align: right;
+    align-self: center;
+    margin-right: 25px;
+    font-size: 20px;
+}
+
+.curveMetadata {
+    grid-area: curveMetadata;
+    text-align: left;
+    align-self: center;
+    margin-left: 25px;
+    font-size: 20px;
+}
+
+.cardPool {
+    grid-area: cardPool;
+    height: 40vh;
+    min-height: 300px;
+    background-color: lightgoldenrodyellow;
+}
+
+.deckContents {
+    grid-area: deckContents;
+    min-height: 300px;
+    background-color: lightcyan;
+}
+
+.button {
+    max-width: 100px;
+    min-width: 100px;
+    height: fit-content;
+    font-size: 20px;
+    color: white;
+    margin: 2%;
+}
+
+.submit {
+    background-color: green;
+}
+
+.generate {
+    background-color: blue;
+}

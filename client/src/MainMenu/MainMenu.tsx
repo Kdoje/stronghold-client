@@ -4,7 +4,6 @@ import  {GAME_BOARD, DECK_EDITOR} from 'common/Routes'
 
 export default function MainMenu() {
     const navigate = useNavigate();
-    console.log("cheese");
     return(
         <div className={css.mainMenuContainer}>
             <button className={css.menuButton} onClick={() => navigate(GAME_BOARD)}>

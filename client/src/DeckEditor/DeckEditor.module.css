@@ -96,7 +96,7 @@
     grid-auto-columns: min-content;
     grid-template-rows: auto;
     grid-auto-rows: 200px;
-    max-height: 200px;
+    height: 210px;
     grid-area: cardPool;
     background-color: lightgoldenrodyellow;
     overflow-x: scroll;
@@ -105,8 +105,10 @@
 }
 
 .deckContents {
+    padding: 20px;
     grid-area: deckContents;
     background-color: lightcyan;
+    display: grid;
 }
 
 .button {
@@ -119,13 +121,34 @@
     inline-size: min-content;
 }
 
-.cardPreview {
-    width: fit-content;
-    height: fit-content;
-    grid-column: auto;
-    grid-row: 1;
+.cardPoolPreviewContainer {
     scale: .5;
     margin: -35px;
+    grid-row: 1;
+    row-gap: 10px;
+    display: grid;
+    grid-template-areas:
+        "copyCount"
+        "cardPreview";
+}
+
+.copyCountPipContainer { 
+    grid-area: copyCount;
+    font-size: 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.cardPreview {
+    grid-area: cardPreview;
+    width: fit-content;
+    grid-column: auto;
+}
+
+.deckCard {
+    scale: .8;
+    margin-bottom: -250px;
 }
 
 .back {

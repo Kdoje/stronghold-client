@@ -84,7 +84,11 @@ app.post('/decklist', (req, res) => {
 // TODO create an endpoint to handle generating a card pool
 app.get('')
 
-const server = createServer({key: fs.readFileSync(path.join(__dirname, "resources/key.pem")), cert: fs.readFileSync(path.join(__dirname, "resources/cert.pem"))}, app)
+const server = createServer(
+	{
+		key: fs.readFileSync(path.join(__dirname, "resources/key.pem")),
+		cert: fs.readFileSync(path.join(__dirname, "resources/cert.pem"))
+	}, app)
 
 
 server.listen(port, () => {

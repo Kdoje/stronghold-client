@@ -4,18 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import css from './DeckEditor.module.css';
 import { UnitCard } from '../game/board/cards/UnitCard';
 import React, { useRef, useState } from 'react';
-import { AnyCardT } from 'common/types/game-data';
+import { AnyCardT, UnitCardT } from 'common/types/game-data';
 
 
 export default function DeckEditor() {
     let testCard = {
         name: `Sheoldred, The Apocolypse`,
-        description: "Breaks standard", cost: "5",
+        description: "Breaks standard", cost: "3",
         type: "Unit", subtype: "Insectoid Horror",
         value: "A", attack: "4", health: "5", move: "1"
     };
 
-    const [focusedCard, setFocusedCard] = useState<AnyCardT|undefined>(testCard);
+    const [focusedCard, setFocusedCard] = useState<AnyCardT|undefined>(undefined);
+    const [cardPool, setCardPool] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
+    const [deckContents, setDeckContents] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
 
     let timer = useRef<NodeJS.Timeout|undefined>(undefined);
     let focusedCardOverlayStyle = useRef<React.CSSProperties>(
@@ -25,20 +27,76 @@ export default function DeckEditor() {
 
     const navigate = useNavigate();
    
-    // TODO populate this with a map of card to quantity
-    let cardInstances : React.ReactElement[] = [];
-    for (let i = 0; i < 90; i++) {
-        testCard.name = `Sheoldred, The Apocolypse ${i}`
-        let curCard = {...testCard};
-        // TODO convert this into an element that includes pips for card count
-        cardInstances.push(<div onMouseEnter={(e) => cardHovered(e, curCard)} 
-            onMouseLeave={(e) => cardHovered(e, undefined)}
-            className={css.cardPreview} ><UnitCard  {...testCard}/></div>)
+    function generateCardPool() {
+        // TODO update this to use the API to get a card list
+        let newCardPool = new Map<AnyCardT, number>();
+        for (let i = 0; i < 90; i++) {
+            testCard.name = `Sheoldred, The Apocolypse ${i}`
+            let curCard = {...testCard} as AnyCardT;
+            newCardPool.set(curCard, 1);
+        }
+        setCardPool(newCardPool);
     }
 
-    // TODO onClick, move a card to the card pool area
+    function clearOverlay() {
+        clearTimeout(timer.current);
+        focusedCardOverlayStyle.current = {visibility: "hidden"} as React.CSSProperties;
+        setFocusedCard(undefined);
+    }
 
-    // TODO create a component for the card in the card pool and include +/- buttons 
+    function addInstanceToDeck(card: AnyCardT) {
+        let newCardPool = new Map(cardPool);
+        let newDeckContents = new Map(deckContents);
+        if (newCardPool.get(card) ?? 0 > 0) {
+            newCardPool.set(card, newCardPool.get(card)! - 1);
+            if (newDeckContents.get(card) ?? 0 > 0) {
+                newDeckContents.set(card, newDeckContents.get(card)! + 1);
+            } else {
+                newDeckContents.set(card, 1);
+            }
+        }
+        clearOverlay();
+        setCardPool(newCardPool);
+        setDeckContents(newDeckContents);
+    }
+
+    let cardPoolInstances : React.ReactElement[] = [];
+    for (let [card, quantity] of cardPool) {
+        // only render cards w/one or more copy available
+        if (quantity > 0) {
+            let pips = [];
+            for (let i = 0; i < quantity; i++) {
+                pips.push(<span key={i} className="material-symbols-outlined" style={{ color: "green" }}>
+                    radio_button_unchecked
+                </span>);
+            }
+            cardPoolInstances.push(<div className={css.cardPoolPreviewContainer}  key={card.name}>
+                <div className={css.copyCountPipContainer}>{pips}</div>
+                <div key={card.name} onMouseEnter={(e) => cardHovered(e, card)}
+                    onMouseLeave={(e) => cardHovered(e, undefined)}
+                    onClick={() => addInstanceToDeck(card)}
+                    className={css.cardPreview} ><UnitCard  {...card} />
+                </div>
+            </div>)
+        }
+    }
+
+    let deckInstances : React.ReactElement[] = [];
+    for (let [card, quantity] of deckContents) {
+        if (quantity > 0) {
+            // TODO organize the deck instances into columns based on cost and add scale/preview
+            // TODO pre-generate columns for deck for costs 1-6 and 7+
+            for (let i = 0; i < quantity; i++) {
+                deckInstances.push(<div key={card.name + i} className={css.deckCard} 
+                style={{gridColumn: card.cost}}>
+                    <UnitCard {...card}/>
+                    </div>)
+            }
+        }
+    }
+
+
+    // TODO create a component for the card in the deck contents and include +/- buttons 
     // on the component
 
     function cardHovered(e: React.MouseEvent, card: AnyCardT|undefined) {
@@ -64,11 +122,9 @@ export default function DeckEditor() {
                     
 			}, 300);
         } else {
-            clearTimeout(timer.current);
-            focusedCardOverlayStyle.current = {visibility: "hidden"} as React.CSSProperties;
+            clearOverlay();
             target.style.outlineStyle = "hidden";
             target.style.outlineWidth = "0px"
-            setFocusedCard(card);
         }
     }
 
@@ -85,18 +141,18 @@ export default function DeckEditor() {
                 </div>
 
                 <div className={css.deckGenerationSettings}>
-                    <button className={css.button + " " + css.generate}>Generate Cardpool</button>
+                    <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
                     <button className={css.button + " " + css.submit}>Save Deck</button>
                 </div>
             </div>
-            <div className={css.cardPoolView}>{cardInstances}</div>
+            <div className={css.cardPoolView}>{cardPoolInstances}</div>
             <div className={css.deckMetadata}>
                 <div className={css.sizeMetadata}>
                     40 card(s)
                 </div>
                 <div className={css.curveMetadata}>1s:6 2s:5 3s:5 4s:2 5s:1</div>
             </div>
-            <div className={css.deckContents}></div>
+            <div className={css.deckContents}>{...deckInstances}</div>
         </div>
         <div style={focusedCardOverlayStyle.current} className={css.modalWrapper}>
             {

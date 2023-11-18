@@ -15,9 +15,10 @@ export default function DeckEditor() {
         value: "A", attack: "4", health: "5", move: "1"
     };
 
-    const [focusedCard, setFocusedCard] = useState<AnyCardT|undefined>(undefined);
+    const [hoveredCard, setHoveredCard] = useState<AnyCardT|undefined>(undefined);
     const [cardPool, setCardPool] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
     const [deckContents, setDeckContents] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
+    // TODO create state to track focused card in deck
 
     let timer = useRef<NodeJS.Timeout|undefined>(undefined);
     let focusedCardOverlayStyle = useRef<React.CSSProperties>(
@@ -41,7 +42,7 @@ export default function DeckEditor() {
     function clearOverlay() {
         clearTimeout(timer.current);
         focusedCardOverlayStyle.current = {visibility: "hidden"} as React.CSSProperties;
-        setFocusedCard(undefined);
+        setHoveredCard(undefined);
     }
 
     function addInstanceToDeck(card: AnyCardT) {
@@ -81,23 +82,6 @@ export default function DeckEditor() {
         }
     }
 
-    let deckInstances : React.ReactElement[] = [];
-    for (let [card, quantity] of deckContents) {
-        if (quantity > 0) {
-            // TODO organize the deck instances into columns based on cost and add scale/preview
-            // TODO pre-generate columns for deck for costs 1-6 and 7+
-            for (let i = 0; i < quantity; i++) {
-                deckInstances.push(<div key={card.name + i} className={css.deckCard} 
-                style={{gridColumn: card.cost}}>
-                    <UnitCard {...card}/>
-                    </div>)
-            }
-        }
-    }
-
-
-    // TODO create a component for the card in the deck contents and include +/- buttons 
-    // on the component
 
     function cardHovered(e: React.MouseEvent, card: AnyCardT|undefined) {
         const target = e.currentTarget as HTMLElement
@@ -114,11 +98,11 @@ export default function DeckEditor() {
                 }
                 if (window.innerWidth < targetRect.right + 300) {
                     // sets offset from the right of the screen to the right of this elt
-                    focusedCardStyle.current["right"] = window.innerWidth - targetRect.left
+                    focusedCardStyle.current["right"] = window.innerWidth - targetRect.left;
                 } else {
                     focusedCardStyle.current["left"] = targetRect.right;
                 }
-                setFocusedCard(card);
+                setHoveredCard(card);
                     
 			}, 300);
         } else {
@@ -128,8 +112,26 @@ export default function DeckEditor() {
         }
     }
 
-    // TODO create a set to represent the cards in deck, then 
-    // parse it into a Map<cost: num, List<Card>> to decklist columns in deck contents
+    let deckInstances: React.ReactElement[] = [];
+    let cardCount = 0;
+    for (let [card, quantity] of deckContents) {
+        if (quantity > 0) {
+            cardCount++;
+            // TODO create a component for the card in the deck contents and include +/- buttons 
+            // on the component
+            deckInstances.push(<div key={card.name} className={css.deckCard}
+                style={{ gridColumn: cardCount % 7 }} >
+                    {/* TODO enable this to receive pointer events when the card is focused */}
+                <div className={css.quantityDisplay} style={{ pointerEvents: "none" }}>
+                    {quantity == 1 ? "x2" : quantity}
+                </div>
+                <div style={{ gridRow: 1, gridColumn: 1 }} onMouseEnter={(e) => cardHovered(e, card)}
+                    onMouseLeave={(e) => cardHovered(e, undefined)}>
+                    <UnitCard {...card} />
+                </div>
+            </div>);
+        }
+    }
 
     return (<>
         <div className={css.container}>
@@ -142,7 +144,7 @@ export default function DeckEditor() {
 
                 <div className={css.deckGenerationSettings}>
                     <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
-                    <button className={css.button + " " + css.submit}>Save Deck</button>
+                    <button className={css.button + " " + css.submit}>Save Deck</button> {/* TODO make this actually save to clipboard */}
                 </div>
             </div>
             <div className={css.cardPoolView}>{cardPoolInstances}</div>
@@ -156,8 +158,8 @@ export default function DeckEditor() {
         </div>
         <div style={focusedCardOverlayStyle.current} className={css.modalWrapper}>
             {
-                focusedCard ?
-                    <div style={focusedCardStyle.current}><UnitCard  {...focusedCard} /></div> :
+                hoveredCard ?
+                    <div style={focusedCardStyle.current}><UnitCard  {...hoveredCard} /></div> :
                     <></>
             }
         </div>

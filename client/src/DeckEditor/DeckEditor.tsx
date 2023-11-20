@@ -44,6 +44,7 @@ export default function DeckEditor() {
             newCardPool.set(curCard, 3);
         }
         setCardPool(newCardPool);
+        setDeckContents(new Map());
     }
 
     function clearOverlay() {
@@ -63,49 +64,6 @@ export default function DeckEditor() {
         setCardPool(newCardPool);
         setDeckContents(newDeckContents);
     }
-
-    let cardPoolInstances : React.ReactElement[] = [];
-    for (let [card, quantity] of cardPool) {
-        // only render cards w/one or more copy available
-        if (quantity > 0) {
-            let pips = [];
-            for (let i = 0; i < quantity; i++) {
-                pips.push(<span key={i} className="material-symbols-outlined" style={{ color: "green" }}>
-                    radio_button_unchecked
-                </span>);
-            }
-            cardPoolInstances.push(<div className={css.cardPoolPreviewContainer}  key={card.name}>
-                <div className={css.copyCountPipContainer}>{pips}</div>
-                <div key={card.name} onMouseEnter={(e) => cardHovered(e, card)}
-                    onMouseLeave={(e) => cardHovered(e, undefined)}
-                    onClick={() => addInstanceToDeck(card)}
-                    className={css.cardPreview} ><UnitCard  {...card} />
-                </div>
-            </div>)
-        }
-    }
-
-    useEffect(() => {
-        if (cardPoolElt.current !== null) {
-            // get the ref to the element then add:
-            cardPoolElt.current.addEventListener<'wheel'>('wheel', (e: WheelEvent) => {
-                if (e.deltaY !== 0) {
-                    // use a timeout to de-bounce scroll events
-                    clearTimeout(scrollTimer.current);
-                    scrollTimer.current = setTimeout(function () {
-                        clearOverlay();
-                        e.preventDefault();
-                        e.stopPropagation();
-                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -cardPoolElt.current!.clientWidth : cardPoolElt.current!.clientWidth
-                    });
-                }
-            });
-        }
-        else {
-            throw new Error("cardPoolElt not found, can't enable scrolling.")
-        }
-    })
-
 
     function cardHovered(e: React.MouseEvent, card: AnyCardT|undefined) {
         const target = e.currentTarget as HTMLElement
@@ -159,6 +117,49 @@ export default function DeckEditor() {
     const modifyDeckContentsCallback = useCallback((card: AnyCardT, qtyToAdd: number) => {
         modifyDeckContents(card, qtyToAdd);
     }, [modifyDeckContents])
+
+    
+    let cardPoolInstances : React.ReactElement[] = [];
+    for (let [card, quantity] of cardPool) {
+        // only render cards w/one or more copy available
+        if (quantity > 0) {
+            let pips = [];
+            for (let i = 0; i < quantity; i++) {
+                pips.push(<span key={i} className="material-symbols-outlined" style={{ color: "green" }}>
+                    radio_button_unchecked
+                </span>);
+            }
+            cardPoolInstances.push(<div className={css.cardPoolPreviewContainer}  key={card.name}>
+                <div className={css.copyCountPipContainer}>{pips}</div>
+                <div key={card.name} onMouseEnter={(e) => cardHovered(e, card)}
+                    onMouseLeave={(e) => cardHovered(e, undefined)}
+                    onClick={() => addInstanceToDeck(card)}
+                    className={css.cardPreview} ><UnitCard  {...card} />
+                </div>
+            </div>)
+        }
+    }
+
+    useEffect(() => {
+        if (cardPoolElt.current !== null) {
+            // get the ref to the element then add:
+            cardPoolElt.current.addEventListener<'wheel'>('wheel', (e: WheelEvent) => {
+                if (e.deltaY !== 0) {
+                    // use a timeout to de-bounce scroll events
+                    clearTimeout(scrollTimer.current);
+                    scrollTimer.current = setTimeout(function () {
+                        clearOverlay();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -cardPoolElt.current!.clientWidth : cardPoolElt.current!.clientWidth
+                    });
+                }
+            });
+        }
+        else {
+            throw new Error("cardPoolElt not found, can't enable scrolling.")
+        }
+    })
 
     let deckInstances: React.ReactElement[] = [];
     let costQtyMap = new Map<number, number>()

@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    height: 95vh;
+    height: 98vh;
     max-width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: min-content min-content min-content auto;
@@ -11,6 +11,10 @@
         "cardPool cardPool cardPool"
         "deckMetadata deckMetadata deckMetadata"
         "deckContents deckContents deckContents";
+}
+
+.container::-webkit-scrollbar {
+    display: none;
 }
 
 .modalWrapper {
@@ -141,7 +145,6 @@
     grid-column: auto;
 }
 
-/*TODO fix the grid changing the card overlap*/
 .deckContents {
     grid-template-columns: repeat(auto-fill, 200px);
     grid-auto-rows: 75px;
@@ -163,6 +166,7 @@
 .quantityDisplay {
     margin: 30px auto;
     max-height: 45px;
+    padding-right: 10px;
     min-width: 90%;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 5;
@@ -171,6 +175,22 @@
     color: white;
     font-size: 30px;
     font-family: sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantityButton {
+    padding: 0px;
+    line-height: 0px;
+    margin: 10px;
+    height: 50px;
+    min-height: fit-content;
+    min-width: 50px;
+    font-size: 48px;
+    max-width: fit-content;
+    border-radius: 75px;
+    background-color: rgba(0, 0, 0, 0.692);
 }
 
 .back {

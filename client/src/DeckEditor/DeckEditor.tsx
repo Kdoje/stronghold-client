@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 import css from './DeckEditor.module.css';
 import { UnitCard } from '../game/board/cards/UnitCard';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnyCardT, UnitCardT } from 'common/types/game-data';
+import QuantityDisplay from './QuantityDisplay';
+import { DeckEditorContext } from './DeckEditorContext';
 
 
 export default function DeckEditor() {
@@ -15,12 +17,16 @@ export default function DeckEditor() {
         value: "A", attack: "4", health: "5", move: "1"
     };
 
+    const cardPoolElt = useRef<HTMLDivElement|null>(null)
+
     const [hoveredCard, setHoveredCard] = useState<AnyCardT|undefined>(undefined);
     const [cardPool, setCardPool] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
     const [deckContents, setDeckContents] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
-    // TODO create state to track focused card in deck
+    const [focusedCard, setFocusedCard] = useState<AnyCardT|undefined>(undefined);
 
-    let timer = useRef<NodeJS.Timeout|undefined>(undefined);
+    let hoverTimer = useRef<NodeJS.Timeout|undefined>(undefined);
+    let scrollTimer = useRef<NodeJS.Timeout|undefined>(undefined);
+
     let focusedCardOverlayStyle = useRef<React.CSSProperties>(
         { visibility: "hidden" } as React.CSSProperties
     );
@@ -32,15 +38,16 @@ export default function DeckEditor() {
         // TODO update this to use the API to get a card list
         let newCardPool = new Map<AnyCardT, number>();
         for (let i = 0; i < 90; i++) {
+            testCard.cost = `${i % 7}`
             testCard.name = `Sheoldred, The Apocolypse ${i}`
             let curCard = {...testCard} as AnyCardT;
-            newCardPool.set(curCard, 1);
+            newCardPool.set(curCard, 3);
         }
         setCardPool(newCardPool);
     }
 
     function clearOverlay() {
-        clearTimeout(timer.current);
+        clearTimeout(hoverTimer.current);
         focusedCardOverlayStyle.current = {visibility: "hidden"} as React.CSSProperties;
         setHoveredCard(undefined);
     }
@@ -48,13 +55,9 @@ export default function DeckEditor() {
     function addInstanceToDeck(card: AnyCardT) {
         let newCardPool = new Map(cardPool);
         let newDeckContents = new Map(deckContents);
-        if (newCardPool.get(card) ?? 0 > 0) {
+        if ((newCardPool.get(card) ?? 0) > 0) {
             newCardPool.set(card, newCardPool.get(card)! - 1);
-            if (newDeckContents.get(card) ?? 0 > 0) {
-                newDeckContents.set(card, newDeckContents.get(card)! + 1);
-            } else {
-                newDeckContents.set(card, 1);
-            }
+            newDeckContents.set(card, (newDeckContents.get(card) ?? 0) + 1);
         }
         clearOverlay();
         setCardPool(newCardPool);
@@ -82,6 +85,27 @@ export default function DeckEditor() {
         }
     }
 
+    useEffect(() => {
+        if (cardPoolElt.current !== null) {
+            // get the ref to the element then add:
+            cardPoolElt.current.addEventListener<'wheel'>('wheel', (e: WheelEvent) => {
+                if (e.deltaY !== 0) {
+                    // use a timeout to de-bounce scroll events
+                    clearTimeout(scrollTimer.current);
+                    scrollTimer.current = setTimeout(function () {
+                        clearOverlay();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -cardPoolElt.current!.clientWidth : cardPoolElt.current!.clientWidth
+                    });
+                }
+            });
+        }
+        else {
+            throw new Error("cardPoolElt not found, can't enable scrolling.")
+        }
+    })
+
 
     function cardHovered(e: React.MouseEvent, card: AnyCardT|undefined) {
         const target = e.currentTarget as HTMLElement
@@ -89,10 +113,11 @@ export default function DeckEditor() {
             target.style.outlineColor = "blue";
             target.style.outlineStyle = "inset";
             target.style.outlineWidth = "10px"
-            timer.current = setTimeout(function() {
+            hoverTimer.current = setTimeout(function() {
                 let targetRect = target.getBoundingClientRect();
                 focusedCardOverlayStyle.current = {}
                 focusedCardStyle.current = {
+                    pointerEvents: "none",
                     position: "absolute",
                     top: targetRect.top
                 }
@@ -112,21 +137,44 @@ export default function DeckEditor() {
         }
     }
 
+    function modifyDeckContents(card: AnyCardT, qtyToAdd: number) {
+        if (qtyToAdd > 0) {
+            if (cardPool.has(card) && cardPool.get(card)! > 0) {
+                cardPool.set(card, cardPool.get(card)! - 1);
+                deckContents.set(card, (deckContents.get(card) ?? 0) + 1);
+                setCardPool(new Map(cardPool));
+                setDeckContents(new Map(deckContents));
+            }
+        } if (qtyToAdd < 0) {
+            let qtyToRemove = -qtyToAdd;
+            if (deckContents.has(card) && (deckContents.get(card)! - qtyToRemove) >= 0) {
+                deckContents.set(card, deckContents.get(card)! - qtyToRemove);
+                cardPool.set(card, (cardPool.get(card) ?? 0) + qtyToRemove);
+                setCardPool(new Map(cardPool));
+                setDeckContents(new Map(deckContents));
+            }
+        }
+    }
+
+    const modifyDeckContentsCallback = useCallback((card: AnyCardT, qtyToAdd: number) => {
+        modifyDeckContents(card, qtyToAdd);
+    }, [modifyDeckContents])
+
     let deckInstances: React.ReactElement[] = [];
-    let cardCount = 0;
+    let costQtyMap = new Map<number, number>()
     for (let [card, quantity] of deckContents) {
         if (quantity > 0) {
-            cardCount++;
-            // TODO create a component for the card in the deck contents and include +/- buttons 
-            // on the component
+            let plusEnabled = (cardPool.get(card) ?? 0) > 0;
+            let focused = focusedCard?.name == card.name;
+            let cost = Number(card.cost);
+            costQtyMap.set(cost, (costQtyMap.get(cost) ?? 0) + 1);
             deckInstances.push(<div key={card.name} className={css.deckCard}
-                style={{ gridColumn: cardCount % 7 }} >
-                    {/* TODO enable this to receive pointer events when the card is focused */}
-                <div className={css.quantityDisplay} style={{ pointerEvents: "none" }}>
-                    {quantity == 1 ? "x2" : quantity}
-                </div>
+                style={{ gridArea: `${costQtyMap.get(cost)}/${(cost)+ 1}` }} >
+
+               <QuantityDisplay focused={focused} quantity={quantity} plusEnabled={plusEnabled} card={card}/>
                 <div style={{ gridRow: 1, gridColumn: 1 }} onMouseEnter={(e) => cardHovered(e, card)}
-                    onMouseLeave={(e) => cardHovered(e, undefined)}>
+                    onMouseLeave={(e) => cardHovered(e, undefined)}
+                    onClick={(e) => {e.stopPropagation(); setFocusedCard(card); clearOverlay();}}>
                     <UnitCard {...card} />
                 </div>
             </div>);
@@ -134,27 +182,29 @@ export default function DeckEditor() {
     }
 
     return (<>
-        <div className={css.container}>
-            <div className={css.navBar}>
-                <div className={css.title}>
-                    <button className={css.button + " " + css.back}
-                        onClick={() => { navigate(MAIN_MENU) }}>{'< Menu'}</button>
-                    <div className={css.titleText}>Deck Editor</div>
-                </div>
+        <div className={css.container} onClick={() => { setFocusedCard(undefined) }}>
+            <DeckEditorContext.Provider value={{ modifyDeckContents: modifyDeckContentsCallback }}>
+                <div className={css.navBar}>
+                    <div className={css.title}>
+                        <button className={css.button + " " + css.back}
+                            onClick={() => { navigate(MAIN_MENU) }}>{'< Menu'}</button>
+                        <div className={css.titleText}>Deck Editor</div>
+                    </div>
 
-                <div className={css.deckGenerationSettings}>
-                    <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
-                    <button className={css.button + " " + css.submit}>Save Deck</button> {/* TODO make this actually save to clipboard */}
+                    <div className={css.deckGenerationSettings}>
+                        <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
+                        <button className={css.button + " " + css.submit}>Save Deck</button> {/* TODO make this actually save to clipboard */}
+                    </div>
                 </div>
-            </div>
-            <div className={css.cardPoolView}>{cardPoolInstances}</div>
-            <div className={css.deckMetadata}>
-                <div className={css.sizeMetadata}>
-                    40 card(s)
+                <div ref={cardPoolElt} className={css.cardPoolView}>{cardPoolInstances}</div>
+                <div className={css.deckMetadata}>
+                    <div className={css.sizeMetadata}>
+                        40 card(s)
+                    </div>
+                    <div className={css.curveMetadata}>1s:6 2s:5 3s:5 4s:2 5s:1</div>
                 </div>
-                <div className={css.curveMetadata}>1s:6 2s:5 3s:5 4s:2 5s:1</div>
-            </div>
-            <div className={css.deckContents}>{...deckInstances}</div>
+                <div className={css.deckContents}>{...deckInstances}</div>
+            </DeckEditorContext.Provider>
         </div>
         <div style={focusedCardOverlayStyle.current} className={css.modalWrapper}>
             {

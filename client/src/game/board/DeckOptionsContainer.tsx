@@ -32,10 +32,13 @@ export default function DeckOptionsContainer(props: {
     async function onSetDeckClick(inputData: string) {
         let requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            },
             body: JSON.stringify({ decklist: inputData })
         };
-        
+
         const response = await fetch(`${getUrl()}/decklist`, requestOptions);
         const data = await response.json();
         console.log("got decklist");

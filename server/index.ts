@@ -61,8 +61,13 @@ app.use(
 	})
 )
 
-app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', CONFIG.clientPath, 'index.html'))
+app.use('/', (req, res, next) => {
+	if (req.accepts('text/html')) {
+		res.sendFile(path.join(__dirname, '..', CONFIG.clientPath, 'index.html'))
+	}
+	else {
+		next();
+	}
 })
 
 app.post('/decklist', (req, res) => {

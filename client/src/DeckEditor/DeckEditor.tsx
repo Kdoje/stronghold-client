@@ -40,7 +40,7 @@ export default function DeckEditor() {
     async function generateCardPool() {
         let requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'accept': 'application/json' },
         };
         
         const response = await fetch(`${getUrl()}/cardpool`, requestOptions);

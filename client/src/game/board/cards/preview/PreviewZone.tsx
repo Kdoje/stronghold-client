@@ -115,7 +115,7 @@ export default function PreviewZone(props: PreviewZoneDataT) {
                 previewElt.current.addEventListener('wheel', (e) => {
                     if (e.deltaY !== 0) {
                         e.preventDefault();
-                        previewElt.current.scrollLeft += e.deltaY;
+                        previewElt.current!.scrollLeft += e.deltaY;
                     }
                 });
             }

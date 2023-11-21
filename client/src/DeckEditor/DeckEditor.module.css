@@ -1,0 +1,206 @@
+.container {
+    display: grid;
+    height: 98vh;
+    max-width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: min-content min-content min-content auto;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "navBar navBar navBar"
+        "cardPool cardPool cardPool"
+        "deckMetadata deckMetadata deckMetadata"
+        "deckContents deckContents deckContents";
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.modalWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background: rgba(0, 0, 0, 5%);
+	top: 0;
+	left: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.navBar {
+    grid-area: navBar;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "title . deckGenerationSettings";
+}
+
+.title {
+    grid-area: title;
+    font-size: 30px;
+    justify-content: left;
+    display: flex;
+    inline-size: min-content;
+    white-space: nowrap;
+    min-height: fit-content;
+    align-items: center;
+}
+
+.titleText {
+    align-self: center;
+    font-size: 25px;
+    margin: 5px;
+}
+
+.deckGenerationSettings {
+    grid-area: deckGenerationSettings;
+    align-self: center;
+    display: flex;
+    justify-content: right;
+    min-height: fit-content;
+}
+
+.deckMetadata {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "curveMetadata . sizeMetadata";
+    grid-area: deckMetadata;
+    height: fit-content;
+    background-color: lightblue;
+}
+
+.sizeMetadata {
+    grid-area: sizeMetadata;
+    text-align: right;
+    align-self: center;
+    margin-right: 25px;
+    font-size: 20px;
+}
+
+.curveMetadata {
+    grid-area: curveMetadata;
+    text-align: left;
+    align-self: center;
+    margin-left: 25px;
+    font-size: 20px;
+}
+
+.cardPoolView {
+    display: grid;
+    grid-auto-columns: min-content;
+    grid-template-rows: auto;
+    grid-auto-rows: 200px;
+    height: 210px;
+    grid-area: cardPool;
+    background-color: lightgoldenrodyellow;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    align-content: space-around;
+}
+
+
+.button {
+    min-height: 50px;
+    max-width: 100px;
+    min-width: 100px;
+    font-size: 20px;
+    color: white;
+    margin: 2%;
+    inline-size: min-content;
+}
+
+.cardPoolPreviewContainer {
+    scale: .5;
+    margin: -35px;
+    grid-row: 1;
+    row-gap: 10px;
+    display: grid;
+    grid-template-areas:
+        "copyCount"
+        "cardPreview";
+}
+
+.copyCountPipContainer { 
+    grid-area: copyCount;
+    font-size: 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.cardPreview {
+    grid-area: cardPreview;
+    width: fit-content;
+    grid-column: auto;
+}
+
+.deckContents {
+    grid-template-columns: repeat(auto-fill, 200px);
+    grid-auto-rows: 75px;
+    grid-area: deckContents;
+    background-color: lightcyan;
+    display: grid;
+    overflow-y: scroll;
+    max-width: 100%;
+}
+
+
+.deckCard {
+    max-height: 75px;
+    min-width: fit-content;
+    display: grid;
+    scale: .8;
+}
+
+.quantityDisplay {
+    margin: 30px auto;
+    max-height: 45px;
+    padding-right: 10px;
+    min-width: 90%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    grid-area: 1/1;
+    text-align: right;
+    color: white;
+    font-size: 30px;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantityButton {
+    padding: 0px;
+    line-height: 0px;
+    margin: 10px;
+    height: 50px;
+    min-height: fit-content;
+    min-width: 50px;
+    font-size: 48px;
+    max-width: fit-content;
+    border-radius: 75px;
+    background-color: rgba(0, 0, 0, 0.692);
+}
+
+.back {
+    background-color: coral;
+}
+
+.submit {
+    background-color: green;
+}
+
+.generate {
+    background-color: blue;
+}

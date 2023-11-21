@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import  {GAME_BOARD, DECK_EDITOR, MAIN_MENU} from 'common/Routes'
 import MainMenu from './MainMenu/MainMenu';
+import DeckEditor from './DeckEditor/DeckEditor';
 
 
 const router = createBrowserRouter([
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: DECK_EDITOR,
-        element: <div>Fuck me</div>
+        element: <DeckEditor/>
       },
       {
         path: GAME_BOARD,

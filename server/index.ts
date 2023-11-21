@@ -81,8 +81,23 @@ app.post('/decklist', (req, res) => {
     res.end(JSON.stringify({deck: decklistResp, wielder: cards.get("The Novice")}));
 })
 
+app.get('/cardpool', (req, res) => {
+	let cardNames = new Array(...cards.keys());
+	let cardPoolResp = new Map<AnyCardT, number>();
+	for (let i = 0; i < 150; i++) {
+		const cardInd = Math.floor(Math.random() * cardNames.length);
+		const card = cards.get(cardNames[cardInd])!
+		cardPoolResp.set(card, (cardPoolResp.get(card) ?? 0) + 1);
+	}
+	res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({cardPool: JSON.stringify(Array.from(cardPoolResp.entries()))}))
+})
 
-const server = createServer({key: fs.readFileSync(path.join(__dirname, "resources/key.pem")), cert: fs.readFileSync(path.join(__dirname, "resources/cert.pem"))}, app)
+const server = createServer(
+	{
+		key: fs.readFileSync(path.join(__dirname, "resources/key.pem")),
+		cert: fs.readFileSync(path.join(__dirname, "resources/cert.pem"))
+	}, app)
 
 
 server.listen(port, () => {

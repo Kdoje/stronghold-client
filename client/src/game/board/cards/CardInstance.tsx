@@ -40,7 +40,6 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
         <div className={css.cardAnnotation}>{props.annotation}</div> : null;
 
     let result =
-
         <div ref={setNodeRef}  {...listeners} {...attributes}
             style={style} className={css.draggableContainer}>
             <div className={css.cardPreivewContainer} style={rotatedStyle} 

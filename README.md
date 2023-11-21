@@ -26,3 +26,7 @@
     * open the command pallete (with `ctrl + shift + p`)
     * set `Debug: Toggle auto-attach` to always, then restart the terminal. 
     * run `npm run server:dev` in the command line and observe breakpoints are hit
+
+## FAQs
+* I see `ERR_CERT_AUTHORITY_INVALID` when connecting to the sockets server on a local dev client. How do I fix this?
+    * Ctrl + click on the link and click `Trust this domain` on the resultant page. This will tell your browser to accept the self-signed cert and enable the sockets locally

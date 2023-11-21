@@ -3,6 +3,8 @@ import { useContext, useState } from 'react';
 import DeckEntry from '../deck/DeckEntry';
 import { getUrl } from '../../utils/FetchUtils';
 import { BoardContext } from './BoardContext';
+import { useNavigate } from 'react-router-dom';
+import { MAIN_MENU } from 'common/Routes';
 
 
 export default function DeckOptionsContainer(props: {
@@ -15,6 +17,8 @@ export default function DeckOptionsContainer(props: {
 
     const [deckData, setDeckData] = useState<{ cards: Array<AnyCardT>, wielder?: AnyCardT }>({ cards: [] });
     const [showDeckModal, setShowDeckModal] = useState<boolean>(false);
+    const navigate = useNavigate();
+    
     const getPlayerId = useContext(BoardContext).getPlayerId;
     let color = getPlayerId() === 0 ? "red" : "green";
 
@@ -56,6 +60,7 @@ export default function DeckOptionsContainer(props: {
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.resetPlayer(deckData.cards, deckData.wielder) }}>RESET</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => { props.closePreview() }}>CLOSE PREVEIW</button>
         <button style={DECK_BUTTON_STYLE} onClick={(e) => {onTakeDamageClick()}}>TAKE DAMAGE</button>
+        <button style={DECK_BUTTON_STYLE} onClick={() => {navigate(MAIN_MENU)}}>QUIT</button>
         <div>{showDeckModal ? (
             <DeckEntry onAccept={(inputData) => onSetDeckClick(inputData)} onClose={() => setShowDeckModal(false)} />
             ) : null}</div>

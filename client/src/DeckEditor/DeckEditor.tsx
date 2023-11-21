@@ -7,6 +7,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnyCardT, UnitCardT } from 'common/types/game-data';
 import QuantityDisplay from './QuantityDisplay';
 import { DeckEditorContext } from './DeckEditorContext';
+import toast, { Toaster } from 'react-hot-toast';
+import { getUrl } from '../utils/FetchUtils';
+import { StratagemCard } from '../game/board/cards/StratagemCard';
 
 
 export default function DeckEditor() {
@@ -34,16 +37,15 @@ export default function DeckEditor() {
 
     const navigate = useNavigate();
    
-    function generateCardPool() {
-        // TODO update this to use the API to get a card list
-        let newCardPool = new Map<AnyCardT, number>();
-        for (let i = 0; i < 90; i++) {
-            testCard.cost = `${i % 7}`
-            testCard.name = `Sheoldred, The Apocolypse ${i}`
-            let curCard = {...testCard} as AnyCardT;
-            newCardPool.set(curCard, 3);
-        }
-        setCardPool(newCardPool);
+    async function generateCardPool() {
+        let requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        
+        const response = await fetch(`${getUrl()}/cardpool`, requestOptions);
+        const data = await response.json();
+        setCardPool(new Map(JSON.parse(data.cardPool)));
         setDeckContents(new Map());
     }
 
@@ -114,14 +116,46 @@ export default function DeckEditor() {
         }
     }
 
+    function saveDeck() {
+        let deckList = "";
+        for (let [card, quantity] of deckContents) {
+            if (quantity > 0) {
+                deckList += `${quantity} ${card.name.toString()}\n`
+            }
+        }
+        toast.success("Deck copied to clipboard!", {style:{fontFamily: 'sans-serif'}})
+        navigator.clipboard.writeText(deckList)
+    }
+
+    function getCardRender(card: AnyCardT) {
+        let cardRender = <StratagemCard {...card} />
+        if ((card as UnitCardT).attack !== "") {
+            cardRender = <UnitCard {...card as UnitCardT} />
+        }
+        return cardRender;
+    }
+
     const modifyDeckContentsCallback = useCallback((card: AnyCardT, qtyToAdd: number) => {
         modifyDeckContents(card, qtyToAdd);
     }, [modifyDeckContents])
 
     
+    let sortedCards = new Array(...cardPool.keys()).sort((c1, c2) => {
+        if (c1.cost !== c2.cost) {
+            return c1.cost < c2.cost ? -1 : 1;
+        } else if (c1.type !== c2.type) {
+            return c1.type.localeCompare(c2.type);
+        } else if (c1.subtype !== c2.subtype) {
+            return (c1.subtype ?? "").localeCompare(c2.subtype ?? "");
+        } else {
+            return (c1.name).localeCompare(c2.name);
+        }
+    });
+
     let cardPoolInstances : React.ReactElement[] = [];
-    for (let [card, quantity] of cardPool) {
+    for (let card of sortedCards) {
         // only render cards w/one or more copy available
+        let quantity = cardPool.get(card) ?? 0;
         if (quantity > 0) {
             let pips = [];
             for (let i = 0; i < quantity; i++) {
@@ -129,12 +163,13 @@ export default function DeckEditor() {
                     radio_button_unchecked
                 </span>);
             }
+           
             cardPoolInstances.push(<div className={css.cardPoolPreviewContainer}  key={card.name}>
                 <div className={css.copyCountPipContainer}>{pips}</div>
                 <div key={card.name} onMouseEnter={(e) => cardHovered(e, card)}
                     onMouseLeave={(e) => cardHovered(e, undefined)}
                     onClick={() => addInstanceToDeck(card)}
-                    className={css.cardPreview} ><UnitCard  {...card} />
+                    className={css.cardPreview}>{getCardRender(card)}
                 </div>
             </div>)
         }
@@ -143,7 +178,7 @@ export default function DeckEditor() {
     useEffect(() => {
         if (cardPoolElt.current !== null) {
             // get the ref to the element then add:
-            cardPoolElt.current.addEventListener<'wheel'>('wheel', (e: WheelEvent) => {
+            cardPoolElt.current.addEventListener('wheel', (e: WheelEvent) => {
                 if (e.deltaY !== 0) {
                     // use a timeout to de-bounce scroll events
                     clearTimeout(scrollTimer.current);
@@ -151,7 +186,8 @@ export default function DeckEditor() {
                         clearOverlay();
                         e.preventDefault();
                         e.stopPropagation();
-                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -cardPoolElt.current!.clientWidth : cardPoolElt.current!.clientWidth
+                        let scrollDist = cardPoolElt.current!.clientWidth/4
+                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -scrollDist : scrollDist
                     });
                 }
             });
@@ -162,13 +198,18 @@ export default function DeckEditor() {
     })
 
     let deckInstances: React.ReactElement[] = [];
-    let costQtyMap = new Map<number, number>()
+    let costQtyMap = new Map<number, number>();
+    let totalCostMap = new Map<number, number>();
+    let cardCount = 0;
+
     for (let [card, quantity] of deckContents) {
         if (quantity > 0) {
             let plusEnabled = (cardPool.get(card) ?? 0) > 0;
             let focused = focusedCard?.name == card.name;
             let cost = Number(card.cost);
+            cardCount += quantity;
             costQtyMap.set(cost, (costQtyMap.get(cost) ?? 0) + 1);
+            totalCostMap.set(cost, (totalCostMap.get(cost) ?? 0) + quantity);
             deckInstances.push(<div key={card.name} className={css.deckCard}
                 style={{ gridArea: `${costQtyMap.get(cost)}/${(cost)+ 1}` }} >
 
@@ -176,13 +217,24 @@ export default function DeckEditor() {
                 <div style={{ gridRow: 1, gridColumn: 1 }} onMouseEnter={(e) => cardHovered(e, card)}
                     onMouseLeave={(e) => cardHovered(e, undefined)}
                     onClick={(e) => {e.stopPropagation(); setFocusedCard(card); clearOverlay();}}>
-                    <UnitCard {...card} />
+                    {getCardRender(card)}
                 </div>
             </div>);
         }
     }
 
+    let costBreakdown = "";
+    let lowerBoundCardCount = 0;
+    for(let i = 0; i < 7; i++) {
+        lowerBoundCardCount += (totalCostMap.get(i) ?? 0);
+        costBreakdown += `${i}s:${totalCostMap.get(i) ?? 0} `
+    }
+
+    costBreakdown += `7+:${cardCount - lowerBoundCardCount}`
+    
+
     return (<>
+        <Toaster position="top-center"/>
         <div className={css.container} onClick={() => { setFocusedCard(undefined) }}>
             <DeckEditorContext.Provider value={{ modifyDeckContents: modifyDeckContentsCallback }}>
                 <div className={css.navBar}>
@@ -194,15 +246,15 @@ export default function DeckEditor() {
 
                     <div className={css.deckGenerationSettings}>
                         <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
-                        <button className={css.button + " " + css.submit}>Save Deck</button> {/* TODO make this actually save to clipboard */}
+                        <button className={css.button + " " + css.submit} onClick={() => {saveDeck()}}>Save Deck</button>
                     </div>
                 </div>
                 <div ref={cardPoolElt} className={css.cardPoolView}>{cardPoolInstances}</div>
                 <div className={css.deckMetadata}>
                     <div className={css.sizeMetadata}>
-                        40 card(s)
+                        {cardCount} card(s)
                     </div>
-                    <div className={css.curveMetadata}>1s:6 2s:5 3s:5 4s:2 5s:1</div>
+                    <div className={css.curveMetadata}>{costBreakdown}</div>
                 </div>
                 <div className={css.deckContents}>{...deckInstances}</div>
             </DeckEditorContext.Provider>
@@ -210,7 +262,7 @@ export default function DeckEditor() {
         <div style={focusedCardOverlayStyle.current} className={css.modalWrapper}>
             {
                 hoveredCard ?
-                    <div style={focusedCardStyle.current}><UnitCard  {...hoveredCard} /></div> :
+                    <div style={focusedCardStyle.current}>{getCardRender(hoveredCard)}</div> :
                     <></>
             }
         </div>

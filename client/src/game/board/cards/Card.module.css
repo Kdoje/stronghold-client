@@ -123,7 +123,7 @@
     grid-column-start: 1;
     position: relative;
     color: black;
-    font-size: 12px;
+    font-size: 11px;
     width: 163px;
     height: 82px;
     left: 37px;
@@ -132,8 +132,8 @@
     align-items: center;
     justify-content: left;
     text-align: left;
-    line-height: 11px;
-    font-family: 'Matrix';
+    font-family: sans-serif;
+    font-weight: 700;
 }
 
 .moveText {

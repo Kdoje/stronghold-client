@@ -20,6 +20,8 @@ export const PREVIEW_ID_POSTFIX = '-preview'
 export default function PreviewZone(props: PreviewZoneDataT) {
 
     const previewElt = useRef<HTMLDivElement|null>(null)
+    let scrollTimer = useRef<NodeJS.Timeout|undefined>(undefined);
+
     
     let instanceIndex = 0;
     const getActiveCard = useContext(BoardContext).getActiveCard;
@@ -114,8 +116,11 @@ export default function PreviewZone(props: PreviewZoneDataT) {
                 // get the ref to the element then add:
                 previewElt.current.addEventListener('wheel', (e) => {
                     if (e.deltaY !== 0) {
-                        e.preventDefault();
-                        previewElt.current!.scrollLeft += e.deltaY;
+                        clearTimeout(scrollTimer.current);
+                        scrollTimer.current = setTimeout(function () {
+                            e.preventDefault();
+                            previewElt.current!.scrollLeft += e.deltaY;
+                        })
                     }
                 });
             }

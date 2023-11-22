@@ -10,22 +10,27 @@ import { DeckEditorContext } from './DeckEditorContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { getUrl } from '../utils/FetchUtils';
 import { StratagemCard } from '../game/board/cards/StratagemCard';
-
+import SearchBar from './SearchBar';
 
 export default function DeckEditor() {
-    let testCard = {
-        name: `Sheoldred, The Apocolypse`,
-        description: "Breaks standard", cost: "3",
-        type: "Unit", subtype: "Insectoid Horror",
-        value: "A", attack: "4", health: "5", move: "1"
-    };
 
     const cardPoolElt = useRef<HTMLDivElement|null>(null)
 
+    const CARD_FIELDS = ['name',
+        'cost',
+        'type',
+        'subtype',
+        'description',
+        'value',
+        'attack',
+        'health',
+        'move'
+    ]
     const [hoveredCard, setHoveredCard] = useState<AnyCardT|undefined>(undefined);
     const [cardPool, setCardPool] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
     const [deckContents, setDeckContents] = useState<Map<AnyCardT, number>>(new Map<AnyCardT, number>());
     const [focusedCard, setFocusedCard] = useState<AnyCardT|undefined>(undefined);
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     let hoverTimer = useRef<NodeJS.Timeout|undefined>(undefined);
     let scrollTimer = useRef<NodeJS.Timeout|undefined>(undefined);
@@ -135,6 +140,26 @@ export default function DeckEditor() {
         return cardRender;
     }
 
+    function getCardText(card: AnyCardT) {
+        let baseCardText: string = "";
+        CARD_FIELDS.forEach((field) => {
+            baseCardText += (card[field as keyof AnyCardT] ?? "")
+        })
+        return baseCardText;
+    }
+
+    function matchesSearchTerm(card: AnyCardT) {
+        return searchTerm === "" || getCardText(card).toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase());
+    }
+
+    function scrollCardPoolPage(forward: boolean) {
+        if (forward) {
+            cardPoolElt.current!.scrollLeft += cardPoolElt.current!.clientWidth;
+        } else {
+            cardPoolElt.current!.scrollLeft -= cardPoolElt.current!.clientWidth;
+        }
+    }
+
     const modifyDeckContentsCallback = useCallback((card: AnyCardT, qtyToAdd: number) => {
         modifyDeckContents(card, qtyToAdd);
     }, [modifyDeckContents])
@@ -152,11 +177,13 @@ export default function DeckEditor() {
         }
     });
 
+    console.log("search term is " + searchTerm)
+
     let cardPoolInstances : React.ReactElement[] = [];
     for (let card of sortedCards) {
         // only render cards w/one or more copy available
         let quantity = cardPool.get(card) ?? 0;
-        if (quantity > 0) {
+        if (quantity > 0 && matchesSearchTerm(card)) {
             let pips = [];
             for (let i = 0; i < quantity; i++) {
                 pips.push(<span key={i} className="material-symbols-outlined" style={{ color: "green" }}>
@@ -186,8 +213,7 @@ export default function DeckEditor() {
                         clearOverlay();
                         e.preventDefault();
                         e.stopPropagation();
-                        let scrollDist = cardPoolElt.current!.clientWidth/4
-                        cardPoolElt.current!.scrollLeft += e.deltaY < 0 ? -scrollDist : scrollDist
+                        cardPoolElt.current!.scrollLeft += e.deltaY;
                     });
                 }
             });
@@ -241,15 +267,21 @@ export default function DeckEditor() {
                     <div className={css.title}>
                         <button className={css.button + " " + css.back}
                             onClick={() => { navigate(MAIN_MENU) }}>{'< Menu'}</button>
-                        <div className={css.titleText}>Deck Editor</div>
+                        <SearchBar placeholderText='search' onSubmit={(searchTerm) => setSearchTerm(searchTerm)} />
                     </div>
-
+                    <div className={css.titleText}>Deck Editor</div>
                     <div className={css.deckGenerationSettings}>
                         <button className={css.button + " " + css.generate} onClick={() => generateCardPool()}>Generate Cardpool</button>
                         <button className={css.button + " " + css.submit} onClick={() => {saveDeck()}}>Save Deck</button>
                     </div>
                 </div>
-                <div ref={cardPoolElt} className={css.cardPoolView}>{cardPoolInstances}</div>
+                <div style={{ gridArea: 'cardPool', display: 'flex' }}>
+                    <button className={css.cardPoolScrollButton + " " + css.generate}
+                        onClick={() => scrollCardPoolPage(false)}>{'<'}</button>
+                    <div ref={cardPoolElt} className={css.cardPoolView}>{cardPoolInstances}</div>
+                    <button className={css.cardPoolScrollButton + " " + css.generate}
+                        onClick={() => scrollCardPoolPage(true)}>{'>'}</button>
+                </div>
                 <div className={css.deckMetadata}>
                     <div className={css.sizeMetadata}>
                         {cardCount} card(s)

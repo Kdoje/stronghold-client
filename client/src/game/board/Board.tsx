@@ -293,7 +293,9 @@ export default function Board(props: { socket: Socket }) {
             amount = Math.min(deckLength, amount * 2);
             let damageCards = newData[playerId].deck.splice(deckLength - amount, amount);
             newData[playerId].damage.unshift(...damageCards);
-            rezonePlayerData(newData)
+            rezonePlayerData(newData);
+            let logMessage = `Player ${getPlayerColor()}: Took ${amount / 2} damage.`;
+            appendAndPostLogData(logMessage);
             setAndPostPlayerData(newData);
         }
     }

@@ -2,6 +2,7 @@ import { StratagemCardT } from "common/types/game-data";
 import React from "react";
 import css from "./Card.module.css"
 import {Md5} from 'ts-md5';
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 
 export class StratagemCard extends React.Component<StratagemCardT & {displayOverlay?: boolean}> {
@@ -27,7 +28,7 @@ export class StratagemCard extends React.Component<StratagemCardT & {displayOver
                 <div className={css.costText}>{this.props.cost}</div>
                 <div className={css.typeText}>{typeLineText}</div>
                 <div className={css.descriptionText}>{this.props.description}</div>
-                <div className={css.valueText}>{this.props.value}</div>
+                <div className={css.valueText}>{this.props.value + " " + this.props.rarity}</div>
                 <img className={css.cardImage} src={cardImage}></img>
             </div>;
     }

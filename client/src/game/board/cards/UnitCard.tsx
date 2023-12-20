@@ -46,7 +46,7 @@ export class UnitCard extends React.Component<UnitCardT & {displayOverlay?: bool
             <div className={css.moveText}>{this.props.move}</div>
             {injuryMarkers.map(marker => marker)}
             <div className={css.healthText}>{initialHealth}</div>
-            <div className={css.valueText}>{this.props.value}</div>
+            <div className={css.valueText}>{this.props.value + " " + this.props.rarity}</div>
             <div className={css.attackText}>{this.props.attack}</div>
             <img className={css.cardImage} src={cardImage}></img>
             {this.props.displayOverlay ? statsText : undefined}

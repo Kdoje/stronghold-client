@@ -1,0 +1,43 @@
+name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
+Fr05: Fling to Foundry,3,Stratagem,Tidewalker,Move a friendly adjacent unit to any? friendly unoccupied foundry,,,,Should only Frostlon care about foundries as a tile resource (moving to foundries or using them),,C
+Si01: Treetop dweller,2,Unit,Simian,This costs 1 less if deployed in or adjacent to a firendly environ,3,1,1,"Unit, small, cheaper in Simian",,C
+Si02: Forest Guide,1,Unit,Simian,"Reaction: Leaf Reading: When this enters the field, search your deck or damage for a Simian, reveal it and put it into your hand",1,1,1,"Unit, small, Simian search",,C
+Si03: Glade Strider,2,Unit,Simian,Aura: Friendly Territory This unit has +1Mv when in or adjacent to a friendly Simian environ,3,2,1,"Unit, medium, environ move",,C
+Si04: Treetop Anhillator,4,Unit,Simian,This costs 1 less if deployed in or adjacent to a friendly environ,4,4,2,"Unit, large, cheaper in Simian",,C
+Si05: Goragaran,4,Unit,Simian,This unit can only be deployed on a tile with a friendly environ,6,6,1,"Unit, large, requires Simian",,C
+Si06: Kyrian Clearing,0,Environ,Simian,,,,,"Environ, Simian",,C
+Si07: Simmish Sanctuary,2,Environ,Simian,"Reaction: Emerge from earth: When this enters the field, the next Simian you play this turn costs 1 less
+",,,,"Environ, Simian, chain Simian",,C
+Si08: Arborial Pathways,2,Environ,Simian,"Aura: Paths of Grass: You may pay 2 to allow an ally to move through this tile for free.
+",,,,"Environ, Simian, Free movement",,C
+Si09: Kyrian Mountainside,1,Environ,Simian,"Aura: Verdance Vigor: Friendly units in this environ gain +2Atk
+ 
+",,,,"Environ, Simian, strength",,C
+Si10: Call of the forest,2,Stratagem,Simian,Search your deck or damage pile for Simian ordnance and reveal it. It costs 1 less when played this turn,,,,"Stratagem, search env, chain Simian",,C
+Si11: Kyrian Ambush,2,Tactic,Simian,Chosen unit in a friendly environ gets +2Atk +2Def for each adjacent friendly Simian environ,,,,"Tactic, Simian gives Strength",,C
+G10: Wheel,1,Stragem,(GENERIC),Shuffle your hand into your deck then draw 5 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,C
+G 13: Unit Searcher,1,Tactic,(GENERIC),"To deploy this, you must also discard 2 cards, then search your deck for a unit, reveal it, and shuffle",,,,"Stratagem, cheap discard 2, search for unit",,C
+G01: Place Searcher,1,Tactic,(GENERIC),"To deploy this, you must also discard 2 cards, then search your deck for an environ or structure, reveal it, and shuffle",,,,"Stratagem, cheap, discard 2, search for env or structure",,C
+G02: Strategy Searcher,1,Tactic,(GENERIC),"To deploy this, you must also discard 2 cards, then search your deck for a tactic or stratagem, reveal it, put it into your hand and shuffle",,,,,,C
+G11: Flow Concentration,2,Stratagem,(GENERIC),Search your deck for any card then shuffle. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,"Stratagem, cheap, fatigue, search for anything
+ 
+ This and CG04 are basically the same effect at the same cost. There needs to be some difference",,C
+G03: Flow Filtration,2,Stratagem,(GENERIC),"To deploy this, you must also discard a card. Search your deck and/or damage pile for a card. You become fatigued  (you can't draw cards or deploy ordnance until your next turn)",,,,"Stratagem, cheap, fatigue, search damage pile",,C
+G04: Trance,2,Stratagem,(GENERIC),Draw 4 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,"Stratagem, medium, fatigue, draw 4",,C
+G05: Epiphany,1,Tactic,(GENERIC),Draw 2 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,"Tactic, fatigue, draw 2",,C
+G06: Flow Timewind,2,Tactic,(GENERIC),"To deploy this, you must also discard a card. Search your deck and/or damage pile for any card.  You take 2 damage, and become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,"Tactic, fatigue, take 2 damage, search deck and damage for anything",,C
+G07: Flow Restoration,2,Tactic,(GENERIC),"Shuffle the top 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,Heal 3 draw 1,,C
+G08: Charge!,1,Tactic,(GENERIC),All Friendly Units have +1 to Movement until the end of your next turn,,,,"Tactic, +1 to movement",,C
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,,R
+Fire Fist,,Wielder,,"Fire fists Reaction: Whenever you deal damage to an adjacent occupant, deal 2 additional damage",-,-,1,"Fire fists Reaction: Whenever you deal damage to an adjacent occupant, deal 2 additional damage",,R
+Long Arms,,Wielder,,Telekine arms: reaction: at the start of a turn you can pay one to deploy nearby you this turn,-,-,1,Telekine arms: reaction: at the start of a turn you can pay one to deploy nearby you this turn,,R
+Pupetteer,,Wielder,,"Pupetteer: whenever you destroy 1 or more occupants, you may play 3 life to put a unit that costs 1 or less from your hand adjacent to you",-,-,1,"Pupetteer: whenever you destroy 1 or more occupants, you may play 3 life to put a unit that costs 1 or less from your hand adjacent to you",,R
+Zetsu Guy,,Wielder,,"Zetsu crush: whenever ordnance deploys within 2 tiles of you, you may discard cards with total cost exactly 2 times the deploying ordnance's cost. If you do discard it without applying it",-,-,1,"Zetsu crush: whenever ordnance deploys within 2 tiles of you, you may discard cards with total cost exactly 2 times the deploying ordnance's cost. If you do discard it without applying it",,R
+Magnet Man,,Wielder,,"Universal push/pull: Reaction: when you would move this, you may instead pay 3 to move an occupant in a straight line of unoccupied tiles towards you or away from you until it can't move further.",-,-,1,"Universal push/pull: Reaction: when you would move this, you may instead pay 3 to move an occupant in a straight line of unoccupied tiles towards you or away from you until it can't move further.",,R
+Rally Lady,,Wielder,,"Rallier: whenever 3 or more units adjacent to you attack, those units can't be destroyed this turn",-,-,1,"Rallier: whenever 3 or more units adjacent to you attack, those units can't be destroyed this turn",,R
+Another Rally Lady,,Wielder,,Rallier 2: each friendly unit adjacent to you gets +1/+1 for each other unit adjacent to you,-,-,1,Rallier 2: each friendly unit adjacent to you gets +1/+1 for each other unit adjacent to you,,R
+Shield Fella,,Wielder,,"Shield barer: Reaction: whenever damage would be dealt to an adjacent occupant, you may deal that damage to you instead",-,-,1,"Shield barer: Reaction: whenever damage would be dealt to an adjacent occupant, you may deal that damage to you instead",,R
+Walk-in,,Wielder,,Freezer: pay 3 to freeze a nearby (within 2?) occupant until its attacked unless they/their controller pays 2,-,-,1,Freezer: pay 3 to freeze a nearby (within 2?) occupant until its attacked unless they/their controller pays 2,,R
+Blammo-fella,,Wielder,,Artillery command: Occupants that deal damage to a non-adjacent occupant deal 1 additional damage,-,-,1,Artillery command: Occupants that deal damage to a non-adjacent occupant deal 1 additional damage,,R
+Hole digger,,Wielder,,You Start with 2 black hole counters. Remove a black hole counter to move each occupant adjacent to any chosen tile 1 tile closer to the chosen tile in any order. You deal 1 damage to each occupant that can't move closer. ,-,-,1,You Start with 2 black hole counters. Remove a black hole counter to move each occupant adjacent to any chosen tile 1 tile closer to the chosen tile in any order. You deal 1 damage to each occupant that can't move closer. You become fatigued,,R
+Swampfolk,,Wielder,,"If adjacent to or in a friendly fen, you may chose a card in your discard and discard 3 cards to put the chosen card into your hand. You become fatigued",-,-,1,"If adjacent to or in a friendly fen, you may chose a card in your discard and discard 3 cards to put the chosen card into your hand. You become fatigued",,R

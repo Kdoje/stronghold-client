@@ -139,10 +139,7 @@ export default function Board(props: { socket: Socket }) {
     useEffect(() => {
         console.log(logWindowRef.current)
         if (logData.length > 0 && (logWindowRef.current!.scrollHeight - logWindowRef.current!.scrollTop - logWindowRef.current!.clientHeight) < 50) {
-            logEndRef.current!.scrollIntoView({
-                behavior: "smooth",
-                block: "end"
-            })
+            logWindowRef.current!.scrollTop = logWindowRef.current!.scrollHeight
         }
     }, [logData.length])
 
@@ -282,6 +279,8 @@ export default function Board(props: { socket: Socket }) {
     function handleShuffle() {
         let newData = playerData.slice();
         shuffle(newData[playerId].deck.map((inst) => { return inst.card }), newData);
+        let logMessage = `Player ${getPlayerColor()}: Shuffled their Deck.`;
+        appendAndPostLogData(logMessage);
         setAndPostPlayerData(newData);
     }
 
@@ -599,8 +598,7 @@ export default function Board(props: { socket: Socket }) {
         let cardName = "a card";
         let fromClause = `${srcZone.zoneName}`;
         let toClause = `${destZone.zoneName}`;
-        console.log("zone Name " + destZone.zoneName + " hidden: " + isZoneHidden(destZone.zoneName));
-        if (!isZoneHidden(destZone.zoneName)) {
+        if (!isZoneHidden(srcZone.zoneName) || !isZoneHidden(destZone.zoneName)) {
             cardName = name;
         }
         if (srcZone.zoneName === "Board") {
@@ -729,10 +727,13 @@ export default function Board(props: { socket: Socket }) {
                     <div className={css.CardPreview}>{card}</div>
                     <div className={css.DeckSettings}>
                         <DeckOptionsContainer setDeck={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
-                            resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); setLogData([]); }}
+                            resetPlayer={(cards, wielder) => {
+                                setPlayerDeckData(cards, wielder);
+                                appendAndPostLogData(`===========Player ${getPlayerColor()}: Conceded!==========`);
+                            }}
                             shuffleDeck={() => { handleShuffle(); }}
-                            closePreview={() => { setActiveZone({zoneName: "Board", rowId: 0, colId: 0})}}
-                            takeDamage={(amount) => {handleTakeDamage(amount)}} />
+                            closePreview={() => { setActiveZone({ zoneName: "Board", rowId: 0, colId: 0 }) }}
+                            takeDamage={(amount) => { handleTakeDamage(amount) }} />
                     </div>
                     <PhaseSelector setPhase={setAndPostCurPhase} phase={curPhase}/>
                     <div className={css.GameLog} ref={logWindowRef}>{gameLogRender}</div>

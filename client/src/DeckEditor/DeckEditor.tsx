@@ -11,6 +11,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { getUrl } from '../utils/FetchUtils';
 import { StratagemCard } from '../game/board/cards/StratagemCard';
 import SearchBar from './SearchBar';
+import DeckMetadataDisplay from './DeckMetadataDisplay';
 
 export default function DeckEditor() {
 
@@ -225,7 +226,6 @@ export default function DeckEditor() {
 
     let deckInstances: React.ReactElement[] = [];
     let costQtyMap = new Map<number, number>();
-    let totalCostMap = new Map<number, number>();
     let cardCount = 0;
 
     for (let [card, quantity] of deckContents) {
@@ -235,7 +235,6 @@ export default function DeckEditor() {
             let cost = Number(card.cost);
             cardCount += quantity;
             costQtyMap.set(cost, (costQtyMap.get(cost) ?? 0) + 1);
-            totalCostMap.set(cost, (totalCostMap.get(cost) ?? 0) + quantity);
             deckInstances.push(<div key={card.name} className={css.deckCard}
                 style={{ gridArea: `${costQtyMap.get(cost)}/${(cost)+ 1}` }} >
 
@@ -248,16 +247,6 @@ export default function DeckEditor() {
             </div>);
         }
     }
-
-    let costBreakdown = "";
-    let lowerBoundCardCount = 0;
-    for(let i = 0; i < 7; i++) {
-        lowerBoundCardCount += (totalCostMap.get(i) ?? 0);
-        costBreakdown += `${i}s:${totalCostMap.get(i) ?? 0} `
-    }
-
-    costBreakdown += `7+:${cardCount - lowerBoundCardCount}`
-    
 
     return (<>
         <Toaster position="top-center"/>
@@ -282,12 +271,7 @@ export default function DeckEditor() {
                     <button className={css.cardPoolScrollButton + " " + css.generate}
                         onClick={() => scrollCardPoolPage(true)}>{'>'}</button>
                 </div>
-                <div className={css.deckMetadata}>
-                    <div className={css.sizeMetadata}>
-                        {cardCount} card(s)
-                    </div>
-                    <div className={css.curveMetadata}>{costBreakdown}</div>
-                </div>
+                <DeckMetadataDisplay deckContents={deckContents}/>
                 <div className={css.deckContents}>{...deckInstances}</div>
             </DeckEditorContext.Provider>
         </div>

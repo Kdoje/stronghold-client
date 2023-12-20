@@ -90,18 +90,42 @@ app.post('/decklist', (req, res) => {
 		}
 	})
 	res.setHeader('Content-Type', 'application/json');
-	// TODO have this pull the wielder from the decklist
 	res.end(JSON.stringify({ deck: decklistResp, wielder: wielder }));
 })
 
-app.get('/cardpool', (req, res) => {
-	let cardNames = new Array(...cards.keys());
-	let cardPoolResp = new Map<AnyCardT, number>();
-	for (let i = 0; i < 90; i++) {
-		const cardInd = Math.floor(Math.random() * cardNames.length);
-		const card = cards.get(cardNames[cardInd])!
-		cardPoolResp.set(card, (cardPoolResp.get(card) ?? 0) + 1);
+function addCardsToPool(pool: Map<AnyCardT, number>, cardsAtRarity: AnyCardT[], count: number) {
+	for (let i = 0; i < count; i++) {
+		const cardInd = Math.floor(Math.random() * cardsAtRarity.length);
+		const cardToAdd = cardsAtRarity[cardInd];
+		if (cardToAdd) {
+			pool.set(cardToAdd, (pool.get(cardToAdd) ?? 0) + 1);
+		}
 	}
+}
+
+function getCardList() {
+	return new Array(...cards.values());
+}
+
+app.get('/cardpool', (req, res) => {
+	const totalCardCount = 90;
+	const legendCount = 0;
+	const rareCount = Math.floor(4 + Math.random() * 2);
+	const uncommonCount = 0; // Math.floor(7 + Math.random() * 5);
+	const commonCount = totalCardCount - legendCount - rareCount - uncommonCount;
+
+	let commons =  getCardList().filter((card) => !card.rarity || card.rarity === 'C')
+	let uncommons =  getCardList().filter((card) => {card.rarity === 'U'})
+	let rares =  getCardList().filter((card) => card.rarity === 'R')
+	let legends =  getCardList().filter((card) => {card.rarity === 'L'})
+	let cardPoolResp = new Map<AnyCardT, number>();
+
+	console.log(rares);
+
+	addCardsToPool(cardPoolResp, legends, legendCount);
+	addCardsToPool(cardPoolResp, rares, rareCount);
+	addCardsToPool(cardPoolResp, uncommons, uncommonCount);
+	addCardsToPool(cardPoolResp, commons, commonCount);
 	res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({cardPool: JSON.stringify(Array.from(cardPoolResp.entries()))}))
 })

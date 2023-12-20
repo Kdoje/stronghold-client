@@ -5,9 +5,9 @@
   grid-template-rows: min-content min-content min-content;
   gap: 10px 10px;
   grid-template-areas:
-    "OpUnknownData Board Board Board OpKnownData . ."
-    "Stack Board Board Board CellPreview CardPreview Phase"
-    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData DeckSettings .";
+    "OpUnknownData Board Board Board OpKnownData . . ."
+    "Stack Board Board Board CellPreview CardPreview Phase GameLog"
+    "PlayerUnknownData PlayerHand PlayerHand PlayerHand PlayerKnownData DeckSettings . .";
 }
 
 .DeckSettings {
@@ -170,6 +170,25 @@
   gap: 6px;
 }
 
+.GameLog {
+  grid-area: GameLog;
+  height: 450px;
+  width: 450px;
+  position: relative;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: flex;
+  row-gap: 10px;
+  flex-direction: column;
+  border: grey;
+  border-style: solid;
+}
+
+.LogEntry {
+  max-height: fit-content;
+  margin: 0px;
+}
+
 .Stack {
   grid-area: Stack;
 }
@@ -256,7 +275,7 @@
 .previewAreaVertical {
   min-height: 500px;
   max-height: 500px;
-  max-width: 150px;
+  min-width: 150px;
   position: relative;
   overflow: scroll;
   overflow-x: hidden;
@@ -280,7 +299,7 @@
   border: grey;
   border-style: solid;
   justify-items: center;
-  height: 125px;
+  min-height: 125px;
 }
 
 .previewDropZone {

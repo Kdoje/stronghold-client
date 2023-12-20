@@ -22,6 +22,8 @@ export function BoardGridCell(props: BoardGridCellData) {
     const updateFoundryData = useContext(BoardContext).updateFoundryData;
     const getPlayerId = useContext(BoardContext).getPlayerId;
 
+    let isMirrored = getPlayerId() % 2 == 1;
+
     function onAnnotationClick(e: React.MouseEvent) {
         if (props?.cards) {
             let annotation = prompt("Enter Annotation", props.cards!.annotation);
@@ -67,7 +69,7 @@ export function BoardGridCell(props: BoardGridCellData) {
         <div>
 
             <div className={css.battlefieldGridCell}>
-                <DropZone zone={props.zone} attacking='N' style={{
+                <DropZone zone={props.zone} attacking={isMirrored ? 'S' : 'N'} style={{
                     gridRowStart: 1, gridColumnStart: 2, backgroundColor: "pink",
                     minHeight: '100%', minWidth: '100%'
                 }}>
@@ -79,17 +81,17 @@ export function BoardGridCell(props: BoardGridCellData) {
                     {stackInstance}
                 </DropZone>
 
-                <DropZone zone={props.zone} attacking='S' style={{
+                <DropZone zone={props.zone} attacking={isMirrored ? 'N' : 'S'} style={{
                     gridRowStart: 3, gridColumnStart: 2, backgroundColor: "pink",
                     minHeight: '100%', minWidth: '100%'
                 }}>
                 </DropZone>
-                <DropZone zone={props.zone} attacking='E' style={{
+                <DropZone zone={props.zone} attacking={isMirrored ? 'W' : 'E'} style={{
                     gridRowStart: 2, gridColumnStart: 3, backgroundColor: "pink",
                     minHeight: '100%', minWidth: '100%'
                 }}>
                 </DropZone>
-                <DropZone zone={props.zone} attacking='W' style={{
+                <DropZone zone={props.zone} attacking={isMirrored ? 'E' : 'W'} style={{
                     gridRowStart: 2, gridColumnStart: 1, backgroundColor: "pink",
                     minHeight: '100%', minWidth: '100%'
                 }}>

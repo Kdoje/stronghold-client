@@ -9,6 +9,8 @@ export type BoardContextT = {
     updateFoundryData: (zone: ZoneIdT, owner: number) => void
     setFocusedCard: (card: CardInstanceT, setZone?: boolean) => void
     getActiveCard: () => CardInstanceT | undefined
+    drawCardFromDeck: () => void
+    refreshPlayerOccupants: () => void
 } 
 
 let defaultContext = {
@@ -18,7 +20,9 @@ let defaultContext = {
     getPlayerId: () => 0,
     updateFoundryData: (zone: ZoneIdT, owner: number) => {},
     setFocusedCard: (card: CardInstanceT) => {},
-    getActiveCard: () => {}
+    getActiveCard: () => {},
+    drawCardFromDeck: () => {},
+    refreshPlayerOccupants: () => {}
 } as BoardContextT
 
 export const BoardContext = createContext(defaultContext);

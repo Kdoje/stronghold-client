@@ -74,22 +74,30 @@ app.post('/decklist', (req, res) => {
 	let decklistReq = req.body.decklist.split(/[\r\n]+/);
 	let decklistResp: AnyCardT[] = [];
 	console.log(decklistReq)
+	let wielder = cards.get("The Novice");
 	decklistReq.forEach((cardDetails: string) => {
 		let qtyIndex = cardDetails.indexOf(" ");
 		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
-		if (cards.get(cardName)) {
-			for (let i = 0; i < parseInt(quantity); i++) 
-				decklistResp.push(cards.get(cardName)!);
+		let card = cards.get(cardName)
+		if (card) {
+			if (card.type.toLowerCase() === "wielder") {
+				wielder = card;
+			} else {
+				for (let i = 0; i < parseInt(quantity); i++) {
+					decklistResp.push(card!);
+				}
 			}
-		})
+		}
+	})
 	res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({deck: decklistResp, wielder: cards.get("The Novice")}));
+	// TODO have this pull the wielder from the decklist
+	res.end(JSON.stringify({ deck: decklistResp, wielder: wielder }));
 })
 
 app.get('/cardpool', (req, res) => {
 	let cardNames = new Array(...cards.keys());
 	let cardPoolResp = new Map<AnyCardT, number>();
-	for (let i = 0; i < 150; i++) {
+	for (let i = 0; i < 90; i++) {
 		const cardInd = Math.floor(Math.random() * cardNames.length);
 		const card = cards.get(cardNames[cardInd])!
 		cardPoolResp.set(card, (cardPoolResp.get(card) ?? 0) + 1);

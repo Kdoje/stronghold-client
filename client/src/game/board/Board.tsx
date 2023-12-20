@@ -1,13 +1,12 @@
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
-import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName } from "common/types/game-data";
+import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName, isZoneHidden } from "common/types/game-data";
 import { PLAYER_CONNECTED } from "common/MessageTypes";
 import { StratagemCard } from "./cards/StratagemCard";
 import { UnitCard } from "./cards/UnitCard";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import css from './Board.module.css';
 import PreviewZone, { PREVIEW_ID_POSTFIX } from "./cards/preview/PreviewZone";
-import { BoardGridCell } from "./BoardGridCell";
 import { BoardContext } from "./BoardContext";
 import CardInstance from "./cards/CardInstance";
 import { Socket } from "socket.io-client";
@@ -15,10 +14,14 @@ import DeckOptionsContainer from "./DeckOptionsContainer";
 import PlayerDataDisplay from "./PlayerDataDisplay";
 import FacedownCardInstance from "./cards/FacedownCardInstance";
 import PhaseSelector from "./PhaseSelector";
+import BattlefieldGrid from "./BattlefieldGrid";
 
 export default function Board(props: { socket: Socket }) {
     let connected = false;
     const [playerId, setPlayerId] = useState(0);
+    function getPlayerColor() {
+        return playerId === 0 ? 'Red' : 'Green'
+    }
     const [curIndex, setCurIndex] = useState(0);
     const [playerData, setPlayerData] = useState<PlayerData[]>([
         {
@@ -45,6 +48,7 @@ export default function Board(props: { socket: Socket }) {
     ]);
 
     const [curPhase, setCurPhase] = useState<PhaseName>("Refresh" as unknown as PhaseName);
+    const [logData, setLogData] = useState<string[]>([]);
 
     function setAndPostPlayerData(data: PlayerData[]) {
         props.socket.emit("playerData", { playerId: playerId, playerData: data })
@@ -69,6 +73,32 @@ export default function Board(props: { socket: Socket }) {
         setBoardData(data);
     }
 
+    const logEndRef = useRef<HTMLDivElement>(null);
+    const logWindowRef = useRef<HTMLDivElement>(null);
+
+    function setAndPostCurPhase(data: PhaseName) {
+        let logMessage = `Player ${getPlayerColor()}: Set Phase to ${PhaseName[PhaseName[data]]}`;
+        if (data.toString() === PhaseName[PhaseName.End]) {
+            logMessage = '------' + logMessage + '--------';
+        }
+        appendAndPostLogData(logMessage);
+        
+        props.socket.emit("phaseData", { playerId: playerId, curPhase: data })
+        setCurPhase(data);
+    }
+
+    function appendAndPostLogData(data: string) {
+        let newLogData = appendLogData(data);
+        props.socket.emit("logData", {playerId: playerId, logData: newLogData})
+    }
+
+    function appendLogData(data: string) {
+        let newLogData = [...logData];
+        newLogData.push(data);
+        setLogData(newLogData);
+        return newLogData
+    }
+
     const [activeZone, setActiveZone] = useState<ZoneIdT>({
         zoneName: "Board",
         rowId: 0,
@@ -77,10 +107,6 @@ export default function Board(props: { socket: Socket }) {
 
     const [focusedCard, setFocusedCard] = useState<CardInstanceT | undefined>(undefined);
     const [activeCard, setActiveCard] = useState<CardInstanceT | undefined>(undefined);
-    function setAndPostCurPhase(data: PhaseName) {
-        props.socket.emit("phaseData", { playerId: playerId, curPhase: data })
-        setCurPhase(data);
-    }
 
 
     const sensors = useSensors(
@@ -105,8 +131,20 @@ export default function Board(props: { socket: Socket }) {
             setFoundryData(args[0].foundryData);
         } else if (event === "phaseData") {
             setCurPhase(args[0].curPhase);
+        } else if (event === "logData") {
+            setLogData(args[0].logData)
         }
     })
+
+    useEffect(() => {
+        console.log(logWindowRef.current)
+        if (logData.length > 0 && (logWindowRef.current!.scrollHeight - logWindowRef.current!.scrollTop - logWindowRef.current!.clientHeight) < 50) {
+            logEndRef.current!.scrollIntoView({
+                behavior: "smooth",
+                block: "end"
+            })
+        }
+    }, [logData.length])
 
     useEffect(() => {
         if (!connected) {
@@ -255,7 +293,9 @@ export default function Board(props: { socket: Socket }) {
             amount = Math.min(deckLength, amount * 2);
             let damageCards = newData[playerId].deck.splice(deckLength - amount, amount);
             newData[playerId].damage.unshift(...damageCards);
-            rezonePlayerData(newData)
+            rezonePlayerData(newData);
+            let logMessage = `Player ${getPlayerColor()}: Took ${amount / 2} damage.`;
+            appendAndPostLogData(logMessage);
             setAndPostPlayerData(newData);
         }
     }
@@ -397,6 +437,8 @@ export default function Board(props: { socket: Socket }) {
             if (!newBoardData[zone.rowId][zone.colId!]!.activated) {
                 newBoardData[zone.rowId][zone.colId!]!.attacking = undefined
             }
+            let logMessage = `Player ${getPlayerColor()}: Activated ${newBoardData[zone.rowId][zone.colId!]!.instances[0].card.name} on row: ${zone.rowId + 1} col: ${zone.colId + 1}`;
+            appendAndPostLogData(logMessage);
             setAndPostBoardData(newBoardData)
         }
     }
@@ -405,6 +447,8 @@ export default function Board(props: { socket: Socket }) {
         if (zone.colId != null && boardData[zone.rowId][zone.colId] != null) {
             let newBoardData = boardData.map((item) => item.slice());
             newBoardData[zone.rowId][zone.colId!]!.annotation = annotation
+            let logMessage = `Player ${getPlayerColor()}: Annotated ${newBoardData[zone.rowId][zone.colId!]!.instances[0].card.name} on row: ${zone.rowId + 1} col: ${zone.colId + 1}`;
+            appendAndPostLogData(logMessage);
             setAndPostBoardData(newBoardData)
         }
 
@@ -414,8 +458,35 @@ export default function Board(props: { socket: Socket }) {
         if (zone.zoneName === "Board") {
             let newFoundryData = foundryData.map((item) => item.slice());
             newFoundryData[zone.rowId][zone.colId!] = owner;
+            let logMessage = `Player ${getPlayerColor()}: Created a Foundry on row: ${zone.rowId + 1} col: ${zone.colId! + 1}`;
+            appendAndPostLogData(logMessage);
             setAndPostFoundryData(newFoundryData);
         }
+    }
+
+    function drawCardFromDeck() {
+        let newPlayerData = playerData.slice();
+        let drawCard = newPlayerData[playerId].deck.splice(0, 1);
+        newPlayerData[playerId].hand.push(...drawCard);
+        rezonePlayerData(newPlayerData)
+        setAndPostPlayerData(newPlayerData);
+        let playerColor = playerId === 0 ? 'Red' : 'Green'
+        appendAndPostLogData(`Player ${playerColor}: Drew a card from their Deck.`);
+    }
+    
+    function refreshPlayerOccupants() {
+        let newBoardData = boardData.map((item) => item.slice());
+        for (let row = 0; row < boardData.length; row++) {
+            for (let col = 0; col < boardData[row].length; col++) {
+                if (newBoardData[row][col]?.instances[0].owner === playerId) {
+                    newBoardData[row][col]!.activated = false; 
+                    newBoardData[row][col]!.attacking = undefined; 
+                }
+            }
+        }
+        let logMessage = `Player ${getPlayerColor()}: Refreshed their Occupants.`;
+        appendAndPostLogData(logMessage);
+        setAndPostBoardData(newBoardData);
     }
 
     const handleActivatingCallback = useCallback((zone: ZoneIdT) => {
@@ -437,6 +508,14 @@ export default function Board(props: { socket: Socket }) {
     const updateActiveZoneCallback = useCallback((zone: ZoneIdT) => {
         setActiveZone(zone);
     }, [setActiveZone])
+
+    const drawCardFromDeckCallback = useCallback(() => {
+        drawCardFromDeck();
+    }, [drawCardFromDeck]);
+
+    const refreshPlayerOccupantsCallback = useCallback(() => {
+        refreshPlayerOccupants();
+    }, [refreshPlayerOccupants]);
 
     const getPlayerId = useCallback(() => {
         return playerId;
@@ -476,8 +555,8 @@ export default function Board(props: { socket: Socket }) {
             let destZoneLoc = [destZone.rowId, destZone.colId ??= -1, destZone.index ??= -1]
             let srcZoneLoc = [srcZone.rowId, srcZone.colId ??= -1, srcZone.index ??= -1] // -1 means index is null
             let newBoardData = boardData.map((item) => item.slice());
+            // TODO build the log statement here
             if (isMoveValid(srcZoneLoc, destZoneLoc, srcZone, destZone)) {
-
                 let sourceZoneData: CardInstanceT[] = []
                 let newPlayerData = playerData.slice();
                 let newStackData = stackData.slice();
@@ -506,6 +585,7 @@ export default function Board(props: { socket: Socket }) {
                 setAndPostBoardData(newBoardData);
                 setAndPostPlayerData(newPlayerData);
                 setAndPostStackData(newStackData);
+                buildAndUpdateLogData(srcZone, destZone, sourceZoneData[0].card.name);
                 props.socket.emit("boardData", { playerId: playerId, boardData: newBoardData })
             }
         }
@@ -513,6 +593,25 @@ export default function Board(props: { socket: Socket }) {
             setActiveZone(event.over.data.current!.zone);
         }
         setActiveCard(undefined);
+    }
+
+    function buildAndUpdateLogData(srcZone: ZoneIdT, destZone: ZoneIdT, name: string) {
+        let cardName = "a card";
+        let fromClause = `${srcZone.zoneName}`;
+        let toClause = `${destZone.zoneName}`;
+        console.log("zone Name " + destZone.zoneName + " hidden: " + isZoneHidden(destZone.zoneName));
+        if (!isZoneHidden(destZone.zoneName)) {
+            cardName = name;
+        }
+        if (srcZone.zoneName === "Board") {
+            fromClause = `Board row: ${srcZone.rowId + 1}, col: ${srcZone.colId! + 1}`
+        }
+        if (destZone.zoneName === "Board") {
+            toClause = `Board row: ${destZone.rowId + 1}, col: ${destZone.colId! + 1}`
+        }
+        let playerColor = playerId === 0 ? 'Red' : 'Green'
+        let logMessage = `Player ${playerColor}: Moved ${cardName} from ${fromClause} to ${toClause}`;
+        appendAndPostLogData(logMessage);
     }
 
     function isMoveValid(srcZoneLoc: number[], destZoneLoc: number[], srcZone: ZoneIdT, destZone: ZoneIdT) {
@@ -560,23 +659,6 @@ export default function Board(props: { socket: Socket }) {
         })
     }
 
-
-    let boardRender = [];
-    boardRender.push(boardData.map((row, rIndex) => {
-        let rowRender = row.map((cards, cIndex) => {
-            let zone: ZoneIdT = {
-                zoneName: "Board",
-                rowId: rIndex,
-                colId: cIndex
-            }
-            return (
-                <BoardGridCell key={`Cell ${rIndex} ${cIndex}`} {...{ zone: zone, cards: cards, foundry: foundryData[rIndex][cIndex] }} />
-            )
-        })
-        rowRender.push(<div key={rIndex.toString()} className={css.break}></div>)
-        return rowRender;
-    }))
-
     // Sets the instances for the preview display
     let previewedInstances: Array<CardInstanceT> = boardData[0][0]?.instances ?? []
     if (activeZone.colId !== undefined && activeZone.zoneName === "Board" &&
@@ -594,6 +676,13 @@ export default function Board(props: { socket: Socket }) {
             previewedInstances = playerData[activeZone.playerId ?? playerId].graveyard;
         }
     }
+
+    // TODO Move this to another component
+    let gameLogRender = []
+    logData.forEach(log => {
+        gameLogRender.push(<p className={css.LogEntry}>{log}</p>)
+    })
+    gameLogRender.push(<p style={{margin: "0px"}}ref={logEndRef}/>)
 
     // Sets the individual card preview
     let card;
@@ -617,7 +706,9 @@ export default function Board(props: { socket: Socket }) {
                 setAnnotation: setAnnotationCallback, getPlayerId: getPlayerId,
                 updateFoundryData: updateFoundryDataCallback,
                 setFocusedCard: setFocusedCardCallback,
-                getActiveCard: getActiveCardCallback
+                getActiveCard: getActiveCardCallback,
+                drawCardFromDeck: drawCardFromDeckCallback,
+                refreshPlayerOccupants: refreshPlayerOccupantsCallback
             }}>
                 <div className={css.gameBoard}>
                     <PlayerDataDisplay playerData={playerData} playerId={playerId}
@@ -627,9 +718,7 @@ export default function Board(props: { socket: Socket }) {
                         opId={getOpId()}
                     />
                     <PreviewZone {...{ instances: stackData, zone: { zoneName: "Stack", rowId: 0 }, areaName: "Stack" }} />
-                    <div className={css.battlefieldGrid}>
-                        {...boardRender}
-                    </div>
+                    <BattlefieldGrid boardData={boardData} foundryData={foundryData}/>
                     <PreviewZone {...{ instances: previewedInstances, zone: activeZone, areaName: "CellPreview" }} />
                     <div style={{ gridArea: "PlayerHand", position: "relative", marginTop: "-130px", zIndex: 2, backgroundColor: "white" }}>{`In Hand: ${playerData[playerId].hand.length}`}</div>
                     <div className={css.break}></div>
@@ -640,12 +729,13 @@ export default function Board(props: { socket: Socket }) {
                     <div className={css.CardPreview}>{card}</div>
                     <div className={css.DeckSettings}>
                         <DeckOptionsContainer setDeck={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
-                            resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); }}
+                            resetPlayer={(cards, wielder) => { setPlayerDeckData(cards, wielder); setLogData([]); }}
                             shuffleDeck={() => { handleShuffle(); }}
                             closePreview={() => { setActiveZone({zoneName: "Board", rowId: 0, colId: 0})}}
                             takeDamage={(amount) => {handleTakeDamage(amount)}} />
                     </div>
                     <PhaseSelector setPhase={setAndPostCurPhase} phase={curPhase}/>
+                    <div className={css.GameLog} ref={logWindowRef}>{gameLogRender}</div>
                 </div>
             </BoardContext.Provider>
             <DragOverlay dropAnimation={null}>

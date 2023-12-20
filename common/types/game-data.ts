@@ -36,6 +36,10 @@ export type AttackDirT = 'N'|'S'|'E'|'W'
 
 export type ZoneNameT = 'Board' | 'Hand' | 'Stack' | 'Deck' | 'Damage' | 'Exile' | 'Graveyard'
 
+export function isZoneHidden(zoneName: string) {
+    return ['Hand', 'Deck', 'Damage'].includes(zoneName);
+}
+
 export enum PhaseName {
     Refresh, Draw, Movements, Attacks, Defenders, Damage, Deployment, End
 }

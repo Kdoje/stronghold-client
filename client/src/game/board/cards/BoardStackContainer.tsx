@@ -8,8 +8,14 @@ import { BoardContext } from '../BoardContext';
 export default function BoardStackContainer(props: BoardStackInstanceT) {
     const handleActivate = useContext(BoardContext).handleActivate;
     const setFocusedCard = useContext(BoardContext).setFocusedCard;
+    const getPlayerId = useContext(BoardContext).getPlayerId;
 
-    
+    const mirrorFactor = getPlayerId() % 2 == 1 ? -1 : 1
+    const eOffsetStyle = { transform: `translate(${25 * mirrorFactor}px, 0)` }
+    const nOffsetStyle = { transform: `translate(0px, ${-30 * mirrorFactor}px)` }
+    const sOffsetStyle = { transform: `translate(0px, ${30 * mirrorFactor}px)` }
+    const wOffsetStyle = { transform: `translate(${-25 * mirrorFactor}px, 0)` }
+
     function onClick(e: React.MouseEvent) {
         if (props?.instances[0].zone && e.detail >= 2) {
             handleActivate(props?.instances[0].zone);
@@ -21,16 +27,16 @@ export default function BoardStackContainer(props: BoardStackInstanceT) {
     // TODO this will need to be mirrored for multi-player
     switch (props?.attacking) {
         case 'E':
-            style = { transform: 'translate(25px, 0)' }
+            style = eOffsetStyle
             break;
         case 'N':
-            style = { transform: 'translate(0px, -30px)' }
+            style = nOffsetStyle
             break;
         case 'S':
-            style = { transform: 'translate(0px, 30px)' }
+            style = sOffsetStyle
             break;
         case 'W':
-            style = { transform: 'translate(-25px, 0)' }
+            style = wOffsetStyle
             break;
     }
 

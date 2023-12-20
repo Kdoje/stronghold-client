@@ -1,0 +1,69 @@
+name,cost,type,subtype,description,attack,health,move,Notes,value
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,
+CTw01: Mindmelter,1,Unit,Tidewalker,"Act: place psych counters on each adjacent enemy
+ 
+ Act: remove 3 psych counters from adjacent enemy unit, control it until the end of your next turn",1,1,1,,
+CTw02: Psych Bolter,2,Unit,Tidewalker,"Range 2 (can attack and damage a target within 2 unoccupied tiles in a straight line)
+ 
+ Reaction: When this deals damage to an enemy, deal additional damage equal to number of psych counters",2,2,1,,
+CTw03: Big puppy,2,Unit,Tidewalker,"Power: discard a card and return a unit within 2 tiles you control to your hand to deploy this without paying its cost
+ 
+ Reaction: When this enters the field, destroy an adjacent unit with psych counters on it",3,1,1,,
+CTw04: Stealer Cheater,1,Unit,Tidewalker,"Reaction: When this destroys a unit, you may deploy a unit from your hand with cost equal to the cost of the destroyed unit",1,3,1,,
+CTw05: Farseer,2,Unit,Tidewalker,Power: Remove a psych counter from this to deploy a unit within 2 tiles of you,2,1,1,,
+CTw06: Brain blast,2,Tactic,Tidewalker,Place up to 3 psych counters on an adjacent ally,,,,,
+CTw07: Psyonic Bolt,3,Tactic,Tidewalker,Place 2 pysch counters on an occupant within 2 tiles of you. Then you may remove all psych counters and have this deal damage equal to the number of removed counters,,,,,
+CTw08: Confusion field,2,Structure,Tidewalker,Power: Adjacent occupants lose movement equal to the number of pysch counters on them,,,,,
+CTw09: Share Brain,3,Unit,Tidewalker,"Power: Remove 1 or more psych counters from adjacent allies to search your deck and damage pile with cost eqaul to removed counters. Reveal it, shuffle, and put it into your hand",4,3,2,,
+CTw10: Memory Stalker,5,Unit,Tidewalker,"Power: Act, you may deploy ordnance that costs one or more from an adjacent wielders discard equal to the number of psych counters they have",5,5,2,"Should this affect any wielder, or only adjacent ones",
+CTw11: Erasure,3,Stratagem,Tidewalker,Remove all psych counters from each wielder. Each wielder discards cards equal to the number of counters removed this way,,,,,
+CFr01: Mind Break,2,Structure,Frostlon,"Power: Sac this, remove all psych counters from adjacent units and draw a card for each removed counter",,,,,
+CFr02: Thought reader,1,Unit,Frostlon,"Reaction: When this enters the field, remove all psych counter from an adjacent occupant and draw cards equal to the removed counters",0,2,1,,
+CFr03: Interceptor Array,2,Structure,Frostlon,"Reaction: When a wielder within 2 tiles of this deploys ordnance, you may remove a psych counter from an adjacent ally to discard the ordnance without applying it",,,,,
+CFr04: Psycher converter,2,Unit,,"Converts psych counters (to damage, counter, etc.)",2,1,2,,
+CFr05: Keep-it-there-inator,2,Structure,,Does something to help keep things adjacent,,,,,
+CFr06: Learn-a-bot,1,Unit,,Remove all psych counters for 2 cards,1,1,1,,
+CFr07: Psych Thrower,2,Unit,,Reaction: Remove a psych counter from this to give this Bombard 2,5,3,0,,
+CSi01: Angry Boi,2,Unit,Simian,"Reaction: Act: Remove all counters on a unit, it gains +1Atk +1Def for each removed counter",2,2,1,Should Froslons convert psych counters to power? Or should that be a simian thing,
+CSi01,1,Unit,Simian,Reaction: Sylvan Courage: When this enters the field the next Simian environ you play this turn costs 1 less,1,1,1,"Unit, small, chain environ",
+CSi02,2,Unit,Simian,This costs 1 less if deployed in a friendly Simian tile,3,1,1,"Unit, small, cheaper in Simian",
+CSi03,1,Unit,Simian,"Reaction: Leaf Reading: When this enters the field, search your deck or damage for a Simian, reveal it and put it into your hand",1,1,1,"Unit, small, Simian search",
+CSi04,2,Unit,Simian,Aura: Friendly Territory This unit has +1Mv when in or adjacent to a friendly environ,3,2,1,"Unit, medium, environ move",
+CSi05,4,Unit,Simian,This costs 1 less if deployed in a friendly Simian tile,4,4,2,"Unit, large, cheaper in Simian",
+CSi06,4,Unit,Simian,This unit can only be deployed on a tile with a friendly environ,6,6,1,"Unit, large, requires Simian",
+CSi07,1,Environ,Simian,Aura: Canopize: Tiles adjacent to this are Simian tiles,,,,"Environ, Simian",
+CSi08,2,Environ,Simian,"Reaction: Emerge from earth: When this enters the field, the next Simian you play this turn costs 1 less
+ 
+ Aura: Full Canopize: This tile and nearby tiles are Simian tiles",,,,"Environ, Simian, chain Simian",
+CSi09,2,Environ,Simian,"Aura: Paths of Grass: You may pay 2 to allow an ally to move through this tile for free.
+ 
+ Aura: Canopize:This tile and ajdacent tiles are Simian tiles",,,,"Environ, Simian, Free movement",
+CSi10,1,Environ,Simian,"Aura: Verdance Vigor: Friendly units in this environ gain +2Atk
+ 
+ Aura: Canopize: This tile and ajdacent tiles are Simian tiles",,,,"Environ, Simian, strength",
+CSi11,2,Stratagem,Simian,Search your deck or damage pile for a Simian and reveal it. It costs 1 less when played this turn,,,,"Stratagem, search env, chain Simian",
+CSi12,2,Tactic,Simian,Chosen unit in a friendly environ gets +1Atk +1Def for each adjacent friendly Simian tile,,,,"Tactic, Simian gives Strength",
+CG08,2,Tactic,(GENERIC),"Shuffle 6 cards from your damage pile into your deck, then draw 2 cards. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,,
+CG10: Wheel,0,Stratagem,(GENERIC),Discard your hand and draw 7 cards,,,,,
+CG 13: Bike wheel,1,Stragem,(GENERIC),Shuffle your hand into your deck then draw 7 cards. You become fatigued (you can't draw cards or play cards that fatigue you until your next turn),,,,,
+CG01,0,Stratagem,(GENERIC),"To deploy this, discard 2 cards in addition to its cost, then search your deck for a unit, reveal it, and shuffle",,,,"Stratagem, cheap discard 2, search for unit",
+CG02,0,Stratagem,(GENERIC),"To deploy this, discard 2 cards in addition to its cost, then search your deck for an environ or structure, reveal it, and shuffle",,,,"Stratagem, cheap, discard 2, search for env or structure",
+CG03,1,Stratagem,(GENERIC),"Search your deck for any card then shuffle. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, cheap, fatigue, search for anything
+ 
+ This and CG04 are basically the same effect at the same cost. There needs to be some difference",
+CG04,1,Stratagem,(GENERIC),"To deploy this, discard a card in addition to its cost. Search your deck and/or damage pile for a card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, cheap, fatigue, search damage pile",
+CG05,2,Stratagem,(GENERIC),"Draw 4 cards. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, medium, fatigue, draw 4",
+CG06,1,Tactic,(GENERIC),"Draw 2 cards. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Tactic, fatigue, draw 2",
+CG07,2,Tactic,(GENERIC),"You take 2 damage, then search your deck and/or damage pile for any card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Tactic, fatigue, take 2 damage, search deck and damage for anything",
+CG08,2,Tactic,(GENERIC),"Shuffle 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,Heal 3 draw 1,
+CG09,1,Tactic,(GENERIC),All Friendly Units have +1 to Movement until the end of your next turn,,,,"Tactic, +1 to movement",
+CG01,1,Stratagem,(GENERIC),"Discard 2 cards, then search your deck for a unit, reveal it, and shuffle",,,,"Stratagem, cheap discard 2, search for unit",
+CG02,1,Stratagem,(GENERIC),"Discard 2 cards, then search your deck for an environ or structure, reveal it, and shuffle",,,,"Stratagem, cheap, discard 2, search for env or structure",
+CG03,1,Stratagem,(GENERIC),"Search your deck for any card then shuffle. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, cheap, fatigue, search for anything
+This and CG04 are basically the same effect at the same cost. There needs to be some difference",
+CG04,1,Stratagem,(GENERIC),"Search your deck and/or damage pile for a card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, cheap, fatigue, search damage pile",
+CG05,2,Stratagem,(GENERIC),"Draw 4 cards. You become fatigued  (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Stratagem, medium, fatigue, draw 4",
+CG06,1,Tactic,(GENERIC),"Draw 2 cards. You become fatigued  (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Tactic, fatigue, draw 2",
+CG07,2,Tactic,(GENERIC),"You take 2 damage, then search your deck and/or damage pile for any card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,"Tactic, fatigue, take 2 damage, search deck and damage for anything",
+CG08,2,Tactic,(GENERIC),"Shuffle 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't play other cards that fatigue you, and you can't draw until your next turn)",,,,Heal 3 draw 1,
+CG09,1,Tactic,(GENERIC),All Friendly Units have +1 to Movement until the end of your next turn,,,,"Tactic, +1 to movement",

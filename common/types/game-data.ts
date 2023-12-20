@@ -5,6 +5,7 @@ export type BaseCardT = {
     subtype?: string
     description: string
     value: string
+    rarity?: 'C'|'U'|'R'|'L'
 }
 
 export type UnitCardT = BaseCardT & {

@@ -78,10 +78,19 @@
 
 .sizeMetadata {
     grid-area: sizeMetadata;
+    display: flex;
+    justify-content: flex-end;
+    gap: 35px;
     text-align: right;
     align-self: center;
     margin-right: 25px;
     font-size: 20px;
+}
+
+.contentsMetadata {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .curveMetadata {

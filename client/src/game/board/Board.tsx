@@ -477,7 +477,7 @@ export default function Board(props: { socket: Socket }) {
         let newBoardData = boardData.map((item) => item.slice());
         for (let row = 0; row < boardData.length; row++) {
             for (let col = 0; col < boardData[row].length; col++) {
-                if (newBoardData[row][col]?.instances[0].owner === playerId) {
+                if (newBoardData[row][col]?.instances[0]?.owner === playerId) {
                     newBoardData[row][col]!.activated = false; 
                     newBoardData[row][col]!.attacking = undefined; 
                 }

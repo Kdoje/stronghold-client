@@ -1,0 +1,46 @@
+name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
+CCo01: Frontliner,1,Corlian,Unit,"Reaction: Push the advantage: When this unit enters the field, adjacent allies get +1 mv this turn",1,1,1,,,C
+CCo02: Legionnaire,2,Corlian,Unit,Aura: United Front: This gains +2atk and +2def if it has a friendly occupant to its right and left,2,2,1,,,C
+CCo03: Duelist,2,Corlian,Unit,"Reaction: Duelist: When this unit attacks an enemy unit with no other enemies adjacent to it, destroy that unit after the damage step",3,1,1,,,C
+CCo04: Ardent Recruiter,2,Corlian,Unit,"Reaction: Recruitment Drive: When this enters the field you may put a Corlian that costs 2 or less onto the field adjacent to this ""for free""",2,2,1,,,C
+CCo05: Shield bearer,2,Corlian,Unit,Aura: Defensive Line: This unit can't attack. Units to the left and right of this gain +2 def ,1,3,1,,,C
+CCo06: Archer,2,Corlian,Unit,Aura: Backliner:This unit can attack any valid non-adjacent target within 2 tiles. This can only attack if there is an ally in front of this,2,2,1,,,C
+CCo07: Colonel of Charges,3,Corlian,Unit,"Reaction: When this unit attacks, adjacent attacking units get +1atk +1 def",3,3,1,,,C
+CCo08: Caravan Leader,4,Corlian,Unit,"Aura: Supply lines: Allies that start adjacent to this can move forward 1 tile ""for free""",3,5,1,,,C
+CCo09: Fortress,1,Corlian,Structure,"Reaction: Take Cover: When an adjacent unit would take damage, you may have that damage be dealt to this structure instead",-,2,-,,,C
+CCo10: Farmland,2,Corlian,Structure,Aura: Bountiful Harvest: You may sacrifice this to give all adjacent occupants +1atk +1def,-,2,-,,,C
+CCo11: Valley Battlefield,2,Corlian,Eniviron,Only a unit behind this environ can attack the unit occupying this,,,,,,C
+CCo12: Forward March,1,Corlian,Tactic,Give an adjacent Unit +1 mv,,,,,,C
+CCo13: Outflank,2,Corlian,Tactic,Destroy a chosen enemy unit with allies in front and behind of it,,,,,,C
+CCo14: Strategize,1,Corlian,Stratagem,Draw a card for each Corlian occupant nearby you,,,,,,C
+CCo15: Bolster the defense,2,Corlian,Stratagem,All Corlians within 2 tiles of you gain +2atk +2 Def,,,,,,C
+CSi01: Forest Dweller,1,Simian,Unit,Aura: Home Turf: This unit can only be deployed on a tile with a friendly environ,2,2,1,,,C
+CSi02: Kyrian Sage,1,Simian,Unit,"Reaction: Leaf Reading: When this enters the field if it's in a friendly simian environ, search your deck or damage for a Simian, reveal it and put it into your hand. The shuffle both piles",1,1,1,,,C
+CSi03: Leaf Traverser,2,Simian,Unit,Aura: Earthen Emergence: This costs 1 less if deployed in or adjacent to a friendly environ,2,2,1,,,C
+CSi04: Forest Morpher,2,Simian,Unit,Aura: Arborialize: You can deploy simian environs adjacent to this,2,2,1,,,C
+CSi05: Treetrop Jumper,2,Simian,Unit,Aura: Vine Smasher: This gains +1atk for each simian environ it's in or adjacent to,2,2,1,,,C
+CSi06: Angry Ape,2,Simian,Unit,Aura: Goading: Each unit that can attack this must do so.,3,1,1,,,C
+CSi07: Aporial Guide,2,Simian,Unit,Aura: Friendly Territory This unit has +1Mv when in or adjacent to a friendly Simian environ,2,2,1,,,C
+CSi08: Simian Converger,3,Simian,Unit,"Reaction: Earthen Emergence: When this enters the field, the next environ you deploy costs 1 lesss",4,4,1,,,C
+CSi09: Arborial Arielist,4,Simian,Unit,Aura: Treetop Gliding: This unit can move through friendly simian environs without expending movement,5,5,1,,,C
+CSi10: King Ape,6,Simian,Unit,Aura: Forest Vitalization: This costs 1 less if deployed in or adjacent to a firendly environ,8,9,2,,,C
+CSi11: Glade of Rage,2,Simian,Environ,Reaction: Vigorous Growth: You may pay 1 to give a simian that occupies this tile +1 mv +1atk,,,,,,
+CSi12: Kyrian Mountainside,1,Simian,Environ,Aura: Verdance Vigor: Friendly units in this environ gain +2Atk,,,,,,
+CSi13: Calm Clearning,2,Simian,Environ,"Aura: Paths of Grass: You may pay 2 to allow an ally to move through this tile for free.
+ 
+",,,,,,
+CSi14: Kyrian Defolade,1,Simian,Tactic,A chosen unit in a simian environ takes no counter-attack damage this turn,,,,,,
+CSi15: Arborial Crush,2,Simian,Tactic,Chosen unit in a friendly environ gets +2Atk +2Def for each adjacent friendly Simian environ,,,,,,
+CSi16: Forest Ambush,2,Simian,Stratagem,This deals damage to a chosen unit in a friendly simian tile equal to the attack of friendly units adjacent to the chosen unit,,,,,,
+CGe01: Wheel,1,GENERIC,Stragem,Shuffle your hand into your deck then draw 5 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
+CGe02: Unit Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a unit, reveal it, and shuffle",,,,,,
+CGe03: Place Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for an environ or structure, reveal it, and shuffle",,,,,,
+CGe04: Strategy Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a tactic or stratagem, reveal it, put it into your hand and shuffle",,,,,,
+CGe05: Flow Concentration,2,GENERIC,Stratagem,Search your deck for any card then shuffle. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
+CGe06: Flow Filtration,2,GENERIC,Stratagem,"To deploy this, you must also discard a card. Search your deck and/or damage pile for a card. You become fatigued  (you can't draw cards or deploy ordnance until your next turn)",,,,,,
+CGe07: Trance,2,GENERIC,Stratagem,Draw 4 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
+CGe08: Epiphany,1,GENERIC,Tactic,Draw 2 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
+CGe09: Flow Timewind,2,GENERIC,Tactic,"To deploy this, you must also discard a card. Search your deck and/or damage pile for any card.  You take 2 damage, and become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,
+CGe10: Flow Restoration,2,GENERIC,Tactic,"Shuffle the top 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,
+CGe11: Charge!,1,GENERIC,Tactic,All Friendly Units have +1 to Movement until the end of your next turn,,,,,,
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,,R

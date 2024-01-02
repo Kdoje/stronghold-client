@@ -14,7 +14,7 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
     render() {
 
         let template: CardTemplate = "Stratagem";
-        if (this.props.subtype === "Unit" || this.props.subtype === "Wielder") {
+        if (this.props.subtype === "Unit" || this.props.type === "Wielder") {
             template = "Unit";
         } if (this.props.subtype === "Structure") {
             template = "Structure";
@@ -28,7 +28,7 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
         }
 
         let initialHealth;
-        if (this.props.health != null) {
+        if (this.props.health !== "" && this.props.health != null) {
             initialHealth = this.props.health.split('|')[0];
         }        
        
@@ -40,7 +40,7 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
         let statsText;
         let healthText;
         if (initialHealth != null) {
-            healthText =  <div className={css.healthText}>{initialHealth}</div>;
+            healthText = <div className={css.healthText}>{initialHealth}</div>;
             statsText = <div className={css.statsOverlayContainer}>
                 <p className={css.statsOverlayText}>{this.props.move}</p>
                 <p className={css.statsOverlayText}>{this.props.attack}/{initialHealth}</p>

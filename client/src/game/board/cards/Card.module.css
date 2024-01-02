@@ -23,10 +23,10 @@
     font-family: 'Gill Sans MT';
     position: relative;
     z-index: 4;
-    max-width: 116px;
+    max-width: 123px;
     top: -64px;
-    left: 35px;
-    line-height: 5px; 
+    left: 32px;
+    line-height: 6px; 
     margin: 0px;
     font-style: italic;
 }

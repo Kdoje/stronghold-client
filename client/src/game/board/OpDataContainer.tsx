@@ -8,6 +8,7 @@ import { DropZone } from './DropZone';
 import CardInstance from './cards/CardInstance';
 import UnitCard from './cards/Card';
 import { StratagemCard } from './cards/StratagemCard';
+import Card from './cards/Card';
 
 
 export default function OpDataContainer(props: { cards: Array<CardInstanceT>, faceup: boolean }) {
@@ -23,12 +24,7 @@ export default function OpDataContainer(props: { cards: Array<CardInstanceT>, fa
     if (props.cards[0]) {
         let cardToRender = props.cards[0].card;
         if (props.faceup) {
-            if ((cardToRender as UnitCardT).attack) {
-                let cardData = cardToRender as UnitCardT;
-                card = <UnitCard  {...cardData} displayOverlay={true} />;
-            } else {
-                card = <StratagemCard {...cardToRender} displayOverlay={true} />;
-            }
+            card = <Card {...cardToRender} displayOverlay={true} />;
         }
         else {
             card = <img className={css.cardImage} src={"card-back.png"}></img>

@@ -86,7 +86,7 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
                 rulesText = "Before phases, start with the active player " +
                 "and continue clockwise, that player may " +
                 "play tactics onto the pile. Once everyone " +
-                "has passed, continue to apply and discard " +
+                "passes, continue to apply and discard " +
                 "the top pile card.";
             } else if (rules === "Structure") {
                 rulesText = "Structures occupy the tile they are  " +

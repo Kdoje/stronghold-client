@@ -2,6 +2,7 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { createServer } from 'https'
+import axios from 'axios';
 import cors from 'cors'
 import { CONFIG } from '../config'
 import startSocketIO from './sockets'
@@ -61,6 +62,35 @@ app.use(
 	})
 )
 
+
+function generateCardImagePath(cardName: string) {
+	return path.join(__dirname, `resources/CardImages/${cardName}.png`)
+}
+
+async function saveImage(cardName: string) {
+	const response = await axios.get(
+		`https://image.pollinations.ai/prompt/a fantasy painting of a ${cards.get(cardName)?.subtype} named ${cardName} with the ability ${cards.get(cardName)?.description}`,
+		{ responseType: 'arraybuffer' });
+	fs.writeFileSync(generateCardImagePath(cardName), Buffer.from(response.data, 'binary'));
+}
+
+app.use('/cardimage/:cardName', async (req, res) => {
+	const imagePath = generateCardImagePath(req.params.cardName);
+	try {
+		fs.accessSync(imagePath, fs.constants.F_OK);
+	} catch {
+		await saveImage(req.params.cardName);
+	}
+
+	res.setHeader('Content-Type', 'image/jpeg');
+
+	res.sendFile(imagePath, (err) => {
+		if (err) {
+			res.status(404).send('Image not found');
+		}
+	});
+})
+
 app.use('/', (req, res, next) => {
 	if (req.accepts('text/html')) {
 		res.sendFile(path.join(__dirname, '..', CONFIG.clientPath, 'index.html'))
@@ -75,7 +105,7 @@ app.post('/decklist', (req, res) => {
 	let decklistResp: AnyCardT[] = [];
 	console.log(decklistReq)
 	let wielder = cards.get("The Novice");
-	decklistReq.forEach((cardDetails: string) => {
+	decklistReq.forEach(async (cardDetails: string) => {
 		let qtyIndex = cardDetails.indexOf(" ");
 		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
 		let card = cards.get(cardName)
@@ -85,7 +115,7 @@ app.post('/decklist', (req, res) => {
 			} else {
 				for (let i = 0; i < parseInt(quantity); i++) {
 					decklistResp.push(card!);
-				}
+				}	
 			}
 		}
 	})
@@ -130,6 +160,7 @@ app.get('/cardpool', (req, res) => {
     res.end(JSON.stringify({cardPool: JSON.stringify(Array.from(cardPoolResp.entries()))}))
 })
 
+
 const server = createServer(
 	{
 		key: fs.readFileSync(path.join(__dirname, "resources/key.pem")),
@@ -145,3 +176,4 @@ server.listen(port, () => {
 startSocketIO(server)
 
 export { }
+

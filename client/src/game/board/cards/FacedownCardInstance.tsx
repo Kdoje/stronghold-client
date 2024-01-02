@@ -3,7 +3,7 @@ import { CardInstanceT, UnitCardT } from "common/types/game-data";
 import React, { useContext } from "react";
 import css from '../Board.module.css';
 import { StratagemCard } from "./StratagemCard";
-import { UnitCard } from "./UnitCard";
+import UnitCard from "./Card";
 
 
 export default function FacedownCardInstance(props: CardInstanceT) {

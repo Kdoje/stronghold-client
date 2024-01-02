@@ -17,6 +17,7 @@
   "dependencies": {
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
+    "axios": "^1.6.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "papaparse": "^5.4.1",

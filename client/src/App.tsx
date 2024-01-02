@@ -7,9 +7,10 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import  {GAME_BOARD, DECK_EDITOR, MAIN_MENU} from 'common/Routes'
+import  {GAME_BOARD, DECK_EDITOR, MAIN_MENU, PREVIEW_PAGE} from 'common/Routes'
 import MainMenu from './MainMenu/MainMenu';
 import DeckEditor from './DeckEditor/DeckEditor';
+import PreivewPage from './PreviewPage/PreviewPage';
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: DECK_EDITOR,
         element: <DeckEditor/>
+      },
+      {
+        path: PREVIEW_PAGE,
+        element: <PreivewPage/>
       },
       {
         path: GAME_BOARD,

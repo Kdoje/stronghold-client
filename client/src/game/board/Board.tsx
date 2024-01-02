@@ -3,7 +3,7 @@ import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName, isZoneHidden } from "common/types/game-data";
 import { PLAYER_CONNECTED } from "common/MessageTypes";
 import { StratagemCard } from "./cards/StratagemCard";
-import { UnitCard } from "./cards/UnitCard";
+import UnitCard from "./cards/Card";
 import { useCallback, useEffect, useRef, useState } from "react";
 import css from './Board.module.css';
 import PreviewZone, { PREVIEW_ID_POSTFIX } from "./cards/preview/PreviewZone";
@@ -15,6 +15,7 @@ import PlayerDataDisplay from "./PlayerDataDisplay";
 import FacedownCardInstance from "./cards/FacedownCardInstance";
 import PhaseSelector from "./PhaseSelector";
 import BattlefieldGrid from "./BattlefieldGrid";
+import Card from "./cards/Card";
 
 export default function Board(props: { socket: Socket }) {
     let connected = false;
@@ -41,7 +42,7 @@ export default function Board(props: { socket: Socket }) {
                 },
                 {
                     zone: { zoneName: "Hand", rowId: 1 }, instanceId: '2', owner: 0,
-                    card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "5", type: "Unit", subtype: "Insectoid Horror", value: "A", attack: "4", health: "5", move: "1" }
+                    card: { name: "Sheoldred, The Apocolypse", description: "Breaks standard", cost: "5", type: "Horror", subtype: "Unit", value: "A", attack: "4", health: "5", move: "1" }
                 }]
         },
         { deck: [], graveyard: [], damage: [], exile: [], hand: [] }
@@ -685,12 +686,7 @@ export default function Board(props: { socket: Socket }) {
     // Sets the individual card preview
     let card;
     if (focusedCard && isCardVisible(focusedCard)) {
-        if ((focusedCard.card as UnitCardT).attack) {
-            let cardData = focusedCard.card as UnitCardT;
-            card = <UnitCard  {...cardData} />;
-        } else if (focusedCard) {
-            card = <StratagemCard {...focusedCard.card} />;
-        }
+        card = <Card {...focusedCard.card}/>
     }
 
     return (

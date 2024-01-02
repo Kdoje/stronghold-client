@@ -3,14 +3,32 @@
     transform-origin: center center;
     display: grid;
     grid-template-columns: 1fr;
-    margin: -3px -11px;
 }
 
 .cardImage {
     grid-row-start: 1;
     grid-column-start: 1;
     position: relative;
-    height: fit-content;
+    height: 3.5in;
+}
+
+.rulesContainer {
+    grid-row: 1;
+    grid-column: 1;
+    height: 3.5in;
+    z-index: 3;
+}
+
+.rulesText {
+    font-family: 'Gill Sans MT';
+    position: relative;
+    z-index: 4;
+    max-width: 116px;
+    top: -64px;
+    left: 35px;
+    line-height: 5px; 
+    margin: 0px;
+    font-style: italic;
 }
 
 .portraitImage {
@@ -18,10 +36,9 @@
     grid-row-start: 1;
     grid-column-start: 1;
     position: relative;
-    height: fit-content;
     transform-origin: left;
-    left: 32px;
     top: 30px;
+    height: 2.5in;
 }
 
 .titleOverlayText {
@@ -33,13 +50,10 @@
     background-color: black;
     font-size: 40px;
     position: relative;
-    left: 25px;
-    top: 14px;
     display: flex;
     align-items: center;
     text-align: left;
     height: fit-content;
-    max-width: 85%;
     overflow-wrap: anywhere;
 }
 
@@ -62,11 +76,8 @@
     z-index: 2;
     grid-row-start: 1;
     grid-column-start: 1;
-    max-width: 90%;
-    min-width: 90%;
     overflow-wrap: none;
-    left: 12px;
-    top: 280px;
+    top: 300px;
     max-height: 35px;
 }
 
@@ -76,11 +87,11 @@
     grid-column-start: 1;
     font-family: 'Matrix';
     font-weight: bold;
-    color: white;
+    color: black;
     font-size: 14px;
     position: relative;
     left: 25px;
-    top: 14px;
+    top: 20px;
     display: flex;
     align-items: center;
     text-align: left;
@@ -94,13 +105,13 @@
     font-family: 'Matrix';
     font-weight: bold;
     color: white;
-    font-size: 16px;
+    font-size: 24px;
     position: relative;
-    right: -116px;
-    top: 14px;
-    text-align: right;
-    height: 20px;
-    width: 100px;
+    right: -195px;
+    top: 15px;
+    text-align: center;
+    height: 35px;
+    width: 35px;
 }
 
 .typeText {
@@ -108,13 +119,13 @@
     grid-row-start: 1;
     grid-column-start: 1;
     position: relative;
-    font-family: 'Gill Sans MT';
+    font-family: 'Matrix';
     font-weight: bold;
-    color: white;
+    text-align: center;
+    color: black;
     font-size: 14px;
-    left: 32px;
-    top: 175px;
-    height: 100px;
+    height: 30px;
+    top: 307px;
 }
 
 .descriptionText {
@@ -124,16 +135,14 @@
     position: relative;
     color: black;
     font-size: 11px;
-    width: 163px;
+    width: 197px;
     height: 82px;
-    left: 37px;
-    top: 191px;
+    left: 23px;
+    top: 212px;
     display: flex;
-    align-items: center;
     justify-content: left;
     text-align: left;
     font-family: sans-serif;
-    font-weight: 700;
 }
 
 .moveText {
@@ -143,11 +152,11 @@
     position: relative;
     font-family: 'Gadugi';
     font-weight: bold;
-    font-style: italic;
-    color: black;
-    font-size: 28px;
-    left: 186px;
-    top: 159px;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 5px;
+    top: 292px;
     width: 40px;
     height: 40px;
     text-align: center;
@@ -224,11 +233,11 @@
     position: relative;
     font-family: 'Gadugi';
     font-weight: bold;
-    font-style: italic;
-    color: black;
-    font-size: 28px;
-    left: 186px;
-    top: 268px;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 196px;
+    top: 292px;
     width: 40px;
     height: 40px;
     text-align: center;
@@ -242,11 +251,9 @@
     font-family: 'Gadugi';
     font-weight: bold;
     font-style: italic;
-    color: black;
+    color: white;
     font-size: 11px;
-    left: 86px;
-    top: 287px;
-    width: 77px;
+    top: 322px;
     height: 13px;
     display: flex;
     align-items: center;
@@ -261,11 +268,11 @@
     position: relative;
     font-family: 'Gadugi';
     font-weight: bold;
-    font-style: italic;
-    color: black;
-    font-size: 28px;
-    left: 13px;
-    top: 268px;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 169px;
+    top: 292px;
     width: 40px;
     height: 40px;
     text-align: center;

@@ -2,7 +2,7 @@ import { MAIN_MENU } from 'common/Routes';
 import { useNavigate } from 'react-router-dom';
 
 import css from './DeckEditor.module.css';
-import { UnitCard } from '../game/board/cards/UnitCard';
+import UnitCard from '../game/board/cards/Card';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnyCardT, UnitCardT } from 'common/types/game-data';
 import QuantityDisplay from './QuantityDisplay';
@@ -12,6 +12,7 @@ import { getUrl } from '../utils/FetchUtils';
 import { StratagemCard } from '../game/board/cards/StratagemCard';
 import SearchBar from './SearchBar';
 import DeckMetadataDisplay from './DeckMetadataDisplay';
+import Card from '../game/board/cards/Card';
 
 export default function DeckEditor() {
 
@@ -133,14 +134,6 @@ export default function DeckEditor() {
         navigator.clipboard.writeText(deckList)
     }
 
-    function getCardRender(card: AnyCardT) {
-        let cardRender = <StratagemCard {...card} />
-        if ((card as UnitCardT).attack !== "") {
-            cardRender = <UnitCard {...card as UnitCardT} />
-        }
-        return cardRender;
-    }
-
     function getCardText(card: AnyCardT) {
         let baseCardText: string = "";
         CARD_FIELDS.forEach((field) => {
@@ -197,7 +190,7 @@ export default function DeckEditor() {
                 <div key={card.name} onMouseEnter={(e) => cardHovered(e, card)}
                     onMouseLeave={(e) => cardHovered(e, undefined)}
                     onClick={() => addInstanceToDeck(card)}
-                    className={css.cardPreview}>{getCardRender(card)}
+                    className={css.cardPreview}><Card {...card}/>
                 </div>
             </div>)
         }
@@ -242,7 +235,7 @@ export default function DeckEditor() {
                 <div style={{ gridRow: 1, gridColumn: 1 }} onMouseEnter={(e) => cardHovered(e, card)}
                     onMouseLeave={(e) => cardHovered(e, undefined)}
                     onClick={(e) => {e.stopPropagation(); setFocusedCard(card); clearOverlay();}}>
-                    {getCardRender(card)}
+                    <Card {...card}/>
                 </div>
             </div>);
         }
@@ -278,7 +271,7 @@ export default function DeckEditor() {
         <div style={focusedCardOverlayStyle.current} className={css.modalWrapper}>
             {
                 hoveredCard ?
-                    <div style={focusedCardStyle.current}>{getCardRender(hoveredCard)}</div> :
+                    <div style={focusedCardStyle.current}>{<Card {...hoveredCard}/>}</div> :
                     <></>
             }
         </div>

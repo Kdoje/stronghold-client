@@ -3,8 +3,9 @@ import { CardInstanceT, UnitCardT } from "common/types/game-data";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import css from '../Board.module.css';
 import { StratagemCard } from "./StratagemCard";
-import { UnitCard } from "./UnitCard";
+import UnitCard from "./Card";
 import { BoardContext } from "../BoardContext";
+import Card from "./Card";
 
 
 export default function CardInstance(props: CardInstanceT & { activated: boolean, annotation?: string}) {
@@ -27,13 +28,7 @@ export default function CardInstance(props: CardInstanceT & { activated: boolean
 
     const rotatedStyle = props.activated ? { rotate: '90deg' } : {} as React.CSSProperties
 
-    let card;
-    if ((cardToRender as UnitCardT).attack) {
-        let cardData = cardToRender as UnitCardT;
-        card = <UnitCard  {...cardData} displayOverlay={true} />;
-    } else {
-        card = <StratagemCard {...cardToRender} displayOverlay={true} />;
-    }
+    let card = <Card  {...cardToRender} displayOverlay={true} />;
 
     // add the annotation on the card if it exists
     let annotationRender = props.annotation ?

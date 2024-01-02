@@ -6,7 +6,7 @@ import { BoardContext } from './BoardContext';
 import FacedownCardInstance from './cards/FacedownCardInstance';
 import { DropZone } from './DropZone';
 import CardInstance from './cards/CardInstance';
-import { UnitCard } from './cards/UnitCard';
+import UnitCard from './cards/Card';
 import { StratagemCard } from './cards/StratagemCard';
 
 

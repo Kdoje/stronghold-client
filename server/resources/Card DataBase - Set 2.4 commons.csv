@@ -1,19 +1,20 @@
 name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
-CCo01: Frontliner,1,Corlian,Unit,"Reaction: Push the advantage: When this unit enters the field, adjacent allies get +1 mv this turn",1,1,1,,,C
+CCo01: Frontliner,1,Corlian,Unit,"Reaction: Push the advantage: When this unit enters the field, adjacent allies get +1 mv until the end of your next turn",1,1,1,,,C
 CCo02: Legionnaire,2,Corlian,Unit,Aura: United Front: This gains +2atk and +2def if it has a friendly occupant to its right and left,2,2,1,,,C
 CCo03: Duelist,2,Corlian,Unit,"Reaction: Duelist: When this unit attacks an enemy unit with no other enemies adjacent to it, destroy that unit after the damage step",3,1,1,,,C
 CCo04: Ardent Recruiter,2,Corlian,Unit,"Reaction: Recruitment Drive: When this enters the field you may put a Corlian that costs 2 or less onto the field adjacent to this ""for free""",2,2,1,,,C
 CCo05: Shield bearer,2,Corlian,Unit,Aura: Defensive Line: This unit can't attack. Units to the left and right of this gain +2 def ,1,3,1,,,C
-CCo06: Archer,2,Corlian,Unit,Aura: Backliner:This unit can attack any valid non-adjacent target within 2 tiles. This can only attack if there is an ally in front of this,2,2,1,,,C
+CCo06: Archer,2,Corlian,Unit,Aura: Backliner:This unit can attack any valid non-adjacent target within 2 tiles. This can only attack if it has an ally in front and adjacent,2,2,1,,,C
 CCo07: Colonel of Charges,3,Corlian,Unit,"Reaction: When this unit attacks, adjacent attacking units get +1atk +1 def",3,3,1,,,C
 CCo08: Caravan Leader,4,Corlian,Unit,"Aura: Supply lines: Allies that start adjacent to this can move forward 1 tile ""for free""",3,5,1,,,C
 CCo09: Fortress,1,Corlian,Structure,"Reaction: Take Cover: When an adjacent unit would take damage, you may have that damage be dealt to this structure instead",-,2,-,,,C
 CCo10: Farmland,2,Corlian,Structure,Aura: Bountiful Harvest: You may sacrifice this to give all adjacent occupants +1atk +1def,-,2,-,,,C
 CCo11: Valley Battlefield,2,Corlian,Eniviron,Only a unit behind this environ can attack the unit occupying this,,,,,,C
 CCo12: Forward March,1,Corlian,Tactic,Give an adjacent Unit +1 mv,,,,,,C
+CCo12: Forward March,1,Corlian,Tactic,All Corlians adjacent to you get +2mv this turn,,,,,,
 CCo13: Outflank,2,Corlian,Tactic,Destroy a chosen enemy unit with allies in front and behind of it,,,,,,C
 CCo14: Strategize,1,Corlian,Stratagem,Draw a card for each Corlian occupant nearby you,,,,,,C
-CCo15: Bolster the defense,2,Corlian,Stratagem,All Corlians within 2 tiles of you gain +2atk +2 Def,,,,,,C
+CCo15: Bolster the defense,2,Corlian,Stratagem,All Corlians within 2 tiles of you gain +2atk +2 Def until the end of your next turn,,,,,,C
 CSi01: Forest Dweller,1,Simian,Unit,Aura: Home Turf: This unit can only be deployed on a tile with a friendly environ,2,2,1,,,C
 CSi02: Kyrian Sage,1,Simian,Unit,"Reaction: Leaf Reading: When this enters the field if it's in a friendly simian environ, search your deck or damage for a Simian, reveal it and put it into your hand. The shuffle both piles",1,1,1,,,C
 CSi03: Leaf Traverser,2,Simian,Unit,Aura: Earthen Emergence: This costs 1 less if deployed in or adjacent to a friendly environ,2,2,1,,,C
@@ -24,23 +25,95 @@ CSi07: Aporial Guide,2,Simian,Unit,Aura: Friendly Territory This unit has +1Mv w
 CSi08: Simian Converger,3,Simian,Unit,"Reaction: Earthen Emergence: When this enters the field, the next environ you deploy costs 1 lesss",4,4,1,,,C
 CSi09: Arborial Arielist,4,Simian,Unit,Aura: Treetop Gliding: This unit can move through friendly simian environs without expending movement,5,5,1,,,C
 CSi10: King Ape,6,Simian,Unit,Aura: Forest Vitalization: This costs 1 less if deployed in or adjacent to a firendly environ,8,9,2,,,C
-CSi11: Glade of Rage,2,Simian,Environ,Reaction: Vigorous Growth: You may pay 1 to give a simian that occupies this tile +1 mv +1atk,,,,,,
-CSi12: Kyrian Mountainside,1,Simian,Environ,Aura: Verdance Vigor: Friendly units in this environ gain +2Atk,,,,,,
-CSi13: Calm Clearning,2,Simian,Environ,"Aura: Paths of Grass: You may pay 2 to allow an ally to move through this tile for free.
+CSi11: Glade of Rage,2,Simian,Environ,Reaction: Vigorous Growth: You may pay 1 to give a simian that occupies this tile +1 mv +1atk,,,,,,C
+CSi12: Kyrian Mountainside,1,Simian,Environ,Aura: Verdance Vigor: Friendly units in this environ gain +2Atk,,,,,,C
+CSi13: Calm Clearning,2,Simian,Environ,"Aura: Paths of Grass: You may pay 1 to allow an ally to move through this tile for free.
  
-",,,,,,
-CSi14: Kyrian Defolade,1,Simian,Tactic,A chosen unit in a simian environ takes no counter-attack damage this turn,,,,,,
-CSi15: Arborial Crush,2,Simian,Tactic,Chosen unit in a friendly environ gets +2Atk +2Def for each adjacent friendly Simian environ,,,,,,
-CSi16: Forest Ambush,2,Simian,Stratagem,This deals damage to a chosen unit in a friendly simian tile equal to the attack of friendly units adjacent to the chosen unit,,,,,,
-CGe01: Wheel,1,GENERIC,Stragem,Shuffle your hand into your deck then draw 5 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
-CGe02: Unit Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a unit, reveal it, and shuffle",,,,,,
-CGe03: Place Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for an environ or structure, reveal it, and shuffle",,,,,,
-CGe04: Strategy Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a tactic or stratagem, reveal it, put it into your hand and shuffle",,,,,,
-CGe05: Flow Concentration,2,GENERIC,Stratagem,Search your deck for any card then shuffle. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
-CGe06: Flow Filtration,2,GENERIC,Stratagem,"To deploy this, you must also discard a card. Search your deck and/or damage pile for a card. You become fatigued  (you can't draw cards or deploy ordnance until your next turn)",,,,,,
-CGe07: Trance,2,GENERIC,Stratagem,Draw 4 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
-CGe08: Epiphany,1,GENERIC,Tactic,Draw 2 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,
-CGe09: Flow Timewind,2,GENERIC,Tactic,"To deploy this, you must also discard a card. Search your deck and/or damage pile for any card.  You take 2 damage, and become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,
-CGe10: Flow Restoration,2,GENERIC,Tactic,"Shuffle the top 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,
-CGe11: Charge!,1,GENERIC,Tactic,All Friendly Units have +1 to Movement until the end of your next turn,,,,,,
-The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,,R
+",,,,,,C
+CSi13: Fastball,1,Simian,Tactic,Choose an ally simian unit as your thrower and an ally unit with less defense or ally wielder adjacent to your thrower as your projectile. Move your projectile to an open tile within 2 tiles of your thrower,,,,,,C
+CSi14: Kyrian Defolade,1,Simian,Tactic,A chosen unit in a simian environ takes no counter-attack damage this turn,,,,,,C
+CSi15: Arborial Crush,2,Simian,Tactic,Chosen unit in a friendly environ gets +2Atk +2Def for each adjacent friendly Simian environ,,,,,,C
+CSi16: Forest Ambush,2,Simian,Stratagem,This deals damage to a chosen unit in a friendly simian tile equal to the attack of friendly units adjacent to the chosen unit,,,,,,C
+CFe01: Fen Ambusher,1,Fenan,Unit,Aura: You may deploy this into any unoccupied ally tile,1,1,1,"Guerilla 1:
+can appear in unocced env",,C
+CFe02: Naturalizer,2,Fenan,Unit,Reaction: You may sacrifice this to deploy an environ adjacent to it,1,2,1,"Shaman:
+Sacs for env",,C
+CFe03: Mirage Crafter,2,Fenan,Unit,Reaction: You must discard 2 cards to activate this. You may put a Fenan from your hand into an unoccupied friendly environ. Sacrifice it at the end of the turn,3,1,1,"Shaman 2:
+Spawns temp. thing in friendly fen",,C
+CFe04: Islandback Turtle,2,Fenan,Unit,"Reaction: When this enters the field, you may move a structure adjacent to this to another unoccupied tile adjacent to it",2,2,1,"Transporter 1:
+can move Struct around when deployed",,C
+CFe05: Cybrdid Launcher,2,Fenan,Unit,Reaction: When this enters the field you may move an adjacent ally structure to an unoccupied tile within 2 tiles of this,2,2,1,"Transporter 2:
+can throw struct on deploy",,C
+CFe06: Marsh Lurker,2,Fenan,Unit,Aura: You may deploy this adjacent to an ally Fenan Structure or Environ,1,2,1,"Guerilla 2:
+can go next to fenan struct or env ",,C
+CFe07: Mired Ambusher,3,Fenan,Unit,Aura: You may deploy this to any unoccupied allied environ,3,3,1,deploy to any env. lower stats,,C
+CFe08: Fen Converter,1,Fenan,Structure,Aura: You may pay 1 to deploy an environ adjacent to this,,2,,play env from hand adj. for 1,,C
+CFe09: Reclaimer,2,Fenan,Structure,Aura: You may sacrifice an env adjacent to this to draw 2 cards,,3,,Sac an adj. env for card adv.,,C
+CFe10: Mire Trenches,1,Fenan,Environ,Aura: Enemies that enter this environ end their movement imediately,,,,Enemies that enter this end movement immediately,,C
+CFe11: Marsh Pits,1,Fenan,Environ,"Reaction: When this enters the field, if this is unoccupied, you may move an adjacent occupant into this",,,,Pull an adjacent wielder or unit closer,,C
+CFe12: Vine-choked Barrens,2,Fenan,Environ,"Reaction: When this enters the field, you may prevent the occupant of this tile from leaving until the end of its controller's next turn",,,,Trap unit temporarily here,,C
+CFe13: Storm-shocked shores,2,Fenan,Environ,Aura: If you're in an ally Fenan Environ you may deploy this within 2 tiles of you,,,,put within 2 if in a fenan env,,C
+CFe14: Quench the Earth,2,Fenan,Tactic,You may deploy your next environ adjacent to an ally Fenan this turn,,,,"Env synergy:
+deploy env adj. to fen unit",,C
+CFe15: Bayou Conduit,1,Fenan,Stratagem,You may move an adjacent unit to an unoccupied Fenan Environ,,,,"Movement enabler:
+Move any adj. unit to another fenan env",,C
+CFe16: Entomb in Earth,2,Fenan,Stratagem,You may destroy a unit occupying a friendly environ within 2 tiles of you,,,,"Removal:
+Kill thing in env",,C
+CTw01: Tide Hunter,1,Tidewalker,Unit,Reaction: This gets +2atk if this is behind its attack target,0,2,1,Backstabber: bonus attack from behind,,C
+CTw02: Dust cloaked stalker,1,Tidewalker,Unit,Aura: This unit cannot be attacked in a friendly Environ,1,1,1,Can't be attacked in friendly env,,C
+CTw03: Angry Apparition,2,Tidewalker,Unit,"Reaction: When this unit would move, you may move it to an unoccupied tile in or adjacent to an ally Environ",1,1,1,"Ambusher: This can teleport instead of move, but must attack when it does",,C
+CTw04: Shadow Clone,2,Tidewalker,Unit,Reaction: Sacrifice this unit to move yourself into the tile this occupied,1,2,2,Sac to switch places with this,,C
+CTw05: Tide Stalker,2,Tidewalker,Unit,"Reaction: At the start of your turn, this unit gains +2mv if it's in an ally environ",2,3,1,Extra moves if starts in friendly env,,C
+CTw06: Trawler,3,Tidewalker,Unit,Reaction: You may banish an ally Tidewalker from the field or from your hand to give this +1mv,3,2,1,banish Tw to move this 1 extra space,,C
+CTw07: Mirage Conduit,3,Tidewalker,Unit,Reaction: Once per turn you may move this to an unoccupied adjacent tile,3,3,0,Can move adj. as reaction,,C
+CTw08: Scaled Brute,4,Tidewalker,Unit,Aura: This gains +3def in an ally Tidewalker Environ,5,3,2,"Scaled Brute, gains def in tw env?",,C
+CTw09: Tide Scoured Temple,2,Tidewalker,Structure,"Reaction: At the start of your turn, if you're adjacent to this, you may draw 2 cards",,3,,Hidden temple? Draw 2 cards if you start your turn adj. to this,,C
+CTw10: Wind scarred Passage,1,Tidewalker,Environ,Aura: You may deploy this within 3 tiles of you  if you're in an ally environ,,,,Deploy within 3 if in friendly env,,C
+CTw11: Hidden Sand Tidewell,2,Tidewalker,Environ,Aura: Occupants of this environ cannot be attacked (foundries in this tile may still be attacked),,,,Occupants of this env can't be attacked,,C
+CTw12: Apparate,1,Tidewalker,Tactic,You may move an occupant your adjacent to into an unoccupied tile within 2 tiles of you,,,,Teleport you or something you're touching,,C
+CTw13: Desolate,2,Tidewalker,Tactic,You may destroy a unit or structure with 2 or less remaining defense adjacent to you,,,,Destroy something your touching,,C
+CTw14: Forge From Dusk,1,Tidewalker,Stratagem,You may put a unit that was destroyed this turn into an adjacent ally Tidewalker Environ,,,,Reanimate thing into a Tw env,,C
+CTw15: Tide Crush,2,Tidewalker,Stratagem,Destroy a unit or structure that's adjacent to an ally Tidewalker unit,,,,Destroy something a unit you control is touching,,C
+CSc01: Explosive Runner,1,Scorsharan,Unit,Power: Sacrifice this unit then it deals 1 damage to all adjacent occupants,1,1,1,Sac. to deal 1 damage adj.,,C
+CSc02: Wild Cutter,1,Scorsharan,Unit,"Reaction: When this deals attack damage, it deals 1 damage to occupants and foundries nearby this and adjacent to the attack target",1,1,1,Deals a damage to itself and adj. on attack,,C
+CSc03: Scorched Golem,2,Scorsharan,Unit,,3,2,2,"A bit stronger, nothing special",,C
+CSc04: Furnace Reaper,2,Scorsharan,Unit,"Reaction: You may sacrifice an adjacent Scorsharan, then give this +2atk",1,2,2,Sac. adj scorsharan for more attack,,C
+CSc05: Hammer Dropper,3,Scorsharan,Unit,"Reaction: When this declares an attack, it deals 1 damage to all occupants and foundries in this column",3,2,1,Attacks everything in front in this column,,C
+CSc06: Stone-hammer Man,4,Scorsharan,Unit,"Reaction: When this unit attacks, it deals damage equal to its attack to the stucture or unit behind it. That occupant deals damage equal to its atk to this",4,5,2,Hits occupant behind on attack,,C
+CSc07: Enraged Golem,5,Scorsharan,Unit,,6,6,2,"Huge guy, nothing special",,C
+CSc08: Reactor Heavy,2,Scorsharan,Structure,"Reaction: When this enters or leaves the field, it deals 1 damage to ",,3,,Deals damage to surroundings on entry and death,,C
+CSc09: Magma Spillway,1,Scorsharan,Environ,"Reaction: Whenever an occupant enters this tile, this deals 1 damage to it",,,,Everything that enters this takes 1 dmg,,C
+CSc10: Searing Missle,1,Scorsharan,Tactic,This deals 2 damage to an occupant or foundry within 3 tiles of you,,,,Deal a little damage at a distance,,C
+CSc11: Firestar,1,Scorsharan,Tactic,This deals 3 damage to an occupant or foundry adjacent to you,,,,Deal a lot of damage close,,C
+CSc12: Torch Bomb,2,Scorsharan,Tactic,This deals 3 damage to an occupant or foundry within 3 tiles of you,,,,Deal a lot of damage far,,C
+CSc13: Heat Flow,1,Scorsharan,Stratagem,This deals 2 damage to an occupant and moves it to the tile behind it if possible,,,,Deal damage and push things a tile,,C
+CSc14: Explosive Arc,2,Scorsharan,Stratagem,This deals 4 damage to an occupant or foundry adjacent to you and 2 damage to all occupants nearby you,,,,Deal damage to targets in front and nearby,,C
+CSc15: Burning Pillar,3,Scorsharan,Stratagem,This deals 3 damage to all occupants in your row or column,,,,Deal Damage to everything in your row and column,,C
+CFr01: Ice Shield,1,Frostlon,Unit,,0,3,2,High def. with no attack,,C
+CFr02: Intercessor Icylix,2,Frostlon,Unit,Reaction: You may discard a Frostlon to prevent an occupant in front of this from leaving its tile this turn,2,2,1,Higher def. with low attack that can prevents occ. in front from moving next turn on entry,,C
+CFr03: Ice-Toothed Crusher,2,Frostlon,Unit,Reaction: You may move a foundry from the field to your damage pile to reduce the cost of your next Frostlon or Generic ordnacne by 1 this turn,2,2,1,Can sac a foundry to reduce cost of Fr or Gen. Tactic or Strat ,,C
+CFr04: Powered Cannon,2,Frostlon,Unit,Aura: This can only declare an attack if it's in a tile with an ally foundry,4,2,2,Above avg. can only attack in tile with foundry,,C
+CFr05: Glass-Ice Artillery,2,Frostlon,Unit,Aura: Bombard: This unit can attack and counter-attack units within 2 tiles ,3,1,1,Low def. can attack with bombard,,C
+CFr06: Investagitive Icylix,3,Frostlon,Unit,"Reaction: When this unit declares an attack, draw a card",3,2,1,Draws a card on attack,,C
+CFr07: Slick-Silk Ice Spider,4,Frostlon,Unit,Aura: Occupants dealt damage by this unit cannot leave their tile until the end of the next turn,4,3,2,Frost spider that traps unit in place,,C
+CFr08: Research Base,2,Frostlon,Structure,"Reaction: Once per turn, if you or an ally Frostlon is adjacent to this, you may discard a Frostlon card to draw 2 cards",,3,,"If adj. to you or frostlon, you can discard a frostlon card to draw 2 cards ",,C
+CFr09: Interceptor array,3,Frostlon,Structure,Reaction: You may discard a Frostlon to discard chosen deploying ordnance without applying its affect,,3,,Discard a frostlon to intercept ord.,,C
+CFr10: Icy Auorora Field,2,Frostlon,Environ,"Reaction: Once per turn, the wielder occupying this tile may take 1 damage to draw a card, then discard a card",,,,Once per turn you can take 1 damage to DaC then discard,,C
+CFr11: Veil of Frost,1,Frostlon,Tactic,Enemies cannot enter tiles nearby you this turn,,,,Prevent enemies from entering tiles within 2 tiles of you this turn,,C
+CFr12: Succumb to Cold,2,Frostlon,Tactic,A chosen unit has 0 base atk or 2 base def until the end of this turn,,,,A chosen unit has 0 base atk or 1 base def until EoT,,C
+CFr13: Bounce,2,Frostlon,Tactic,Return a chosen unit or structure owned by a wielder within 2 tiles of you to that wielder's hand ,,,,Return occupant to hand if you're within range of the opposing wielder,,C
+CFr14: Humble,2,Frostlon,Stratagem,Enemies within 2 tiles of you have 0 base atk until the start of your next turn,,,,Enemies within a range have 0 base atk. until the end of their controllers next turn,,C
+CFr15: Frozen Eye,4,Frostlon,Stratagem,"Draw 2 cards for each Frostlon structure or unit you're adjacent to, then put any number of cards from your hand on the bottom of your deck",,,,"Draw 2 cards for each Fr you're adjacent to, then you may put any number of cards from hand to bottom of deck at random ",,C
+CGe01: Wheel,1,GENERIC,Stragem,Shuffle your hand into your deck then draw 5 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,C
+CGe02: Unit Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a unit, reveal it, and shuffle",,,,,,C
+CGe03: Place Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for an environ or structure, reveal it, and shuffle",,,,,,C
+CGe04: Strategy Searcher,1,GENERIC,Tactic,"To deploy this, you must also discard 2 cards, then search your deck for a tactic or stratagem, reveal it, put it into your hand and shuffle",,,,,,C
+CGe05: Flow Concentration,2,GENERIC,Stratagem,Search your deck for any card then shuffle. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,C
+CGe06: Flow Filtration,2,GENERIC,Stratagem,"To deploy this, you must also discard a card. Search your deck and/or damage pile for a card. You become fatigued  (you can't draw cards or deploy ordnance until your next turn)",,,,,,C
+CGe07: Trance,2,GENERIC,Stratagem,Draw 4 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,C
+CGe08: Epiphany,1,GENERIC,Tactic,Draw 2 cards. You become fatigued (you can't draw cards or deploy ordnance until your next turn),,,,,,C
+CGe09: Flow Timewind,2,GENERIC,Tactic,"To deploy this, you must also discard a card. Search your deck and/or damage pile for any card.  You take 2 damage, and become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,C
+CGe10: Flow Restoration,2,GENERIC,Tactic,"Shuffle the top 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,C
+CGe11: Charge!,1,GENERIC,Tactic,All Friendly Units have +1 to Movement until the end of your next turn,,,,,,C
+The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,-,-,1,,,NA
+Blank Page,0,GENERIC,Stratagem,You may only activate 2 blank pages per turn. Draw a card,,,,,,NA

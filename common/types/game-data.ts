@@ -5,7 +5,7 @@ export type BaseCardT = {
     subtype?: string
     description: string
     value: string
-    rarity?: 'C'|'U'|'R'|'L'
+    rarity?: 'C'|'U'|'R'|'L'|'NC'
 }
 
 export type UnitCardT = BaseCardT & {
@@ -16,7 +16,18 @@ export type UnitCardT = BaseCardT & {
 
 export type StratagemCardT = BaseCardT
 
-export type AnyCardT = UnitCardT | StratagemCardT
+export type AnyCardT = {
+    name: string
+    cost: string
+    type: string
+    subtype?: string
+    description: string
+    value: string
+    rarity?: 'C'|'U'|'R'|'L'|'NC'
+    attack?: string
+    health?: string
+    move?: string
+}
 
 // Used to represent a card on the board
 export type CardInstanceT = {

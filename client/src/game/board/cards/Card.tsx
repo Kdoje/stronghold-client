@@ -3,18 +3,32 @@ import {AnyCardT, UnitCardT} from 'common/types/game-data';
 import css from "./Card.module.css"
 import { getUrl } from "../../../utils/FetchUtils";
 
-type CardTemplate = "Unit"|"Stratagem"|"Structure";
-type RulesText = "Tactic"|"Reaction"|"Structure"|"Stratagem"|undefined;
+type CardTemplate = "Unit"|"Stratagem"|"Structure"|"Wielder";
+type RulesText = "Tactic"|"Reaction"|"Structure"|"Stratagem"|"Wielder"|undefined;
+
+const TEXT_SHADOW_VALUE = "1px 0px 0px #fff, 0px -1px 0px #fff, -1px 0px 0px #fff, 0px 1px 0px #fff";
+const HALF_SHADOW_VALUE = "1px 0px 0px #fff, 0px 1px 0px #fff"
 
 export default class Card extends React.Component<AnyCardT & {displayOverlay?: boolean}> {
+
     constructor(props: AnyCardT & {displayOverlay?: boolean}) {
         super(props);
+    }
+
+    getTypeName() {
+        if (this.props.type === "Wielder") {
+            return "Character";
+        }
+        return this.props.type;
     }
 
     render() {
 
         let template: CardTemplate = "Stratagem";
-        if (this.props.subtype === "Unit" || this.props.type === "Wielder") {
+        if (this.props.type === "Wielder") {
+            template = "Wielder"
+        }
+        if (this.props.subtype === "Unit") {
             template = "Unit";
         } if (this.props.subtype === "Structure") {
             template = "Structure";
@@ -25,6 +39,8 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
             cardImage = "UnitCardTemplate.png";
         } else if (template === "Structure") {
             cardImage = "StructureCardTemplate.png";
+        } else if (template === "Wielder") {
+            cardImage = "CharacterCardTemplate.png";
         }
 
         let initialHealth;
@@ -32,9 +48,13 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
             initialHealth = this.props.health.split('|')[0];
         }        
        
-        let titleStyle: React.CSSProperties|undefined = undefined;
+        let titleStyle: React.CSSProperties|undefined = {};
         if (this.props.name.length > 25) {
-            titleStyle = {fontSize: "12px"};
+            titleStyle.fontSize = "12px";
+        }
+
+        if (this.props.type === "Wielder") {
+            titleStyle.justifyContent = "center";
         }
 
         let statsText;
@@ -57,6 +77,13 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
            attackText = <div className={css.attackText}>{this.props.attack}</div>;
         } 
 
+        let portraitStyle: React.CSSProperties|undefined;
+        let descriptionStyle: React.CSSProperties|undefined;
+        if (template === "Wielder") {
+            portraitStyle = {height: "3in", width: "2.5in"};
+            descriptionStyle = {textShadow: TEXT_SHADOW_VALUE, top: "228px"}
+        }
+
         let rules: RulesText;
         let rulesRender: ReactElement;
         if (this.props.description.length < 150) {
@@ -68,33 +95,30 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
                 rules = "Tactic";
             } else if (this.props.subtype === "Structure") {
                 rules = "Structure";
+            } else if (template === "Wielder") {
+                rules = "Wielder";
             }
         }
 
         if (rules != null) {
-            let rulesTextStyle: React.CSSProperties = {fontSize: "5pt"};
-            let rulesText = "Whenever occupant reaction(s) are triggered, " +
-            "begin with the active player and continue " +
-            "clockwise. Each play er applies their " +
-            "occupant reaction(s) in any order.";
+            let rulesTemplate = "Unit"
+            let rulesTextStyle: React.CSSProperties = {fontSize: "7.5pt", textShadow: HALF_SHADOW_VALUE};
+            let rulesText = "Apply reactions starting " +
+            "with the active player's occupants continuing clockwise.";
             if (rules === "Stratagem") {
-                rulesText = "You may play Stratagems during your " +
-                "deployment phase while no Tactics or " +
-                "Reactions are waiting to be applied. " +
-                "Discard this after applying its affect.";
+                rulesText = "The active player may deploy Strategems " +
+                "during their deployment phase."
             } else if (rules === "Tactic") {
-                rulesText = "Before phases, start with the active player " +
-                "and continue clockwise, that player may " +
-                "play tactics onto the pile. Once everyone " +
-                "passes, continue to apply and discard " +
-                "the top pile card.";
+                rulesText = "Deploy tactics before phases onto " +
+                "the pile. Then, apply and discard them in pile order";
             } else if (rules === "Structure") {
-                rulesText = "Structures occupy the tile they are  " +
-                "deployed in. Other occupants cannot " +
-                "move through occupied tiles.";
+                rulesText = "Structures occupy the tile they are " +
+                "deployed in.";
+            } else if (rules === "Wielder") {
+                rulesText = "This represents your abilities and position on the field";
             }
             rulesRender = <div className={css.rulesContainer}>
-                <img className={css.rulesContainer} src="RulesTextTemplate.png"/>
+                <img className={css.rulesContainer} src={`${rulesTemplate}RulesTextTemplate.png`}/>
                 <p className={css.rulesText} style={rulesTextStyle}>{rulesText}</p>
                 </div>
         }
@@ -102,12 +126,12 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
         let imgSrc = `${getUrl()}/cardimage/${this.props.name}`
 
         let elt = <div className={css.cardContainer}>
-            <img className={css.portraitImage} src={imgSrc}></img>
+            <img className={css.portraitImage} style={portraitStyle} src={imgSrc}></img>
             <div className={css.titleOverlayText}>{this.props.displayOverlay ? this.props.name + ":" + this.props.cost : undefined}</div>
             <div className={css.titleText} style={titleStyle}>{this.props.name}</div>
             <div className={css.costText}>{this.props.cost}</div>
-            <div className={css.typeText}>{this.props.type} - {this.props.subtype}</div>
-            <div className={css.descriptionText}>{this.props.description}</div>
+            <div className={css.typeText}>{this.getTypeName()} - {this.props.subtype}</div>
+            <div className={css.descriptionText} style={descriptionStyle}>{this.props.description}</div>
             {moveText}
             {healthText}
             {attackText}

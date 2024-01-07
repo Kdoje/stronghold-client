@@ -12,7 +12,10 @@ const deckList = "1 CSc13: Heat Flow\n" +
                  "1 CSc14: Explosive Arc\n" +
                  "1 CCo05: Shield bearer\n" +
                  "1 CSi02: Kyrian Sage\n" + 
-                 "1 CCo12: Forward March\n"
+                 "1 CCo12: Forward March\n" +
+                 "1 CCo10: Farmland\n" +
+                 "1 The Novice\n" + 
+                 "1 The Houndmaster\n"
 
 export default function PreivewPage() {
     const [curCards, setCurCards] = useState([] as AnyCardT[]);
@@ -30,7 +33,9 @@ export default function PreivewPage() {
         const response = await fetch(`${getUrl()}/decklist`, requestOptions);
         const data = await response.json();
         console.log("got decklist");
-        setCurCards(data.deck);
+        let cards = data.deck;
+        cards.push(data.wielder);
+        setCurCards(cards);
     }
 
     let genDeckListButton = curCards.length > 0 ?

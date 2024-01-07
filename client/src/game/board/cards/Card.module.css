@@ -23,12 +23,11 @@
     font-family: 'Gill Sans MT';
     position: relative;
     z-index: 4;
-    max-width: 123px;
-    top: -64px;
-    left: 32px;
-    line-height: 6px; 
+    max-width: 124px;
+    top: -72px;
+    left: 103px;
+    line-height: 8px; 
     margin: 0px;
-    font-style: italic;
 }
 
 .portraitImage {
@@ -94,8 +93,10 @@
     top: 20px;
     display: flex;
     align-items: center;
+    justify-content: left;
     text-align: left;
     height: 20px;
+    width: calc(2.5in - 25*2px);
 }
 
 .costText {
@@ -126,6 +127,7 @@
     font-size: 14px;
     height: 30px;
     top: 307px;
+    width: calc(2.5in);
 }
 
 .descriptionText {

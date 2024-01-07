@@ -72,17 +72,21 @@ export default class Card extends React.Component<AnyCardT & {displayOverlay?: b
             moveText = <div className={css.moveText}>{this.props.move}</div>
         }
         
-        let attackText;
-        if (this.props.attack != null  && template !== "Structure") {
-           attackText = <div className={css.attackText}>{this.props.attack}</div>;
-        } 
+        
 
         let portraitStyle: React.CSSProperties|undefined;
         let descriptionStyle: React.CSSProperties|undefined;
+        let attackStyle: React.CSSProperties|undefined;
         if (template === "Wielder") {
             portraitStyle = {height: "3in", width: "2.5in"};
             descriptionStyle = {textShadow: TEXT_SHADOW_VALUE, top: "228px"}
+            attackStyle = {left: "195px", top: "292px"}
         }
+
+        let attackText;
+        if (this.props.attack != null  && template !== "Structure") {
+           attackText = <div className={css.attackText} style={attackStyle}>{this.props.attack}</div>;
+        } 
 
         let rules: RulesText;
         let rulesRender: ReactElement;

@@ -117,5 +117,5 @@ CGe09: Flow Timewind,2,GENERIC,Tactic,"To deploy this, you must also discard a c
 CGe10: Flow Restoration,2,GENERIC,Tactic,"Shuffle the top 6 cards from your damage pile into your deck, then draw a card. You become fatigued (you can't draw cards or deploy ordnance until your next turn)",,,,,,C
 CGe11: Charge!,1,GENERIC,Tactic,All Friendly Units have +1 to Movement until the end of your next turn,,,,,,C
 The Novice,,Wielder,Novice,You may create a conduit and/or move your wielder once per turn,,,1,,,NA
-The Houndmaster,,Wielder,Houndmaster,You may create a conduit and/or move your wielder once per turn,,,1,,,NA
+The Houndmaster,,Wielder,Houndmaster,"Power: Release The Hounds: You may discard 2 Units to search your deck, damage or graveyard for Samuel, Loyal Companion and put it into your hand. Activate only if you don't control Samuel",1,,1,,,NA
 Blank Page,0,GENERIC,Stratagem,You may only activate 2 blank pages per turn. Draw a card,,,,,,NA

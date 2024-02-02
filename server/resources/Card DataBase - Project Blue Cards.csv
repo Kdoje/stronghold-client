@@ -1,0 +1,16 @@
+name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
+Block,0,Block,,"On play: Prevent the ""on hit"" of the attack below this",,,,5,,
+Strike,1,Attack,,On hit: deal 1 damage. ,,,,9,,
+Analyze,1,Tecnique,,On play: Draw 2 cards unless your opponent plays an attack on top of this,,,,2,,
+Dash,1,Technique,,On play: Move 2 hexes,,,,2,,
+Slash,2,Attack,,Your opponents can only play blocks on top of this. On hit: Deal 1 damage,,,,2,,
+Feint,0,Attack,,This can't be played on top of an attack. On hit: deal 1 damage,,,,2,,
+Dodge,0,Technique,,On play: Move 1 hex,,,,2,,
+Center,1,Technique,,"On end: If you took no damage this attack, draw a card and gain 1 stamina at the start of the next attack",,,,2,,
+Parry,1,Block,,"On end: If your opponent played no attacks on top of this, they discard a card and lose 1 stamina at the start of the next round",,,,2,,
+Slice,2,Attack,,On hit: Deal 2 damage,,,,2,,
+Focus,0,Technique,,On play: Your next card costs 1 less stamina to play,,,,2,,
+Inner Eye,0,Technique,,"On end: If you took no damage this attack, you draw a card and your opponent reveals 2 cards from their hand",,,,2,,
+Guard Break,0,Attack,,"On hit: If this is on top of a block, your opponent loses 1 stamina",,,,2,,
+The Samurai,,Wielder,,"Before your attack: draw a card, then you may pay 1 stamina to move up to 2 tiles
+Before any attack: you may pay 1 stamina to discard up to 2 cards and draw the number of cards discarded",,,,,,

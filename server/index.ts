@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { createServer } from 'https'
@@ -69,7 +69,7 @@ function generateCardImagePath(cardName: string) {
 
 async function saveImage(cardName: string) {
 	const response = await axios.get(
-		`https://image.pollinations.ai/prompt/a fantasy painting of a ${cards.get(cardName)?.subtype} named ${cardName} with the ability ${cards.get(cardName)?.description}`,
+		`https://image.pollinations.ai/prompt/a painting of a battlefield featuring the ${cards.get(cardName)?.subtype} ${cardName} `,
 		{ responseType: 'arraybuffer' });
 	fs.writeFileSync(generateCardImagePath(cardName), Buffer.from(response.data, 'binary'));
 }
@@ -100,12 +100,31 @@ app.use('/', (req, res, next) => {
 	}
 })
 
+app.post('/cardlist', (req, res) => {
+	let decklistReq = req.body.cardlist.split(/[\r\n]+/);
+	let listResp: AnyCardT[] = [];
+	console.log(decklistReq)
+	decklistReq.forEach(async (cardDetails: string) => {
+		let qtyIndex = cardDetails.indexOf(" ");
+		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
+		let card = cards.get(cardName)
+		if (card) {
+			for (let i = 0; i < parseInt(quantity); i++) {
+				listResp.push(card!);
+			}	
+		}
+	})
+	res.setHeader('Content-Type', 'application/json');
+	res.end(JSON.stringify({ list: listResp }));
+})
+
 app.post('/decklist', (req, res) => {
 	let decklistReq = req.body.decklist.split(/[\r\n]+/);
 	let decklistResp: AnyCardT[] = [];
 	console.log(decklistReq)
 	let wielder = cards.get("The Novice");
 	decklistReq.forEach(async (cardDetails: string) => {
+		cardDetails = cardDetails.replace(/[ \t\r]+/g," ");
 		let qtyIndex = cardDetails.indexOf(" ");
 		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
 		let card = cards.get(cardName)

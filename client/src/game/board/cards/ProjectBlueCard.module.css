@@ -1,0 +1,331 @@
+
+.cardContainer {
+    transform-origin: center center;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.cardImage {
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    height: 3.5in;
+}
+
+.rulesContainer {
+    grid-row: 1;
+    grid-column: 1;
+    height: 3.5in;
+    z-index: 3;
+}
+
+.rulesText {
+    font-family: 'Gill Sans MT';
+    position: relative;
+    z-index: 4;
+    max-width: 124px;
+    top: -74px;
+    left: 103px;
+    line-height: 8px; 
+    margin: 0px;
+}
+
+.portraitImage {
+    z-index: -1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    transform-origin: left;
+    height: 3.5in;
+}
+
+.titleOverlayText {
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    font-family: 'Gill Sans MT';
+    color: white;
+    background-color: black;
+    font-size: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    height: fit-content;
+    overflow-wrap: anywhere;
+}
+
+.statsOverlayText{
+    font-family: 'Gill Sans MT';
+    color: white;
+    font-size: 32px;
+    align-self: center;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.statsOverlayContainer{
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    background-color: black;
+    z-index: 2;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    overflow-wrap: none;
+    top: 300px;
+    max-height: 35px;
+}
+
+.titleText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    font-family: 'Arial';
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    height: 50px;
+    width: 10px;
+    font-weight: bold;
+    color: white;
+    font-size: 8px;
+    letter-spacing: -1px;
+    position: relative;
+    left: 25px;
+    top: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.jaTitleText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    font-family: 'Arial';
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    height: fit-content;
+    width: fit-content;
+    font-weight: bold;
+    color: white;
+    font-size: 8px;
+    letter-spacing: -1px;
+    position: relative;
+    left: 35px;
+    top: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+
+.costImage {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    height: 3.5in;
+}
+
+.typeText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Matrix';
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    font-size: 11px;
+    height: 30px;
+    top: 191px;
+    left: 5px;
+    width: 100px;
+}
+
+.jaTypeText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Matrix';
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    font-size: 4px;
+    height: 30px;
+    top: 189px;
+    left: 5px;
+    width: 100px;
+}
+
+.descriptionText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    color: black;
+    font-size: 11px;
+    width: 197px;
+    height: 54px;
+    left: 23px;
+    top: 206px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.flavorText{
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    color: black;
+    font-size: 11px;
+    width: 197px;
+    height: 54px;
+    left: 23px;
+    top: 254px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.moveText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 5px;
+    top: 292px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.injuryMarker1 {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+    font-size: 28px;
+    left: 200px;
+    top: 243px;
+    text-align: center;
+}
+
+.injuryMarkerText1 {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+    font-size: 18px;
+    left: 191px;
+    top: 243px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.injuryMarker2 {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+    font-size: 28px;
+    left: 200px;
+    top: 218px;
+    text-align: center;
+}
+
+.injuryMarkerText2 {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+    font-size: 18px;
+    left: 191px;
+    top: 218px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.healthText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 196px;
+    top: 292px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.valueText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    font-style: italic;
+    color: white;
+    font-size: 11px;
+    top: 322px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.attackText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-family: 'Gadugi';
+    font-weight: bold;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-size: 25px;
+    left: 169px;
+    top: 292px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}

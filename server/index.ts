@@ -105,6 +105,7 @@ app.post('/cardlist', (req, res) => {
 	let listResp: AnyCardT[] = [];
 	console.log(decklistReq)
 	decklistReq.forEach(async (cardDetails: string) => {
+		cardDetails = cardDetails.replace(/[ \t\r]+/g," ");
 		let qtyIndex = cardDetails.indexOf(" ");
 		let [quantity, cardName] = [cardDetails.slice(0, qtyIndex), cardDetails.slice(qtyIndex + 1)];
 		let card = cards.get(cardName)

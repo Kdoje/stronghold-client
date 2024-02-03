@@ -1,16 +1,23 @@
 name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
-Block,0,Block,,"On play: Prevent the ""on hit"" of the attack below this",,,,5,,
+Block,0,Block,,"On play: Prevent the ""on hit"" of the attack below this. You lose 1 stamina",,,,5,,
 Strike,1,Attack,,On hit: deal 1 damage. ,,,,9,,
-Analyze,1,Tecnique,,On play: Draw 2 cards unless your opponent plays an attack on top of this,,,,2,,
-Dash,1,Technique,,On play: Move 2 hexes,,,,2,,
+Analyze,1,Technique,,"You may play this when your adjacent to an opponent 
+On play: Draw 2 cards unless your opponent plays an attack on top of this",,,,2,,
+Dash,1,Technique,,On play: Move up to 2 hexes,,,,2,,
 Slash,2,Attack,,Your opponents can only play blocks on top of this. On hit: Deal 1 damage,,,,2,,
 Feint,0,Attack,,This can't be played on top of an attack. On hit: deal 1 damage,,,,2,,
 Dodge,0,Technique,,On play: Move 1 hex,,,,2,,
-Center,1,Technique,,"On end: If you took no damage this attack, draw a card and gain 1 stamina at the start of the next attack",,,,2,,
-Parry,1,Block,,"On end: If your opponent played no attacks on top of this, they discard a card and lose 1 stamina at the start of the next round",,,,2,,
+Center,1,Technique,,"On end: If you took no damage this attack, draw a card and gain 2 temporary stamina (this is spent before regular stamina)",,,,This basically cycles then does nothing if you get hit. Maybe you get 2 temporary stamina,,
+Parry,1,Block,,"On end: If your opponent played no attacks on top of this, they discard a card and lose all stamina",,,,2,,
 Slice,2,Attack,,On hit: Deal 2 damage,,,,2,,
 Focus,0,Technique,,On play: Your next card costs 1 less stamina to play,,,,2,,
 Inner Eye,0,Technique,,"On end: If you took no damage this attack, you draw a card and your opponent reveals 2 cards from their hand",,,,2,,
-Guard Break,0,Attack,,"On hit: If this is on top of a block, your opponent loses 1 stamina",,,,2,,
-The Samurai,,Wielder,,"Before your attack: draw a card, then you may pay 1 stamina to move up to 2 tiles
-Before any attack: you may pay 1 stamina to discard up to 2 cards and draw the number of cards discarded",,,,,,
+Guard Break,0,Attack,,Only play this on top of a block On hit: your opponent loses all stamina,,,,2,,
+Blue Samurai,,Wielder,,"Before your attack: draw a card and recover 2 stamina. Then you may move 1 tile. This move costs 1 stamina if you're adjacent to an opponent.
+Before any attack: You may pay 1 stamina to draw a card once",,,,,,
+Green Samurai,,Wielder,,"Before your attack: draw a card and recover 2 stamina. Then you may move 1 tile. This move costs 1 stamina if you're adjacent to an opponent.
+Before any attack: You may pay 1 stamina to draw a card once",,,,,,
+Red Samurai,,Wielder,,"Before your attack: draw a card and recover 2 stamina. Then you may move 1 tile. This move costs 1 stamina if you're adjacent to an opponent.
+Before any attack: You may pay 1 stamina to draw a card once",,,,,,
+Yellow Samurai,,Wielder,,"Before your attack: draw a card and recover 2 stamina. Then you may move 1 tile. This move costs 1 stamina if you're adjacent to an opponent.
+Before any attack: You may pay 1 stamina to draw a card once",,,,,,

@@ -5,13 +5,17 @@
   "main": "server/index.ts",
   "type": "module",
   "engines": {
-    "node": ">=16 <19"
+    "node": ">=16"
   },
   "scripts": {
     "client:dev": "vite client/",
     "build": "vite build client/",
-    "server:dev": "nodemon --exec 'ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json' server/index.ts",
-    "server": "ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json server/index.ts",
+    "server:about": "ehco 'Use the server commands that correspond to the version of node youre using'",
+    "server:compile": "tsc --noEmit -p server/tsconfig.json", 
+    "server:dev:node16": "nodemon --exec 'ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json' server/index.ts",
+    "server:dev:node20": "cd server/ && nodemon watch \"**\" --ext \"ts,json\" --exec 'node --loader ts-node/esm index.ts' server/index.ts",
+    "server:node16": "ts-node-esm --experimental-specifier-resolution=node --project server/tsconfig.json server/index.ts",
+    "server:node20": "cd server/ && node --loader ts-node/esm index.ts server/index.ts",
     "forwardServer": "ngrok http https://localhost:9000"
   },
   "dependencies": {
@@ -46,7 +50,8 @@
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.0-beta",
-    "vite": "^4.2.0"
+    "vite": "^4.2.0",
+    "ts-node-esm": "^0.0.6"
   },
   "browserslist": {
     "production": [

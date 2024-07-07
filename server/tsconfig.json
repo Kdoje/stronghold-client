@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "paths": {
       "common/*": [
         "../common/*"
@@ -25,5 +26,9 @@
     "allowJs": true,
     "sourceMap": true,
     "baseUrl": "."
-  }
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+  },
 }

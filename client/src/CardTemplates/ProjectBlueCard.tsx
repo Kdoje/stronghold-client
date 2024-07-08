@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import {AnyCardT} from 'common/types/game-data'; 
 import css from "./ProjectBlueCard.module.css"
-import { getUrl } from "../../../utils/FetchUtils";
-import TRANSLATIONS from "../../../utils/Translations";
+import { getUrl } from "../utils/FetchUtils";
+import TRANSLATIONS from "../utils/Translations";
 
 export default class ProjectBlueCard extends React.Component<AnyCardT & {displayOverlay?: boolean}> {
 

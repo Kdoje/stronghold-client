@@ -2,8 +2,8 @@ import { useDraggable } from "@dnd-kit/core";
 import { CardInstanceT, UnitCardT } from "common/types/game-data";
 import React, { useContext } from "react";
 import css from '../Board.module.css';
-import { StratagemCard } from "./StratagemCard";
-import UnitCard from "./Card";
+import { StratagemCard } from "../../../CardTemplates/StratagemCard";
+import UnitCard from "../../../CardTemplates/Card";
 
 
 export default function FacedownCardInstance(props: CardInstanceT) {

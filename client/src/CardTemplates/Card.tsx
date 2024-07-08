@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import {AnyCardT, UnitCardT} from 'common/types/game-data'; 
 import css from "./Card.module.css"
-import { getUrl } from "../../../utils/FetchUtils";
+import { getUrl } from "../utils/FetchUtils";
 
 type CardTemplate = "Unit"|"Stratagem"|"Structure"|"Wielder";
 type RulesText = "Tactic"|"Reaction"|"Structure"|"Stratagem"|"Wielder"|undefined;

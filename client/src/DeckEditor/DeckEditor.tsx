@@ -2,17 +2,17 @@ import { MAIN_MENU } from 'common/Routes';
 import { useNavigate } from 'react-router-dom';
 
 import css from './DeckEditor.module.css';
-import UnitCard from '../game/board/cards/Card';
+import UnitCard from '../CardTemplates/Card';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnyCardT, UnitCardT } from 'common/types/game-data';
 import QuantityDisplay from './QuantityDisplay';
 import { DeckEditorContext } from './DeckEditorContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { getUrl } from '../utils/FetchUtils';
-import { StratagemCard } from '../game/board/cards/StratagemCard';
+import { StratagemCard } from '../CardTemplates/StratagemCard';
 import SearchBar from './SearchBar';
 import DeckMetadataDisplay from './DeckMetadataDisplay';
-import Card from '../game/board/cards/Card';
+import Card from '../CardTemplates/Card';
 
 export default function DeckEditor() {
 

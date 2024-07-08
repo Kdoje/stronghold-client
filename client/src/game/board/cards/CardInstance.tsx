@@ -2,10 +2,10 @@ import { useDraggable } from "@dnd-kit/core";
 import { CardInstanceT, UnitCardT } from "common/types/game-data";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import css from '../Board.module.css';
-import { StratagemCard } from "./StratagemCard";
-import UnitCard from "./Card";
+import { StratagemCard } from "../../../CardTemplates/StratagemCard";
+import UnitCard from "../../../CardTemplates/Card";
 import { BoardContext } from "../BoardContext";
-import Card from "./Card";
+import Card from "../../../CardTemplates/Card";
 
 
 export default function CardInstance(props: CardInstanceT & { activated: boolean, annotation?: string}) {

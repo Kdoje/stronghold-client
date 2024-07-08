@@ -2,8 +2,8 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, u
 import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { AttackDirT, BoardStackInstanceT, CardInstanceT, PlayerData, ZoneIdT, UnitCardT, AnyCardT, PhaseName, isZoneHidden } from "common/types/game-data";
 import { PLAYER_CONNECTED } from "common/MessageTypes";
-import { StratagemCard } from "./cards/StratagemCard";
-import UnitCard from "./cards/Card";
+import { StratagemCard } from "../../CardTemplates/StratagemCard";
+import UnitCard from "../../CardTemplates/Card";
 import { useCallback, useEffect, useRef, useState } from "react";
 import css from './Board.module.css';
 import PreviewZone, { PREVIEW_ID_POSTFIX } from "./cards/preview/PreviewZone";
@@ -15,7 +15,7 @@ import PlayerDataDisplay from "./PlayerDataDisplay";
 import FacedownCardInstance from "./cards/FacedownCardInstance";
 import PhaseSelector from "./PhaseSelector";
 import BattlefieldGrid from "./BattlefieldGrid";
-import Card from "./cards/Card";
+import Card from "../../CardTemplates/Card";
 
 export default function Board(props: { socket: Socket }) {
     let connected = false;

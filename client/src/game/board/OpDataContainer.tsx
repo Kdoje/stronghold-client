@@ -6,9 +6,9 @@ import { BoardContext } from './BoardContext';
 import FacedownCardInstance from './cards/FacedownCardInstance';
 import { DropZone } from './DropZone';
 import CardInstance from './cards/CardInstance';
-import UnitCard from './cards/Card';
-import { StratagemCard } from './cards/StratagemCard';
-import Card from './cards/Card';
+import UnitCard from '../../CardTemplates/Card';
+import { StratagemCard } from '../../CardTemplates/StratagemCard';
+import Card from '../../CardTemplates/Card';
 
 
 export default function OpDataContainer(props: { cards: Array<CardInstanceT>, faceup: boolean }) {

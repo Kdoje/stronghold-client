@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import css from '../Board.module.css';
 import { StratagemCard } from "../../../CardTemplates/StratagemCard";
 import UnitCard from "../../../CardTemplates/Card";
-import { BoardContext } from "../BoardContext";
+import { BoardContext } from "../BoardContext"; 
 import Card from "../../../CardTemplates/Card";
 
 

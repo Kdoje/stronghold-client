@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { getUrl } from '../utils/FetchUtils';
 import css from './PreviewPage.module.css'
-import  {GAME_BOARD, DECK_EDITOR, PREVIEW_PAGE} from 'common/Routes'
 import { AnyCardT } from 'common/types/game-data';
-import Card from '../CardTemplates/Card';
 import React from 'react';
 import ProjectBlueCard from '../CardTemplates/ProjectBlueCard';
 import Modal from 'react-modal';

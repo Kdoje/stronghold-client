@@ -41,8 +41,6 @@ export default class ProjectBlueCard extends React.Component<AnyCardT & {display
             costImage = <img className={css.costImage} src={`cost-${this.props.cost}.png`}></img>;
         }
 
-        
-
         let descriptionStyle: React.CSSProperties|undefined;
         if (this.props.description.length > 150) {
             descriptionStyle = {top: "225px"}

@@ -7,12 +7,10 @@ import { CONFIG } from '../config'
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode, ssrBuild }) => {
   // the sockets port shouldn't be specified
-  let port = null;
-  
   // unless we're using hot reload to test with vite
-  if (command === "serve") {
-    port = CONFIG.port;
-  }
+ 
+  let port = CONFIG.port;
+  
   return {
     plugins: [react({
       babel: {

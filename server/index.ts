@@ -69,7 +69,7 @@ function generateCardImagePath(cardName: string) {
 
 async function saveImage(cardName: string) {
 	const response = await axios.get(
-		`https://image.pollinations.ai/prompt/a painting of a battlefield featuring the ${cards.get(cardName)?.subtype} ${cardName} `,
+		`https://image.pollinations.ai/prompt/a painting featuring the ${cards.get(cardName)?.subtype} ${cardName} `,
 		{ responseType: 'arraybuffer' });
 	fs.writeFileSync(generateCardImagePath(cardName), Buffer.from(response.data, 'binary'));
 }

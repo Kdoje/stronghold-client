@@ -3,6 +3,10 @@
     transform-origin: center center;
     display: grid;
     grid-template-columns: 1fr;
+    border-radius: .5px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-color: white;
 }
 
 .cardImage {
@@ -37,6 +41,8 @@
     position: relative;
     transform-origin: left;
     height: 3.5in;
+    max-width: 2.5in;
+    border-radius: 5%;
 }
 
 .titleOverlayText {
@@ -84,20 +90,19 @@
     grid-row-start: 1;
     grid-column-start: 1;
     font-family: 'Arial';
-    writing-mode: vertical-lr;
-    text-orientation: upright;
     height: 50px;
-    width: 10px;
+    width: 90px;
     font-weight: bold;
-    color: white;
-    font-size: 8px;
-    letter-spacing: -1px;
+    color: black;
+    font-size: 13px;
     position: relative;
-    left: 25px;
-    top: 21px;
+    left: 45px;
+    top: 5;
     display: flex;
     align-items: center;
     justify-content: left;
+    font-family: Bahnschrift;
+    text-decoration: underline;
 }
 
 .jaTitleText {
@@ -129,20 +134,56 @@
     height: 3.5in;
 }
 
+.costText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    height: 50px;
+    width: 50px;
+    font-weight: bold;
+    color: black;
+    font-size: 30px;
+    position: relative;
+    left: 18px;
+    top: 8px;
+    display: flex;
+    text-align: center;
+    font-family: Bahnschrift;
+    font-weight: bold;
+}
+
 .typeText {
     z-index: 1;
     grid-row-start: 1;
     grid-column-start: 1;
     position: relative;
-    font-family: 'Matrix';
     font-weight: bold;
     text-align: center;
     color: black;
     font-size: 11px;
     height: 30px;
-    top: 191px;
-    left: 5px;
+    top: 204px;
+    left: 10px;
     width: 100px;
+    font-family: Bahnschrift;
+    font-weight: bold;
+}
+
+.subTypeText {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+    position: relative;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    font-size: 11px;
+    height: 30px;
+    top: 204px;
+    left: 80px;
+    width: 100px;
+    font-family: Bahnschrift;
+    font-weight: bold;
 }
 
 .jaTypeText {
@@ -161,23 +202,77 @@
     width: 100px;
 }
 
-.descriptionText {
+.description {
     z-index: 1;
     grid-row-start: 1;
     grid-column-start: 1;
     position: relative;
     color: black;
     font-size: 11px;
-    width: 197px;
-    height: 54px;
-    left: 23px;
-    top: 209px;
+    width: 200px;
+    height: 73px;
+    left: 19px;
+    top: 240px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+    font-family: Bahnschrift;
+    font-weight: normal;
+    background-color: rgba(255, 255, 0, 0);
+}
+
+.clauseList{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100%;
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+
+.clause {
+    display: flex;
+    flex-direction: row;
+    min-width: 99%;
+    justify-content: space-around;
+    border-bottom-color: black;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    max-height: 100%;
+}
+
+.clause_slug {
+    font-weight: bold;
+    min-width: 25%;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    font-family: sans-serif;
 }
+
+.clause_effect {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 12px;
+}
+
+.clause_effect_text {
+    margin: 0px;
+}
+
+.requirement {
+    font-family: Bahnschrift;
+    font-size: 11px;
+    text-align: left;
+    border-bottom-color: black;
+
+}
+
 
 .flavorText{
     z-index: 1;
@@ -185,7 +280,7 @@
     grid-column-start: 1;
     position: relative;
     color: black;
-    font-size: 11px;
+    font-size: 12pt;
     width: 197px;
     height: 54px;
     left: 23px;

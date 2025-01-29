@@ -1,0 +1,26 @@
+name,cost,type,subtype,description,attack,health,move,Notes,value,rarity
+Block,1,Generic,Defend,"On Play: Chose one: 
+* Draw a card. 
+* Your oponent discards a card.",-,-,-,5,-,-
+Deaden Impact,1,Generic,Defend,"Only play if your foe's stance is neutral
+On Play: Chose one: 
+* Draw 2 cards. * Gain 2 stam. 
+On End: Lose 1 stam",,,,,,
+Closeguard,0,Generic,Defend,"You must discard an attack to play this
+On Play: Your opponent reveals 2 cards",,,,,,
+Strike,1,Dagger,Attack,On Hit: deal 1 damage. ,,,,9,-,-
+Analyze,1,Generic,Tactic,"Only play this when you're adjacent to an opponent 
+On Play: Draw 2 cards unless the opponent's Play to this contained an attack.",-,-,-,No follow up (Atk. punish),-,-
+Slash,2,Dagger,Attack,Your opponent's action in the Play to this costs 1 additional stamina. On Hit: Deal 1 damage,-,-,-,2,-,-
+Feint,0,Chordarm,Attack,This can't be in the Play to an attack. On Hit: deal 1 damage,-,-,-,2,-,-
+Dodge,1,Bolter,Evade,"On Play: If the opponent's Play to this doesn't contain an attack, move up to 2 tiles and end this exchange",-,-,-,This is parasitic becuase it ends an encounter for free. It should cost a discard to play,-,-
+Crush,1,Guantlet,Attack,"On Hit: Deal 1 damage. Then, if this is in the Play to the opponent's block, draw 2 cards",-,-,-,This basically cycles then does nothing if you get Hit. Maybe you get 2 temporary stamina,-,-
+Parry,1,Dagger,Defend,"On Play: If your opponent's Play to this doesn't contain an attack, your opponent loses 2 stamina and discards 2 cards",-,-,-,2,-,-
+Slice,2,Longarm,Attack,On Hit: Deal 2 damage,-,-,-,2,-,-
+Focus,0,Generic,Tactic,On play: Your next card in this Play costs 1 less stamina to play,-,-,-,2,-,-
+Inner Eye,1,Generic,Tactic,On Play: If your opponent's Play to this contains a block draw 2 cards. Otherwise gain 2 stamina,-,-,-,2,-,-
+Guard Break,1,Generic,Tactic,Only play this in the Play to an opponent's block. The attack you play in this Play deals +1 damage on Hit,-,-,-,2,-,-
+Slam,2,Generic,Attack,On Hit: push the opponent back 1 hex,-,-,-,,-,-
+,,,,,,,,"Attacks mutliple opponents, requiring card reveal or discard to prevent damage",,
+,,,,,,,,Draw a couple cards after the Play to this,,
+,,,,,,,,Deal damage to all opponents adj. unless they discard a card,,

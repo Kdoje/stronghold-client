@@ -6,7 +6,7 @@ export function getUrl(): string {
     console.log (window.location.hostname)
 
     if (window.location.hostname === 'localhost') {
-        url += ':9000'
+        url += `:${__PORT__}`
     }
     // if (__PORT__ != null) {
     //     url += `:${__PORT__}`;

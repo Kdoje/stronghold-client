@@ -1,12 +1,13 @@
 name,cost,type,subtype,description,attack,health,move,Notes
-Block,0,Block,,"On play: Negate the ""on hit"" of the attack in the response before this and lose 1 stamina",,,,5
+Block,1,Generic,Defend,"On play: chose 1:
+ * Draw a card * Your current oponent discards a card",,,,5
 Strike,1,Attack,,On hit: deal 1 damage. ,,,,9
 Analyze,1,Technique,,"Only play this when you're adjacent to an opponent 
 On response: Draw 2 cards unless the opponent's response to this contained an attack.",,,,No follow up (Atk. punish)
 Slash,2,Attack,,Your opponent's action in the response to this costs 1 additional stamina. On hit: Deal 1 damage,,,,2
 Feint,0,Attack,,This can't be in the response to an attack. On hit: deal 1 damage,,,,2
-Dodge,1,Evade,,"On response: If the opponent's response to this doesn't contain an attack, move up to 2 tiles and end this exchange",,,,This is parasitic becuase it ends an encounter for free. It should cost a discard to play
-Crush,1,Attack,,"On hit: Deal 1 damage. Then, if this is in the response to the opponent's block, draw 2 cards",,,,This basically cycles then does nothing if you get hit. Maybe you get 2 temporary stamina
+Dodge,1,Evade,,"On response: If the opponent's response to this doesn't contain an attack, move up POTOTOTOTOTOTPOTOTOTOTOTOT",,,,This is parasitic becuase it ends an encounter for free. It should cost a discard to play
+Crush,1,Attack,,"",,,,This basically cycles then does nothing if you get hit. Maybe you get 2 temporary stamina
 Parry,1,Block,,"On response: If your opponent's response to this doesn't contain an attack, your opponent loses 2 stamina and discards 2 cards",,,,2
 Slice,2,Attack,,On hit: Deal 2 damage,,,,2
 Focus,0,Technique,,On play: Your next card in this response costs 1 less stamina to play,,,,2
